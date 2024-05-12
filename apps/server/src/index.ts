@@ -1,4 +1,5 @@
 import { Server } from "socket.io";
+import cron from "node-cron";
 
 type Room = {
   id: string;
@@ -12,6 +13,7 @@ type SocketEvents = {
   queueUpdated: (props: { size: number }) => void;
   newUserConnect: (props: { size: number }) => void;
   queueExit: (props: { id: string }) => void;
+  roomFound: (props: { users: string[] }) => void;
 };
 
 const queue = new Set();
@@ -39,7 +41,6 @@ io.on("connection", (socket) => {
 
   socket.on("queueJoin", ({ id }) => {
     queue.add(id);
-
     console.log({ queueJoin: id });
 
     io.emit("queueUpdated", { size: queue.size });
@@ -55,5 +56,17 @@ io.on("connection", (socket) => {
 });
 
 io.listen(4000);
+
+cron.schedule("*/30 * * * * *", () => {
+  const _queue = Array.from(queue);
+  for (; _queue.length >= 2; ) {
+    const room = _queue.splice(0, 2);
+    queue.delete(room[1]);
+    room.forEach((user) => {
+      queue.delete(user);
+      io.socket(user).emit("roomFound", { users: room });
+    });
+  }
+});
 
 console.log("Server up");
