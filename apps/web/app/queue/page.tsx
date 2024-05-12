@@ -1,6 +1,13 @@
 "use client";
 
-import { useRef, ReactElement, useEffect, useState, useMemo } from "react";
+import {
+  useRef,
+  ReactElement,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+} from "react";
 import { socket } from "../../lib/socket";
 import {
   Select,
@@ -9,6 +16,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Socket } from "socket.io-client";
 
 async function getDevices() {
   try {
@@ -26,13 +35,16 @@ type MediaConstraints = {
 
 const initMedia = async (
   video: HTMLVideoElement,
-  stream: MediaStream,
   constraints: MediaConstraints,
 ) => {
-  console.log("MEDIA");
-  stream = await navigator.mediaDevices.getUserMedia({
+  const stream = await navigator.mediaDevices.getUserMedia({
     video: { deviceId: { exact: constraints.video } },
-    audio: { deviceId: { exact: constraints.audio } },
+    audio: {
+      deviceId: {
+        exact:
+          "0f481a2672954ca783c56482d03893d1f41a1ead034ed3be1523bb8ecf14d2db",
+      },
+    },
   });
 
   if (video) {
@@ -41,16 +53,22 @@ const initMedia = async (
   }
 };
 
-export default function Page(): JSX.Element {
-  const stream = useRef<MediaStream>(null);
-  const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
+let _socket: Socket = null;
 
+export default function Page(): JSX.Element {
+  const videoRef = useRef<ReactElement<HTMLVideoElement>>(null);
+
+  const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedAudioDevice, setSelectedAudioDevice] = useState("");
   const [selectedVideoDevice, setSelectedVideoDevice] = useState("");
-  const videoRef = useRef<ReactElement<HTMLVideoElement>>(null);
-  const socketRef = useRef(null);
+  const [usersOnline, setUsersOnline] = useState(null);
+  const [inQueue, setInQueue] = useState(false);
 
   useEffect(() => {
+    if (_socket == null) {
+      _socket = socket();
+    }
+
     const init = async () => {
       const devices = await getDevices();
       if (!devices) return;
@@ -64,18 +82,32 @@ export default function Page(): JSX.Element {
 
       setSelectedAudioDevice(audioInput?.deviceId);
       setSelectedVideoDevice(videoInput?.deviceId);
-      initMedia(videoRef.current, stream.current, {
+      initMedia(videoRef.current, {
         audio: audioInput,
         video: audioInput,
       });
     };
 
-    socketRef.current = socket();
     init();
+
+    _socket.on("connect", () => {
+      _socket.emit("userConnect", {
+        id: _socket.id,
+      });
+    });
+
+    _socket.on("newUserConnect", ({ size }) => {
+      setUsersOnline(size);
+    });
+
+    return () => {
+      _socket.off("queueUpdated");
+      _socket.close();
+    };
   }, []);
 
   useEffect(() => {
-    initMedia(videoRef.current, stream.current, {
+    initMedia(videoRef.current, {
       audio: selectedAudioDevice,
       video: selectedVideoDevice,
     });
@@ -89,6 +121,11 @@ export default function Page(): JSX.Element {
     return devices.filter((device) => device.kind === "videoinput");
   }, [devices]);
 
+  const onConnect = useCallback(() => {
+    setInQueue(!inQueue);
+    _socket.emit(inQueue ? "queueExit" : "queueJoin", { id: _socket.id });
+  }, [inQueue]);
+
   return (
     <main className="flex flex-col h-full">
       <section className="flex p-5 justify-between">
@@ -98,6 +135,7 @@ export default function Page(): JSX.Element {
       <section className="flex h-full place-content-center justify-center content-center align-center">
         <div>
           <h1>Estamos procurando alguém para praticar inglês contigo</h1>
+          <h1>QueueSize: {usersOnline}</h1>
           <video
             className="[transform:rotateY(180deg)] w-96 h-96"
             ref={videoRef}
@@ -136,6 +174,14 @@ export default function Page(): JSX.Element {
               </SelectContent>
             </Select>
           </div>
+          <h2>
+            {inQueue
+              ? "Procurando outro usuário"
+              : "Quando você estiver pronto entre em uma sala"}
+          </h2>
+          <Button onClick={onConnect}>
+            {inQueue ? "Cancelar" : "Entrar em uma sala"}
+          </Button>
         </div>
       </section>
     </main>
