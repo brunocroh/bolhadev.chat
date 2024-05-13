@@ -29,6 +29,7 @@ const createPeerConnection = () => {
 };
 
 export default function Page(): JSX.Element {
+  const [stream, setStream] = useState();
   const videoRef = useRef<ReactElement<HTMLVideoElement>>(null);
 
   const pathname = usePathname();

@@ -10,12 +10,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Socket } from "socket.io-client";
 import { useRouter } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
 import { Header } from "@/components/header";
-
-let _socket: Socket;
 
 export default function Page(): JSX.Element {
   const router = useRouter();
@@ -35,36 +32,30 @@ export default function Page(): JSX.Element {
   const [inQueue, setInQueue] = useState(false);
 
   useEffect(() => {
-    if (_socket == null) {
-      _socket = socket();
-    }
-
-    _socket.on("connect", () => {
-      _socket.emit("userConnect", {
-        id: _socket.id,
-      });
+    socket.emit("userConnect", {
+      id: socket.id,
     });
 
-    _socket.on("newUserConnect", ({ size }) => {
+    socket.on("newUserConnect", ({ size }) => {
       setUsersOnline(size);
     });
 
-    _socket.on("roomFound", ({ room, roomId }) => {
+    socket.on("roomFound", ({ room, roomId }) => {
       console.log({ room, roomId });
       router.push(`room/${roomId}`);
     });
 
     return () => {
-      _socket.off("queueUpdated");
-      _socket.off("newUserConnect");
-      _socket.off("roomFound");
-      _socket.close();
+      socket.off("queueUpdated");
+      socket.off("newUserConnect");
+      socket.off("roomFound");
+      // socket.close();
     };
   }, []);
 
   const onConnect = useCallback(() => {
     setInQueue(!inQueue);
-    _socket.emit(inQueue ? "queueExit" : "queueJoin", { id: _socket.id });
+    socket.emit(inQueue ? "queueExit" : "queueJoin", { id: socket.id });
   }, [inQueue]);
 
   return (

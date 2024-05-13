@@ -15,6 +15,12 @@ type SocketEvents = {
   newUserConnect: (props: { size: number }) => void;
   queueExit: (props: { id: string }) => void;
   roomFound: (props: { room: string[]; roomId: string }) => void;
+  callUser: (props: {
+    userToCall: string;
+    signalData: any;
+    from: string;
+  }) => void;
+  answerCall: (props: { data: any }) => void;
 };
 
 type SocketEventCurrier<T extends SocketEvents[keyof SocketEvents]> = (
@@ -36,6 +42,8 @@ io.on("connection", (socket) => {
   socket.on("userConnect", (params) => onUserConnect(socket)(params));
   socket.on("queueJoin", (params) => onQueueJoin(socket)(params));
   socket.on("queueExit", (params) => onQueueExit(socket)(params));
+  socket.on("callUser", (params) => onCallUser(socket)(params));
+  socket.on("answerCall", (params) => onAnswerCall(socket)(params));
 });
 
 const handleDisconnect = (socket: Socket) => () => {
@@ -44,6 +52,16 @@ const handleDisconnect = (socket: Socket) => () => {
   users.delete(socket.id);
   io.emit("newUserConnect", { size: users.size });
 };
+
+const onCallUser: SocketEventCurrier<SocketEvents["callUser"]> =
+  (socket) => () => {
+    console.log("user calling");
+  };
+
+const onAnswerCall: SocketEventCurrier<SocketEvents["answerCall"]> =
+  (socket) => () => {
+    console.log("user answer");
+  };
 
 const onUserConnect: SocketEventCurrier<SocketEvents["userConnect"]> =
   (socket) =>
