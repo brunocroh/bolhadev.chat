@@ -3,6 +3,12 @@ on:
   push:
     branches:
       - main
+
+env:
+  PROJECT: "bolhadev-chat"
+  DOCKER_REPO: "brunoroh/bolhadev-chat"
+  DOCKER_USERNAME: "brunoroh"
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -15,10 +21,10 @@ jobs:
           node-version: "16"
       - name: Build and push Docker image
         run: |
-          docker build -t bolhadev-chat --build-arg PROJECT=server .
-          docker tag whatsapp-newsletter:latest ${{ env.DOCKER_REPO}}:latest
-          docker login -u ${{ env.DOCKER_USERNAME }} -p ${{secrets.DOCKER_TOEKEN}}
-          docker push ${{ env.DOCKER_REPO}}:latest
+          docker build -t $PROJECT --build-arg PROJECT=server .
+          docker tag whatsapp-newsletter:latest $DOCKER_REPO:latest
+          docker login -u $DOCKER_USERNAME -p ${{secrets.DOCKER_TOEKEN}}
+          docker push $DOCKER_REPO:latest
       - name: SSH into EC2 instance and deploy
         uses: appleboy/ssh-action@master
         with:
