@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, ReactElement } from "react";
-import { socket as Socket } from "../../../lib/socket";
-import { usePathname, useSearchParams } from "next/navigation";
+import { socket as Socket } from "@/lib/socket";
+import { usePathname } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
 import { Header } from "@/components/header";
 import Peer from "simple-peer";
@@ -11,29 +11,23 @@ import type { Socket as SocketClient } from "socket.io-client";
 let socket: SocketClient;
 
 export default function Page(): JSX.Element {
-  const videoRef = useRef<ReactElement<HTMLVideoElement>>(null);
-  const remoteRef = useRef<ReactElement<HTMLVideoElement>>(null);
-
-  const connectionRef = useRef();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const remoteRef = useRef<HTMLVideoElement>(null);
 
   const pathname = usePathname();
   const roomId = pathname.split("/room/")[1];
 
-  const searchParams = useSearchParams();
-  const host = searchParams.get("host");
+  const [me, setMe] = useState("");
 
-  const [me, setMe] = useState();
-  const [stream, setStream] = useState();
-
-  const { ready } = useUserMedia(videoRef.current);
+  const { ready } = useUserMedia(videoRef.current!);
 
   useEffect(() => {
-    if (!ready) return;
+    if (!ready || !videoRef?.current?.srcObject) return;
     let me: string;
     let peer = new Peer({
       initiator: true,
       trickle: false,
-      stream: videoRef.current.srcObject,
+      stream: videoRef.current.srcObject as MediaStream,
     });
 
     if (!socket) {
@@ -58,7 +52,7 @@ export default function Page(): JSX.Element {
       });
     });
 
-    socket.on("receiveOffer", ({ to, from, signal }) => {
+    socket.on("receiveOffer", ({ from, signal }) => {
       peer.signal(signal);
       peer.on("signal", (data) => {
         if (data.type === "answer") {
@@ -73,7 +67,9 @@ export default function Page(): JSX.Element {
     });
 
     peer.on("stream", (remoteStream) => {
-      remoteRef.current.srcObject = remoteStream;
+      if (remoteRef.current) {
+        remoteRef.current.srcObject = remoteStream;
+      }
     });
 
     return () => {

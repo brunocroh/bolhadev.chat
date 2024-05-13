@@ -19,8 +19,7 @@ let socket: SocketType;
 
 export default function Page(): JSX.Element {
   const router = useRouter();
-
-  const videoRef = useRef<ReactElement<HTMLVideoElement>>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const {
     audioDevices,
@@ -29,7 +28,7 @@ export default function Page(): JSX.Element {
     setSelectedAudioDevice,
     selectedVideoDevice,
     setSelectedVideoDevice,
-  } = useUserMedia(videoRef.current);
+  } = useUserMedia(videoRef.current!);
 
   const [me, setMe] = useState(null);
   const [usersOnline, setUsersOnline] = useState(null);
