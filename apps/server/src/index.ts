@@ -37,7 +37,7 @@ const rooms = new Map<string, Room>();
 
 const io = new Server<SocketEvents, SocketEvents>({
   cors: {
-    origin: "http://localhost:3000",
+    origin: "*",
   },
 });
 
