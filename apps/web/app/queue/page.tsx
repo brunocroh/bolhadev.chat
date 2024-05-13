@@ -100,6 +100,10 @@ export default function Page(): JSX.Element {
       setUsersOnline(size);
     });
 
+    _socket.on("roomFound", ({ room, roomId }) => {
+      console.log({ room, roomId });
+    });
+
     return () => {
       _socket.off("queueUpdated");
       _socket.close();
