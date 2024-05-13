@@ -64,6 +64,7 @@ export const useUserMedia = (video: HTMLVideoElement) => {
   }, []);
 
   useEffect(() => {
+    if (!selectedAudioDevice || !selectedAudioDevice) return;
     initMedia(video, {
       audio: selectedAudioDevice,
       video: selectedVideoDevice,

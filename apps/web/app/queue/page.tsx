@@ -93,7 +93,10 @@ export default function Page(): JSX.Element {
               <SelectContent>
                 {audioDevices.map((audio) => {
                   return (
-                    <SelectItem key={audio.deviceId} value={audio.deviceId}>
+                    <SelectItem
+                      key={audio.deviceId}
+                      value={audio.deviceId || audio.label}
+                    >
                       {audio.label}
                     </SelectItem>
                   );
@@ -110,7 +113,10 @@ export default function Page(): JSX.Element {
               <SelectContent>
                 {videoDevices.map((video) => {
                   return (
-                    <SelectItem key={video.deviceId} value={video.deviceId}>
+                    <SelectItem
+                      key={video.deviceId}
+                      value={video.deviceId || video.label}
+                    >
                       {video.label}
                     </SelectItem>
                   );

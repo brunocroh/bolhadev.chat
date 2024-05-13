@@ -30,7 +30,7 @@ export default function Page(): JSX.Element {
   const pathname = usePathname();
   const room = pathname.split("/room/")[1];
 
-  const result = useUserMedia(videoRef.current);
+  useUserMedia(videoRef.current);
 
   useEffect(() => {}, []);
 
