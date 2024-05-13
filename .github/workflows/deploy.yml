@@ -8,6 +8,7 @@ env:
   PROJECT: "bolhadev-chat"
   DOCKER_REPO: "brunoroh/bolhadev-chat"
   DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
+  DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
 
 jobs:
   deploy:
@@ -25,7 +26,7 @@ jobs:
         uses: docker/login-action@v2
         with:
           username: $DOCKER_USERNAME
-          password: $DOCKER_USERNAME
+          password: $DOCKER_TOKEN
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
