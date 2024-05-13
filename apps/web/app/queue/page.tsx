@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  useRef,
-  ReactElement,
-  useEffect,
-  useState,
-  useMemo,
-  useCallback,
-} from "react";
+import { useRef, ReactElement, useEffect, useState, useCallback } from "react";
 import { socket } from "../../lib/socket";
 import {
   Select,
@@ -19,40 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Socket } from "socket.io-client";
 import { useRouter } from "next/navigation";
-
-async function getDevices() {
-  try {
-    return await navigator.mediaDevices.enumerateDevices();
-  } catch (error) {
-    console.error("Error fetching devices:", error);
-    return null;
-  }
-}
-
-type MediaConstraints = {
-  audio: string;
-  video: string;
-};
-
-const initMedia = async (
-  video: HTMLVideoElement,
-  constraints: MediaConstraints,
-) => {
-  const stream = await navigator.mediaDevices.getUserMedia({
-    video: { deviceId: { exact: constraints.video } },
-    audio: {
-      deviceId: {
-        exact:
-          "0f481a2672954ca783c56482d03893d1f41a1ead034ed3be1523bb8ecf14d2db",
-      },
-    },
-  });
-
-  if (video) {
-    video.srcObject = stream;
-    video.play();
-  }
-};
+import { useUserMedia } from "@/hooks/useUserMedia";
 
 let _socket: Socket;
 
@@ -61,9 +21,15 @@ export default function Page(): JSX.Element {
 
   const videoRef = useRef<ReactElement<HTMLVideoElement>>(null);
 
-  const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
-  const [selectedAudioDevice, setSelectedAudioDevice] = useState("");
-  const [selectedVideoDevice, setSelectedVideoDevice] = useState("");
+  const {
+    audioDevices,
+    videoDevices,
+    selectedAudioDevice,
+    setSelectedAudioDevice,
+    selectedVideoDevice,
+    setSelectedVideoDevice,
+  } = useUserMedia(videoRef.current);
+
   const [usersOnline, setUsersOnline] = useState(null);
   const [inQueue, setInQueue] = useState(false);
 
@@ -71,27 +37,6 @@ export default function Page(): JSX.Element {
     if (_socket == null) {
       _socket = socket();
     }
-
-    const init = async () => {
-      const devices = await getDevices();
-      if (!devices) return;
-
-      setDevices(devices);
-
-      const audioInput = devices.find((device) => device.kind === "audioinput");
-      const videoInput = devices.find((device) => device.kind === "videoinput");
-
-      if (!audioInput?.deviceId || !videoInput?.deviceId) return;
-
-      setSelectedAudioDevice(audioInput?.deviceId);
-      setSelectedVideoDevice(videoInput?.deviceId);
-      initMedia(videoRef.current, {
-        audio: audioInput,
-        video: audioInput,
-      });
-    };
-
-    init();
 
     _socket.on("connect", () => {
       _socket.emit("userConnect", {
@@ -115,21 +60,6 @@ export default function Page(): JSX.Element {
       _socket.close();
     };
   }, []);
-
-  useEffect(() => {
-    initMedia(videoRef.current, {
-      audio: selectedAudioDevice,
-      video: selectedVideoDevice,
-    });
-  }, [selectedAudioDevice, selectedVideoDevice]);
-
-  const audioDevices = useMemo(() => {
-    return devices.filter((device) => device.kind === "audioinput");
-  }, [devices]);
-
-  const videoDevices = useMemo(() => {
-    return devices.filter((device) => device.kind === "videoinput");
-  }, [devices]);
 
   const onConnect = useCallback(() => {
     setInQueue(!inQueue);
@@ -155,7 +85,10 @@ export default function Page(): JSX.Element {
           ></video>
           <h2>Confira sue microfone e webcam, enquanto aguarda</h2>
           <div className="flex flex-row gap-6 w-full">
-            <Select onValueChange={setSelectedAudioDevice}>
+            <Select
+              onValueChange={setSelectedAudioDevice}
+              value={selectedAudioDevice}
+            >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Audio" />
               </SelectTrigger>
@@ -169,7 +102,10 @@ export default function Page(): JSX.Element {
                 })}
               </SelectContent>
             </Select>
-            <Select onValueChange={setSelectedVideoDevice}>
+            <Select
+              onValueChange={setSelectedVideoDevice}
+              value={selectedVideoDevice}
+            >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Video" />
               </SelectTrigger>
