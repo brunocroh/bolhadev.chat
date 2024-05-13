@@ -12,6 +12,8 @@ env:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -23,7 +25,7 @@ jobs:
         run: |
           docker build -t $PROJECT --build-arg PROJECT=server .
           docker tag $PROJECT:latest $DOCKER_REPO:latest
-          docker login -u $DOCKER_USERNAME -p ${{secrets.DOCKER_TOKEN}}
+          docker login -u $DOCKER_USERNAME -p $DOCKER_TOKEN
           docker push $DOCKER_REPO:latest
       - name: SSH into EC2 instance and deploy
         uses: appleboy/ssh-action@master
