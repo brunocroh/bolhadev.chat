@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Socket } from "socket.io-client";
+import { useRouter } from "next/navigation";
 
 async function getDevices() {
   try {
@@ -56,6 +57,8 @@ const initMedia = async (
 let _socket: Socket;
 
 export default function Page(): JSX.Element {
+  const router = useRouter();
+
   const videoRef = useRef<ReactElement<HTMLVideoElement>>(null);
 
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
@@ -102,10 +105,13 @@ export default function Page(): JSX.Element {
 
     _socket.on("roomFound", ({ room, roomId }) => {
       console.log({ room, roomId });
+      router.push(`room/${roomId}`);
     });
 
     return () => {
       _socket.off("queueUpdated");
+      _socket.off("newUserConnect");
+      _socket.off("roomFound");
       _socket.close();
     };
   }, []);
