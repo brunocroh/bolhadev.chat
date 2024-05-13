@@ -25,7 +25,8 @@ jobs:
         run: |
           docker build -t $PROJECT --build-arg PROJECT=server .
           docker tag $PROJECT:latest $DOCKER_REPO:latest
-          echo -n $DOCKER_TOKEN | docker login -u $DOCKER_USERNAME --password-stdin
+          echo "${{ secrets.EC2_HOST }}"
+          docker login -u $DOCKER_USERNAME -p $DOCKER_TOKEN
           docker push $DOCKER_REPO:latest
       - name: SSH into EC2 instance and deploy
         uses: appleboy/ssh-action@master
