@@ -15,7 +15,7 @@ jobs:
           node-version: "16"
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ vars.PROJECT }} --build-arg PROJECT=server .
+          docker build -t bolhadev-chat --build-arg PROJECT=server .
           docker tag whatsapp-newsletter:latest ${{ vars.DOCKER_REPO}}:latest
           docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{secrets.DOCKER_TOEKEN}}
           docker push ${{ vars.DOCKER_REPO}}:latest
