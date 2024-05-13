@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, ReactElement, useEffect, useState, useCallback } from "react";
-import { socket } from "../../lib/socket";
+import { socket as Socket } from "../../lib/socket";
 import {
   Select,
   SelectContent,
@@ -13,6 +13,8 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
 import { Header } from "@/components/header";
+
+let socket: Socket;
 
 export default function Page(): JSX.Element {
   const router = useRouter();
@@ -28,12 +30,19 @@ export default function Page(): JSX.Element {
     setSelectedVideoDevice,
   } = useUserMedia(videoRef.current);
 
+  const [me, setMe] = useState(null);
   const [usersOnline, setUsersOnline] = useState(null);
   const [inQueue, setInQueue] = useState(false);
 
   useEffect(() => {
-    socket.emit("userConnect", {
-      id: socket.id,
+    let me = null;
+    if (!socket) {
+      socket = Socket();
+    }
+
+    socket.on("me", (_me) => {
+      me = _me;
+      setMe(me);
     });
 
     socket.on("newUserConnect", ({ size }) => {
@@ -42,21 +51,21 @@ export default function Page(): JSX.Element {
 
     socket.on("roomFound", ({ room, roomId }) => {
       console.log({ room, roomId });
-      router.push(`room/${roomId}`);
+      router.push(`/room/${roomId}?host=${room.host}`);
     });
 
     return () => {
       socket.off("queueUpdated");
       socket.off("newUserConnect");
       socket.off("roomFound");
-      // socket.close();
+      socket.close();
     };
   }, []);
 
   const onConnect = useCallback(() => {
     setInQueue(!inQueue);
-    socket.emit(inQueue ? "queueExit" : "queueJoin", { id: socket.id });
-  }, [inQueue]);
+    socket.emit(inQueue ? "queueExit" : "queueJoin", { id: me });
+  }, [inQueue, me]);
 
   return (
     <main className="flex flex-col h-full">

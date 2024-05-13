@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState, ReactElement, forwardRef } from "react";
-import { socket } from "../../../lib/socket";
-import { usePathname } from "next/navigation";
+import { socket as Socket } from "../../../lib/socket";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
 import { Header } from "@/components/header";
 
@@ -28,16 +28,41 @@ const createPeerConnection = () => {
   });
 };
 
+let socket: Socket;
+
 export default function Page(): JSX.Element {
-  const [stream, setStream] = useState();
+  const pathname = usePathname();
+  const roomId = pathname.split("/room/")[1];
+
+  const searchParams = useSearchParams();
+  const host = searchParams.get("host");
   const videoRef = useRef<ReactElement<HTMLVideoElement>>(null);
 
-  const pathname = usePathname();
-  const room = pathname.split("/room/")[1];
+  const [stream, setStream] = useState();
+  const [me, setMe] = useState();
 
   useUserMedia(videoRef.current);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    let me;
+    if (!socket) {
+      socket = Socket();
+    }
+
+    socket.on("me", (_me) => {
+      me = _me;
+      setMe(me);
+
+      socket.emit("roomEnter", {
+        roomId,
+        id: me,
+      });
+    });
+
+    return () => {
+      socket.off("me");
+    };
+  }, []);
 
   return (
     <main className="flex flex-col h-full">
