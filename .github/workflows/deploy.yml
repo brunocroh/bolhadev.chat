@@ -22,7 +22,7 @@ jobs:
       - name: Build and push Docker image
         run: |
           docker build -t $PROJECT --build-arg PROJECT=server .
-          docker tag whatsapp-newsletter:latest $DOCKER_REPO:latest
+          docker tag $PROJECT:latest $DOCKER_REPO:latest
           docker login -u $DOCKER_USERNAME -p ${{secrets.DOCKER_TOEKEN}}
           docker push $DOCKER_REPO:latest
       - name: SSH into EC2 instance and deploy
