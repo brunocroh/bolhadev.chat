@@ -1,18 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, ReactElement, forwardRef } from "react";
+import { useEffect, useRef, useState, ReactElement } from "react";
 import { socket as Socket } from "../../../lib/socket";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
 import { Header } from "@/components/header";
 import Peer from "simple-peer";
 import type { Socket as SocketClient } from "socket.io-client";
-
-type UserProps = {
-  id: string;
-  muted?: boolean;
-  isHost: boolean;
-};
 
 let socket: SocketClient;
 
@@ -36,7 +30,6 @@ export default function Page(): JSX.Element {
   useEffect(() => {
     if (!ready) return;
     let me: string;
-    let signal;
     let peer = new Peer({
       initiator: true,
       trickle: false,

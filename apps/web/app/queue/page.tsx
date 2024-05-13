@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, ReactElement, useEffect, useState, useCallback } from "react";
-import { socket as Socket } from "../../lib/socket";
+import { socket as Socket } from "@/lib/socket";
 import {
   Select,
   SelectContent,
@@ -13,8 +13,9 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
 import { Header } from "@/components/header";
+import type { Socket as SocketType } from "socket.io-client";
 
-let socket: Socket;
+let socket: SocketType;
 
 export default function Page(): JSX.Element {
   const router = useRouter();
