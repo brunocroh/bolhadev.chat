@@ -1,4 +1,4 @@
-import { Server } from "socket.io";
+import { Server, Socket } from "socket.io";
 import { v4 as uuid } from "uuid";
 import cron from "node-cron";
 
@@ -17,42 +17,53 @@ type SocketEvents = {
   roomFound: (props: { room: string[]; roomId: string }) => void;
 };
 
+type SocketEventCurrier<T extends SocketEvents[keyof SocketEvents]> = (
+  socket: Socket,
+) => T;
+
 const queue = new Set();
 const users = new Map();
 const rooms = new Map();
 
-const io = new Server<SocketEvents, SocketEvents>({
+const io = new Server<SocketEvents>({
   cors: {
     origin: "http://localhost:3000",
   },
 });
 
 io.on("connection", (socket) => {
-  socket.on("disconnect", () => {
-    queue.delete(socket.id);
-    users.delete(socket.id);
-
-    io.emit("newUserConnect", { size: queue.size });
-  });
-
-  socket.on("userConnect", ({ id }) => {
-    users.set(id, socket);
-
-    io.emit("newUserConnect", { size: users.size });
-  });
-
-  socket.on("queueJoin", ({ id }) => {
-    queue.add(id);
-
-    io.emit("queueUpdated", { size: queue.size });
-  });
-
-  socket.on("queueExit", ({ id }) => {
-    queue.delete(id);
-
-    io.emit("queueUpdated", { size: queue.size });
-  });
+  socket.on("disconnect", handleDisconnect(socket));
+  socket.on("userConnect", onUserConnect(socket));
+  socket.on("queueJoin", onQueueJoin(socket));
+  socket.on("queueExit", onQueueExit(socket));
 });
+
+const handleDisconnect = (socket: Socket) => () => {
+  queue.delete(socket.id);
+  users.delete(socket.id);
+  io.emit("newUserConnect", { size: queue.size });
+};
+
+const onUserConnect: SocketEventCurrier<SocketEvents["userConnect"]> =
+  (socket) =>
+  ({ id }) => {
+    users.set(id, socket);
+    io.emit("newUserConnect", { size: users.size });
+  };
+
+const onQueueJoin: SocketEventCurrier<SocketEvents["queueJoin"]> =
+  () =>
+  ({ id }) => {
+    queue.add(id);
+    io.emit("queueUpdated", { size: queue.size });
+  };
+
+const onQueueExit: SocketEventCurrier<SocketEvents["queueExit"]> =
+  () =>
+  ({ id }) => {
+    queue.delete(id);
+    io.emit("queueUpdated", { size: queue.size });
+  };
 
 io.listen(4000);
 
