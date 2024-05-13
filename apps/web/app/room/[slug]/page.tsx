@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, ReactElement, forwardRef } from "react";
 import { socket } from "../../../lib/socket";
 import { usePathname } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
+import { Header } from "@/components/header";
 
 type UserProps = {
   id: string;
@@ -35,10 +36,7 @@ export default function Page(): JSX.Element {
 
   return (
     <main className="flex flex-col h-full">
-      <section className="flex p-5 justify-between">
-        <h1>Header</h1>
-        <h1>Github</h1>
-      </section>
+      <Header />
       <section className={"flex h-full place-content-center align-center"}>
         <div>
           <video

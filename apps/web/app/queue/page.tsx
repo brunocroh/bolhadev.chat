@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Socket } from "socket.io-client";
 import { useRouter } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
+import { Header } from "@/components/header";
 
 let _socket: Socket;
 
@@ -68,10 +69,7 @@ export default function Page(): JSX.Element {
 
   return (
     <main className="flex flex-col h-full">
-      <section className="flex p-5 justify-between">
-        <h1>Header</h1>
-        <h1>Github</h1>
-      </section>
+      <Header />
       <section className="flex h-full place-content-center justify-center content-center align-center">
         <div>
           <h1>Estamos procurando alguém para praticar inglês contigo</h1>
