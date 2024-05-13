@@ -17,18 +17,12 @@ jobs:
         with:
           node-version: "16"
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ vars.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_TOKEN }}
-
       - name: Build and push Docker image
-        uses: docker/build-push-action@v3
-        with:
-          context: .
-          push: true
-          tags: brunoroh/bolhadev-chat:latest
+        run: |
+          docker build -t ${{ vars.PROJECT }} --build-arg PROJECT=server .
+          docker tag ${{ vars.PROJECT }}:latest ${{ vars.DOCKER_REPO}}:latest
+          docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{secrets.DOCKER_TOKEN}}
+          docker push ${{ vars.DOCKER_REPO}}:latest
 
       - name: SSH into EC2 instance and deploy
         uses: appleboy/ssh-action@master
