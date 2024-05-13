@@ -32,16 +32,17 @@ const io = new Server<SocketEvents>({
 });
 
 io.on("connection", (socket) => {
-  socket.on("disconnect", handleDisconnect(socket));
-  socket.on("userConnect", onUserConnect(socket));
-  socket.on("queueJoin", onQueueJoin(socket));
-  socket.on("queueExit", onQueueExit(socket));
+  socket.on("disconnect", () => handleDisconnect(socket)());
+  socket.on("userConnect", (params) => onUserConnect(socket)(params));
+  socket.on("queueJoin", (params) => onQueueJoin(socket)(params));
+  socket.on("queueExit", (params) => onQueueExit(socket)(params));
 });
 
 const handleDisconnect = (socket: Socket) => () => {
+  console.log({ id: socket.id });
   queue.delete(socket.id);
   users.delete(socket.id);
-  io.emit("newUserConnect", { size: queue.size });
+  io.emit("newUserConnect", { size: users.size });
 };
 
 const onUserConnect: SocketEventCurrier<SocketEvents["userConnect"]> =
