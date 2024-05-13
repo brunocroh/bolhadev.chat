@@ -53,7 +53,7 @@ const initMedia = async (
   }
 };
 
-let _socket: Socket = null;
+let _socket: Socket;
 
 export default function Page(): JSX.Element {
   const videoRef = useRef<ReactElement<HTMLVideoElement>>(null);
