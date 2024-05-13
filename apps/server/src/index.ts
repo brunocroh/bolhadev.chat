@@ -14,13 +14,17 @@ type SocketEvents = {
   queueExit: (props: { id: string }) => void;
   roomFound: (props: { room: Room; roomId: string }) => void;
   roomEnter: (props: { roomId: string; id: string }) => void;
-  callUser: (props: {
-    userToCall: string;
-    signalData: any;
+  sendOffer: (props: {
+    to: string | undefined;
+    signal: any;
     from: string;
   }) => void;
-  answerCall: (props: { data: any }) => void;
+  receiveOffer: (props: { to: string; from: string; signal: any }) => void;
+  sendAnswer: (props: { to: string; signal: any }) => void;
+  receiveAnswer: (props: { signal: any }) => void;
   me: (id: string) => void;
+  callAccepted: (signal: any) => void;
+  hostCall: (payload: { to: string }) => void;
 };
 
 type SocketEventCurrier<T extends SocketEvents[keyof SocketEvents]> = (
@@ -45,8 +49,8 @@ io.on("connection", (socket) => {
   socket.on("disconnect", () => handleDisconnect(socket)());
   socket.on("queueJoin", (params) => onQueueJoin(socket)(params));
   socket.on("queueExit", (params) => onQueueExit(socket)(params));
-  socket.on("callUser", (params) => onCallUser(socket)(params));
-  socket.on("answerCall", (params) => onAnswerCall(socket)(params));
+  socket.on("sendOffer", (params) => onSendOffer(socket)(params));
+  socket.on("sendAnswer", (params) => onSendAnswer(socket)(params));
   socket.on("roomEnter", (params) => onRoomEnter(socket)(params));
 });
 
@@ -66,18 +70,25 @@ const onRoomEnter: SocketEventCurrier<SocketEvents["roomEnter"]> =
     room.users.push(id);
 
     if (room?.users.length === 2) {
-      console.log("criar sala");
+      socket.emit("hostCall", { to: room.users[0] });
     }
   };
 
-const onCallUser: SocketEventCurrier<SocketEvents["callUser"]> =
-  (socket) => () => {
-    console.log("user calling");
+const onSendOffer: SocketEventCurrier<SocketEvents["sendOffer"]> =
+  () =>
+  ({ to, signal, from }) => {
+    if (!to) return;
+
+    console.log(`user ${from} call to ${to}`);
+
+    io.to(to).emit("receiveOffer", { signal, from, to });
   };
 
-const onAnswerCall: SocketEventCurrier<SocketEvents["answerCall"]> =
-  (socket) => () => {
-    console.log("user answer");
+const onSendAnswer: SocketEventCurrier<SocketEvents["sendAnswer"]> =
+  (socket) =>
+  ({ to, signal }) => {
+    console.log(`user ${socket.id} accept call of ${to}`);
+    io.to(to).emit("receiveAnswer", { signal });
   };
 
 const onQueueJoin: SocketEventCurrier<SocketEvents["queueJoin"]> =
@@ -99,10 +110,7 @@ io.listen(4000);
 cron.schedule("*/5 * * * * *", () => {
   const _queue = Array.from(queue);
 
-  console.log({
-    queue: _queue,
-    users: Array.from(users.keys()),
-  });
+  console.log({ clients: io.engine.clientsCount });
 
   for (; _queue.length >= 2; ) {
     const roomId = uuid();

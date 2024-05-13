@@ -9,6 +9,7 @@ export const useUserMedia = (video: HTMLVideoElement) => {
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedAudioDevice, setSelectedAudioDevice] = useState("");
   const [selectedVideoDevice, setSelectedVideoDevice] = useState("");
+  const [ready, setReady] = useState(false);
 
   const getDevices = useCallback(async () => {
     try {
@@ -35,8 +36,10 @@ export const useUserMedia = (video: HTMLVideoElement) => {
         video.srcObject = stream;
         video.play();
       }
+
+      setReady(true);
     },
-    [],
+    [setReady],
   );
 
   useEffect(() => {
@@ -86,5 +89,6 @@ export const useUserMedia = (video: HTMLVideoElement) => {
     setSelectedAudioDevice,
     selectedVideoDevice,
     setSelectedVideoDevice,
+    ready,
   };
 };
