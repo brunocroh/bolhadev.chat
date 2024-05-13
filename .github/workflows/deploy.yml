@@ -7,7 +7,7 @@ on:
 env:
   PROJECT: "bolhadev-chat"
   DOCKER_REPO: "brunoroh/bolhadev-chat"
-  DOCKER_USERNAME: "brunoroh"
+  DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
 
 jobs:
   deploy:
