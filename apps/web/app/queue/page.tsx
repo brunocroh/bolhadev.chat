@@ -28,6 +28,7 @@ export default function Page(): JSX.Element {
     setSelectedAudioDevice,
     selectedVideoDevice,
     setSelectedVideoDevice,
+    ready,
   } = useUserMedia(videoRef.current!);
 
   const [me, setMe] = useState(null);
@@ -66,6 +67,8 @@ export default function Page(): JSX.Element {
     setInQueue(!inQueue);
     socket.emit(inQueue ? "queueExit" : "queueJoin", { id: me });
   }, [inQueue, me]);
+
+  if (!ready) return;
 
   return (
     <main className="flex flex-col h-full">
