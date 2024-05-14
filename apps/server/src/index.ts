@@ -47,11 +47,11 @@ io.on("connection", (socket) => {
   io.emit("newUserConnect", { size: io.engine.clientsCount });
 
   socket.on("disconnect", () => handleDisconnect(socket)());
-  socket.on("queueJoin", (params) => onQueueJoin(socket)(params));
-  socket.on("queueExit", (params) => onQueueExit(socket)(params));
-  socket.on("sendOffer", (params) => onSendOffer(socket)(params));
-  socket.on("sendAnswer", (params) => onSendAnswer(socket)(params));
-  socket.on("roomEnter", (params) => onRoomEnter(socket)(params));
+  socket.on("queueJoin", onQueueJoin(socket));
+  socket.on("queueExit", onQueueExit(socket));
+  socket.on("sendOffer", onSendOffer(socket));
+  socket.on("sendAnswer", onSendAnswer(socket));
+  socket.on("roomEnter", onRoomEnter(socket));
 });
 
 const handleDisconnect = (socket: Socket) => () => {
@@ -61,7 +61,7 @@ const handleDisconnect = (socket: Socket) => () => {
 };
 
 const onRoomEnter: SocketEventCurrier<SocketEvents["roomEnter"]> =
-  (socket: Socket) =>
+  (socket) =>
   ({ roomId, id }) => {
     const room = rooms.get(roomId);
 
