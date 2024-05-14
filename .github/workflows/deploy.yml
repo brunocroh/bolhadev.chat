@@ -34,4 +34,4 @@ jobs:
             sudo docker pull ${{ vars.DOCKER_REPO }}:latest
             sudo docker stop ${{ vars.PROJECT}} || true
             sudo docker rm ${{ vars.PROJECT}} || true
-            sudo docker run -d -p 80:4000 --name ${{ vars.PROJECT}} ${{ vars.DOCKER_REPO }}:latest
+            sudo docker run -d -p 4000:4000 --name ${{ vars.PROJECT}} ${{ vars.DOCKER_REPO }}:latest
