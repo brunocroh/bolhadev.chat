@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, ReactElement, useEffect, useState, useCallback } from "react";
-import { socket as Socket } from "@/lib/socket";
+import useWebSocket from "react-use-websocket";
 import {
   Select,
   SelectContent,
@@ -13,9 +13,6 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
 import { Header } from "@/components/header";
-import type { Socket as SocketType } from "socket.io-client";
-
-let socket: SocketType;
 
 export default function Page(): JSX.Element {
   const router = useRouter();
@@ -35,37 +32,59 @@ export default function Page(): JSX.Element {
   const [usersOnline, setUsersOnline] = useState(null);
   const [inQueue, setInQueue] = useState(false);
 
-  useEffect(() => {
-    let me = null;
-    if (!socket) {
-      socket = Socket();
-    }
+  const { sendJsonMessage } = useWebSocket(process.env.NEXT_PUBLIC_SOCKET_URL, {
+    onOpen: () => {
+      console.log("connected");
+      sendJsonMessage({
+        type: "me",
+      });
+    },
+    onMessage: (event) => {
+      const data = JSON.parse(event.data);
 
-    socket.on("me", (_me) => {
-      me = _me;
-      setMe(me);
-    });
+      switch (data.type) {
+        case "usersOnline":
+          setUsersOnline(data.size);
+          break;
+        default:
+          break;
+      }
+    },
+  });
 
-    socket.on("newUserConnect", ({ size }) => {
-      setUsersOnline(size);
-    });
-
-    socket.on("roomFound", ({ room, roomId }) => {
-      console.log({ room, roomId });
-      router.push(`/room/${roomId}?host=${room.host}`);
-    });
-
-    return () => {
-      socket.off("queueUpdated");
-      socket.off("newUserConnect");
-      socket.off("roomFound");
-      socket.close();
-    };
-  }, []);
+  // useEffect(() => {
+  //   let me = null;
+  //
+  //
+  //   if (!socket) {
+  //     socket = Socket();
+  //   }
+  //
+  //   socket.on("me", (_me) => {
+  //     me = _me;
+  //     setMe(me);
+  //   });
+  //
+  //   socket.on("newUserConnect", ({ size }) => {
+  //     setUsersOnline(size);
+  //   });
+  //
+  //   socket.on("roomFound", ({ room, roomId }) => {
+  //     console.log({ room, roomId });
+  //     router.push(`/room/${roomId}?host=${room.host}`);
+  //   });
+  //
+  //   return () => {
+  //     socket.off("queueUpdated");
+  //     socket.off("newUserConnect");
+  //     socket.off("roomFound");
+  //     socket.close();
+  //   };
+  // }, []);
 
   const onConnect = useCallback(() => {
     setInQueue(!inQueue);
-    socket.emit(inQueue ? "queueExit" : "queueJoin", { id: me });
+    // socket.emit(inQueue ? "queueExit" : "queueJoin", { id: me });
   }, [inQueue, me]);
 
   if (!ready) return <div>loading</div>;

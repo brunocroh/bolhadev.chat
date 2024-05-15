@@ -1,68 +1,99 @@
-import { Server, Socket } from "socket.io";
+import WebSocket, { WebSocketServer } from "ws";
+import Http from "http";
 import { v4 as uuid } from "uuid";
 import cron from "node-cron";
+
+const server = Http.createServer();
+const wss = new WebSocketServer({ server });
 
 type Room = {
   host?: string;
   users: string[];
 };
 
-type SocketEvents = {
-  queueJoin: (props: { id: string }) => void;
-  queueUpdated: (props: { size: number }) => void;
-  newUserConnect: (props: { size: number }) => void;
-  queueExit: (props: { id: string }) => void;
-  roomFound: (props: { room: Room; roomId: string }) => void;
-  roomEnter: (props: { roomId: string; id: string }) => void;
-  sendOffer: (props: {
-    to: string | undefined;
-    signal: any;
-    from: string;
-  }) => void;
-  receiveOffer: (props: { to: string; from: string; signal: any }) => void;
-  sendAnswer: (props: { to: string; signal: any }) => void;
-  receiveAnswer: (props: { signal: any }) => void;
-  me: (id: string) => void;
-  callAccepted: (signal: any) => void;
-  hostCall: (payload: { to: string }) => void;
+type onQueueUpdate = {
+  userId: string;
 };
 
-type SocketEventCurrier<T extends SocketEvents[keyof SocketEvents]> = (
-  socket: Socket,
-) => T;
+type QueueMe = {
+  type: "me";
+};
+
+type QueueUpdateEvent = {
+  type: "queueJoin" | "queueExit";
+  id: string;
+};
+
+type SocketEvents = QueueUpdateEvent | QueueMe;
+
+function broadcastMessage(json: any) {
+  const data = JSON.stringify(json);
+  for (let user of users.values()) {
+    if (user.readyState === WebSocket.OPEN) {
+      user.send(data);
+    }
+  }
+}
 
 const queue = new Set<string>();
-const users = new Map();
+const users = new Map<string, any>();
 const rooms = new Map<string, Room>();
 
-const io = new Server<SocketEvents, SocketEvents>({
-  cors: {
-    origin: "*",
-  },
+wss.on("connection", (ws) => {
+  console.log("user Connected");
+  const userId = uuid();
+  users.set(userId, ws);
+
+  ws.on("message", (data) => {
+    const event = JSON.parse(data.toString()) as SocketEvents;
+
+    switch (event.type) {
+      case "me":
+        const mee = JSON.stringify({ id: userId });
+        console.log({ size: users.size });
+        ws.send(mee);
+        broadcastMessage({ type: "usersOnline", size: users.size });
+        break;
+      case "queueJoin":
+        onQueueJoin({ userId: event.id });
+        break;
+      case "queueExit":
+        onQueueExit({ userId: event.id });
+        break;
+      default:
+        break;
+    }
+  });
+
+  ws.on("close", () => handleDisconnect(userId));
 });
 
-io.on("connection", (socket) => {
-  socket.emit("me", socket.id);
-  users.set(socket.id, socket);
-  io.emit("newUserConnect", { size: io.engine.clientsCount });
+// ws.on("connection", (socket) => {
+//   socket.emit("me", socket.id);
+//   users.set(socket.id, socket);
+//   ws.emit("newUserConnect", { size: ws.engine.clientsCount });
+//
+//   socket.on("disconnect", () => handleDisconnect(socket)());
+//   socket.on("queueJoin", onQueueJoin(socket));
+//   socket.on("queueExit", onQueueExit(socket));
+//   socket.on("sendOffer", onSendOffer(socket));
+//   socket.on("sendAnswer", onSendAnswer(socket));
+//   socket.on("roomEnter", onRoomEnter(socket));
+// });
 
-  socket.on("disconnect", () => handleDisconnect(socket)());
-  socket.on("queueJoin", onQueueJoin(socket));
-  socket.on("queueExit", onQueueExit(socket));
-  socket.on("sendOffer", onSendOffer(socket));
-  socket.on("sendAnswer", onSendAnswer(socket));
-  socket.on("roomEnter", onRoomEnter(socket));
-});
-
-const handleDisconnect = (socket: Socket) => () => {
-  queue.delete(socket.id);
-  users.delete(socket.id);
-  io.emit("newUserConnect", { size: users.size });
+const handleDisconnect = (userId: string) => {
+  console.log("user disconnected");
+  queue.delete(userId);
+  users.delete(userId);
+  broadcastMessage({
+    type: "teste",
+    size: users.size,
+  });
 };
 
-const onRoomEnter: SocketEventCurrier<SocketEvents["roomEnter"]> =
-  (socket) =>
-  ({ roomId, id }) => {
+const onRoomEnter =
+  (socket: any) =>
+  ({ roomId, id }: any) => {
     const room = rooms.get(roomId);
 
     if (!room) return;
@@ -74,56 +105,46 @@ const onRoomEnter: SocketEventCurrier<SocketEvents["roomEnter"]> =
     }
   };
 
-const onSendOffer: SocketEventCurrier<SocketEvents["sendOffer"]> =
-  () =>
-  ({ to, signal, from }) => {
-    if (!to) return;
+const onSendOffer = ({ to, signal, from }: any) => {
+  if (!to) return;
 
-    console.log(`user ${from} call to ${to}`);
+  console.log(`user ${from} call to ${to} on ${signal}`);
 
-    io.to(to).emit("receiveOffer", { signal, from, to });
+  //ws.to(to).emit("receiveOffer", { signal, from, to });
+};
+
+const onSendAnswer =
+  (socket: any) =>
+  ({ to, signal }: any) => {
+    console.log(`user ${socket.id} accept call of ${to} ${signal}`);
+    // ws.to(to).emit("receiveAnswer", { signal });
   };
 
-const onSendAnswer: SocketEventCurrier<SocketEvents["sendAnswer"]> =
-  (socket) =>
-  ({ to, signal }) => {
-    console.log(`user ${socket.id} accept call of ${to}`);
-    io.to(to).emit("receiveAnswer", { signal });
-  };
+const onQueueJoin = ({ userId }: onQueueUpdate) => {
+  queue.add(userId);
+};
 
-const onQueueJoin: SocketEventCurrier<SocketEvents["queueJoin"]> =
-  () =>
-  ({ id }) => {
-    queue.add(id);
-    io.emit("queueUpdated", { size: queue.size });
-  };
+const onQueueExit = ({ userId }: onQueueUpdate) => {
+  queue.delete(userId);
+};
 
-const onQueueExit: SocketEventCurrier<SocketEvents["queueExit"]> =
-  () =>
-  ({ id }) => {
-    queue.delete(id);
-    io.emit("queueUpdated", { size: queue.size });
-  };
-
-io.listen(4000);
-
-cron.schedule("*/5 * * * * *", () => {
-  const _queue = Array.from(queue);
-
-  console.log({ clients: io.engine.clientsCount });
-
-  for (; _queue.length >= 2; ) {
-    const roomId = uuid();
-    const _users = Array.from(_queue.splice(0, 2));
-    const room: Room = { users: _users, host: _users[0] };
-
-    rooms.set(roomId, { host: undefined, users: [] });
-
-    _users.forEach((user) => {
-      queue.delete(user);
-      users.get(user).emit("roomFound", { room, roomId });
-    });
-  }
+server.listen(4000, () => {
+  console.log("Server up");
 });
 
-console.log("Server up");
+// cron.schedule("*/5 * * * * *", () => {
+//   const _queue = Array.from(queue);
+//
+//   for (; _queue.length >= 2; ) {
+//     const roomId = uuid();
+//     const _users = Array.from(_queue.splice(0, 2));
+//     const room: Room = { users: _users, host: _users[0] };
+//
+//     rooms.set(roomId, { host: undefined, users: [] });
+//
+//     _users.forEach((user) => {
+//       queue.delete(user);
+//       users.get(user).emit("roomFound", { room, roomId });
+//     });
+//   }
+// });
