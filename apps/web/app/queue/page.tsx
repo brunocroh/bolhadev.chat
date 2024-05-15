@@ -68,7 +68,7 @@ export default function Page(): JSX.Element {
     socket.emit(inQueue ? "queueExit" : "queueJoin", { id: me });
   }, [inQueue, me]);
 
-  if (!ready) return;
+  if (!ready) return <div>loading</div>;
 
   return (
     <main className="flex flex-col h-full">
