@@ -31,6 +31,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            sudo docker image prune
             sudo docker pull ${{ vars.DOCKER_REPO }}:latest
             sudo docker stop ${{ vars.PROJECT}} || true
             sudo docker rm ${{ vars.PROJECT}} || true
