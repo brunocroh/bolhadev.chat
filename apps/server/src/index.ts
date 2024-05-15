@@ -1,6 +1,12 @@
 import WebSocket, { WebSocketServer } from "ws";
 import Http from "http";
 import { v4 as uuid } from "uuid";
+import Fastify from "fastify";
+
+const fastify = Fastify({
+  logger: true,
+});
+
 import cron from "node-cron";
 
 const server = Http.createServer();
@@ -148,3 +154,15 @@ server.listen(4000, () => {
 //     });
 //   }
 // });
+//
+
+fastify.get("/", function (_, reply) {
+  reply.send({ hello: "world" });
+});
+
+fastify.listen({ port: 4001 }, function (err, address) {
+  if (err) {
+    fastify.log.error(err);
+    process.exit(1);
+  }
+});
