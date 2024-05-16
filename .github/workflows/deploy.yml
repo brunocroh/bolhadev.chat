@@ -36,9 +36,9 @@ jobs:
             sudo docker image prune
             sudo docker pull ${{ vars.DOCKER_REPO }}/bolhadev-chat:latest
             sudo docker pull ${{ vars.DOCKER_REPO }}/bolhadev-nginx:latest
-            sudo docker stop ${{ vars.PROJECT}}/bolhadev-nginx || true
-            sudo docker stop ${{ vars.PROJECT}}/bolhadev-chat || true
-            sudo docker rm ${{ vars.PROJECT}}/bolhadev-nginx || true
-            sudo docker rm ${{ vars.PROJECT}}/bolhadev-chat || true
+            sudo docker stop bolhadev-nginx || true
+            sudo docker stop bolhadev-chat || true
+            sudo docker rm bolhadev-nginx || true
+            sudo docker rm bolhadev-chat || true
             sudo docker run -d -p 4000:4000 -p 4001:4001 --name bolhadev-chat ${{ vars.DOCKER_REPO }}/bolhadev-chat:latest
             sudo docker run -d -p 80:80 --name bolhadev-nginx ${{ vars.DOCKER_REPO }}/bolhadev-nginx:latest
