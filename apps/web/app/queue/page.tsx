@@ -84,7 +84,7 @@ export default function Page(): JSX.Element {
 
   const onConnect = useCallback(() => {
     setInQueue(!inQueue);
-    // socket.emit(inQueue ? "queueExit" : "queueJoin", { id: me });
+    sendJsonMessage({ type: inQueue ? "queueExit" : "queueJoin", userId: me });
   }, [inQueue, me]);
 
   if (!ready) return <div>loading</div>;
