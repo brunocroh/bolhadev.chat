@@ -24,12 +24,7 @@ export const useUserMedia = (video: HTMLVideoElement) => {
     async (video: HTMLVideoElement, constraints: MediaConstraints) => {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { deviceId: { exact: constraints.video } },
-        audio: {
-          deviceId: {
-            exact:
-              "0f481a2672954ca783c56482d03893d1f41a1ead034ed3be1523bb8ecf14d2db",
-          },
-        },
+        audio: { deviceId: { exact: constraints.audio } },
       });
 
       if (video) {
@@ -75,11 +70,15 @@ export const useUserMedia = (video: HTMLVideoElement) => {
   }, [selectedAudioDevice, selectedVideoDevice]);
 
   const audioDevices = useMemo(() => {
-    return devices.filter((device) => device.kind === "audioinput");
+    return devices.filter(
+      (device) => device.kind === "audioinput" && !!device.deviceId,
+    );
   }, [devices]);
 
   const videoDevices = useMemo(() => {
-    return devices.filter((device) => device.kind === "videoinput");
+    return devices.filter(
+      (device) => device.kind === "videoinput" && !!device.deviceId,
+    );
   }, [devices]);
 
   return {
