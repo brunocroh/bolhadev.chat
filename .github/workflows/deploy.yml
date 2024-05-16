@@ -42,6 +42,7 @@ jobs:
             sudo docker rm bolhadev-chat || true
             sudo docker run -d -p 4000:4000 -p 4001:4001 --name bolhadev-chat --network internal ${{ vars.DOCKER_REPO }}/bolhadev-chat:latest
             sudo docker run -d -p 80:80 \
+            sudo docker run -d -p 443:443 \
             --name bolhadev-nginx \
             -v /var/www/certbot:/var/www/certbot \
             -v /etc/letsencrypt/ssl/fullchain.pem:/etc/nginx/ssl/fullchain.pem \
