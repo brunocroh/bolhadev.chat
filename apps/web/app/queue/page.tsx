@@ -32,25 +32,28 @@ export default function Page(): JSX.Element {
   const [usersOnline, setUsersOnline] = useState(null);
   const [inQueue, setInQueue] = useState(false);
 
-  const { sendJsonMessage } = useWebSocket(process.env.NEXT_PUBLIC_SOCKET_URL, {
-    onOpen: () => {
-      console.log("connected");
-      sendJsonMessage({
-        type: "me",
-      });
-    },
-    onMessage: (event) => {
-      const data = JSON.parse(event.data);
+  const { sendJsonMessage } = useWebSocket(
+    process.env.NEXT_PUBLIC_SOCKET_URL!,
+    {
+      onOpen: () => {
+        console.log("connected");
+        sendJsonMessage({
+          type: "me",
+        });
+      },
+      onMessage: (event) => {
+        const data = JSON.parse(event.data);
 
-      switch (data.type) {
-        case "usersOnline":
-          setUsersOnline(data.size);
-          break;
-        default:
-          break;
-      }
+        switch (data.type) {
+          case "usersOnline":
+            setUsersOnline(data.size);
+            break;
+          default:
+            break;
+        }
+      },
     },
-  });
+  );
 
   // useEffect(() => {
   //   let me = null;

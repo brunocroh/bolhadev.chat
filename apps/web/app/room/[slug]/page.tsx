@@ -8,7 +8,7 @@ import { Header } from "@/components/header";
 import Peer from "simple-peer";
 import type { Socket as SocketClient } from "socket.io-client";
 
-let socket: SocketClient;
+let socket: any;
 
 export default function Page(): JSX.Element {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -34,7 +34,7 @@ export default function Page(): JSX.Element {
       socket = Socket();
     }
 
-    socket.on("me", (_me) => {
+    socket.on("me", (_me: any) => {
       me = _me;
       setMe(me);
 
@@ -44,7 +44,7 @@ export default function Page(): JSX.Element {
       });
     });
 
-    socket.on("hostCall", ({ to }) => {
+    socket.on("hostCall", ({ to }: any) => {
       peer.on("signal", (data) => {
         if (data.type === "offer") {
           socket.emit("sendOffer", { to, signal: data, from: me });
@@ -52,7 +52,7 @@ export default function Page(): JSX.Element {
       });
     });
 
-    socket.on("receiveOffer", ({ from, signal }) => {
+    socket.on("receiveOffer", ({ from, signal }: any) => {
       peer.signal(signal);
       peer.on("signal", (data) => {
         if (data.type === "answer") {
@@ -61,7 +61,7 @@ export default function Page(): JSX.Element {
       });
     });
 
-    socket.on("receiveAnswer", ({ signal }) => {
+    socket.on("receiveAnswer", ({ signal }: any) => {
       console.log({ received: "receiveAnswer", signal });
       peer.signal(signal);
     });
