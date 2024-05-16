@@ -1,5 +1,12 @@
+version: "3.8"
+
 services:
   bolhadev-chat:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PROJECT: server
     image: brunoroh/bolhadev-chat:latest
     ports:
       - "4000:4000"
@@ -7,6 +14,7 @@ services:
 
   nginx:
     build: ./docker/nginx/
+    image: brunoroh/bolhadev-nginx:latest
     ports:
       - "80:80"
     depends_on:

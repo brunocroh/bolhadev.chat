@@ -19,10 +19,12 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ vars.PROJECT }} --build-arg PROJECT=server .
-          docker tag ${{ vars.PROJECT }}:latest ${{ vars.DOCKER_REPO}}:latest
+          docker compose build
+          docker tag brunoroh/bolhadev-chat:latest ${{ vars.DOCKER_REPO}}/bolhadev-chat:latest
+          docker tag brunoroh/bolhadev-nginx:latest ${{ vars.DOCKER_REPO}}/bolhadev-nginx:latest
           docker login -u ${{ vars.DOCKER_USERNAME }} -p ${{secrets.DOCKER_TOKEN}}
-          docker push ${{ vars.DOCKER_REPO}}:latest
+          docker push ${{ vars.DOCKER_REPO}}/bolhadev-chat:latest
+          docker push ${{ vars.DOCKER_REPO}}/bolhadev-nginx:latest
 
       - name: SSH into EC2 instance and deploy
         uses: appleboy/ssh-action@master
@@ -32,7 +34,11 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             sudo docker image prune
-            sudo docker pull ${{ vars.DOCKER_REPO }}:latest
-            sudo docker stop ${{ vars.PROJECT}} || true
-            sudo docker rm ${{ vars.PROJECT}} || true
-            sudo docker run -d -p 80:4000 -p 4001:4001 --name ${{ vars.PROJECT}} ${{ vars.DOCKER_REPO }}:latest
+            sudo docker pull ${{ vars.DOCKER_REPO }}/bolhadev-chat:latest
+            sudo docker pull ${{ vars.DOCKER_REPO }}/bolhadev-nginx:latest
+            sudo docker stop ${{ vars.PROJECT}}/bolhadev-nginx || true
+            sudo docker stop ${{ vars.PROJECT}}/bolhadev-chat || true
+            sudo docker rm ${{ vars.PROJECT}}/bolhadev-nginx || true
+            sudo docker rm ${{ vars.PROJECT}}/bolhadev-chat || true
+            sudo docker run -d -p 4000:4000 -p 4001:4001 --name bolhadev-chat ${{ vars.DOCKER_REPO }}/bolhadev-chat:latest
+            sudo docker run -d -p 80:80 --name bolhadev-nginx ${{ vars.DOCKER_REPO }}/bolhadev-nginx:latest
