@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, ReactElement, useEffect, useState, useCallback } from "react";
+import { useRef, useState, useCallback } from "react";
 import useWebSocket from "react-use-websocket";
 import {
   Select,
@@ -25,7 +25,6 @@ export default function Page(): JSX.Element {
     setSelectedAudioDevice,
     selectedVideoDevice,
     setSelectedVideoDevice,
-    ready,
   } = useUserMedia(videoRef.current!);
 
   const [me, setMe] = useState(null);

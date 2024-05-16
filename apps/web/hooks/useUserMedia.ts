@@ -20,11 +20,15 @@ export const useUserMedia = (video: HTMLVideoElement) => {
     }
   }, []);
 
-  const initMedia = useCallback(
+  const updateUserMedia = useCallback(
     async (video: HTMLVideoElement, constraints: MediaConstraints) => {
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { deviceId: { exact: constraints.video } },
-        audio: { deviceId: { exact: constraints.audio } },
+        video: constraints.video
+          ? { deviceId: { exact: constraints.video } }
+          : true,
+        audio: constraints.audio
+          ? { deviceId: { exact: constraints.audio } }
+          : true,
       });
 
       if (video) {
@@ -52,7 +56,7 @@ export const useUserMedia = (video: HTMLVideoElement) => {
       setSelectedAudioDevice(audioInput?.deviceId);
       setSelectedVideoDevice(videoInput?.deviceId);
 
-      initMedia(video, {
+      updateUserMedia(video, {
         audio: audioInput.deviceId,
         video: audioInput.deviceId,
       });
@@ -63,7 +67,7 @@ export const useUserMedia = (video: HTMLVideoElement) => {
 
   useEffect(() => {
     if (!selectedAudioDevice || !selectedAudioDevice) return;
-    initMedia(video, {
+    updateUserMedia(video, {
       audio: selectedAudioDevice,
       video: selectedVideoDevice,
     });
@@ -80,6 +84,8 @@ export const useUserMedia = (video: HTMLVideoElement) => {
       (device) => device.kind === "videoinput" && !!device.deviceId,
     );
   }, [devices]);
+
+  console.log({ devices });
 
   return {
     audioDevices,
