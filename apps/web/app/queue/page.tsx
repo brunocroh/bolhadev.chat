@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
 import { Header } from "@/components/header";
+import { Mic } from "lucide-react";
 
 export default function Page(): JSX.Element {
   const router = useRouter();
@@ -121,7 +122,9 @@ export default function Page(): JSX.Element {
                       key={audio.deviceId}
                       value={audio.deviceId || audio.label}
                     >
-                      {audio.label}
+                      <div className="flex flex-row gap-2 items-center">
+                        <Mic size={12} /> {audio.label}
+                      </div>
                     </SelectItem>
                   );
                 })}

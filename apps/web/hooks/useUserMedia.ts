@@ -12,15 +12,6 @@ export const useUserMedia = (video: HTMLVideoElement) => {
   const [ready, setReady] = useState(false);
   const [accessGranted, setAccessGranted] = useState(false);
 
-  const getDevices = useCallback(async () => {
-    try {
-      return await navigator.mediaDevices.enumerateDevices();
-    } catch (error) {
-      console.error("Error fetching devices:", error);
-      return null;
-    }
-  }, []);
-
   const updateUserMedia = useCallback(
     async (video: HTMLVideoElement, constraints: MediaConstraints) => {
       console.log("requestAccess");
@@ -32,8 +23,6 @@ export const useUserMedia = (video: HTMLVideoElement) => {
           ? { deviceId: { exact: constraints.audio } }
           : true,
       });
-
-      console.log({ stream });
 
       if (video) {
         video.srcObject = stream;
@@ -47,36 +36,17 @@ export const useUserMedia = (video: HTMLVideoElement) => {
   );
 
   const getDevices = useCallback(async () => {
-    const devices = await getDevices();
+    const devices = await navigator.mediaDevices.enumerateDevices();
     setDevices(devices || []);
   }, []);
 
   useEffect(() => {
+    console.log("fetchDevices");
     getDevices();
   }, [accessGranted]);
 
   useEffect(() => {
     const init = async () => {
-      let audioInput;
-      let videoInput;
-      const devices = await getDevices();
-      if (devices) {
-        setDevices(devices);
-
-        audioInput = devices.find((device) => device.kind === "audioinput");
-        videoInput = devices.find((device) => device.kind === "videoinput");
-
-        if (audioInput?.deviceId! && videoInput?.deviceId) {
-          setSelectedAudioDevice(audioInput?.deviceId);
-          setSelectedVideoDevice(videoInput?.deviceId);
-
-          updateUserMedia(video, {
-            audio: audioInput.deviceId,
-            video: audioInput.deviceId,
-          });
-        }
-      }
-
       updateUserMedia(video, {
         audio: "",
         video: "",
@@ -105,8 +75,6 @@ export const useUserMedia = (video: HTMLVideoElement) => {
       (device) => device.kind === "videoinput" && !!device.deviceId,
     );
   }, [devices]);
-
-  console.log({ devices });
 
   return {
     audioDevices,
