@@ -33,7 +33,7 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo docker image prune
+            sudo docker image 
             sudo docker pull ${{ vars.DOCKER_REPO }}/bolhadev-chat:latest
             sudo docker pull ${{ vars.DOCKER_REPO }}/bolhadev-nginx:latest
             sudo docker stop bolhadev-nginx || true
@@ -41,4 +41,4 @@ jobs:
             sudo docker rm bolhadev-nginx || true
             sudo docker rm bolhadev-chat || true
             sudo docker run -d -p 4000:4000 -p 4001:4001 --name bolhadev-chat --network internal ${{ vars.DOCKER_REPO }}/bolhadev-chat:latest
-            sudo docker run -d -p 80:80 --name bolhadev-nginx --network internal ${{ vars.DOCKER_REPO }}/bolhadev-nginx:latest
+            sudo docker run -d -p 80:80 --name bolhadev-nginx -v /var/www/api:/public -v /etc/letsencrypt/ssl/fullchain.pem:/etc/nginx/ssl/fullchain.pem -v /etc/letsencrypt/ssl/privkey.pem:/etc/nginx/ssl/privkey.pem --network internal ${{ vars.DOCKER_REPO }}/bolhadev-nginx:latest
