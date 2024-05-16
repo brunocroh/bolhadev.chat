@@ -46,6 +46,15 @@ export const useUserMedia = (video: HTMLVideoElement) => {
     [setReady],
   );
 
+  const getDevices = useCallback(async () => {
+    const devices = await getDevices();
+    setDevices(devices || []);
+  }, []);
+
+  useEffect(() => {
+    getDevices();
+  }, [accessGranted]);
+
   useEffect(() => {
     const init = async () => {
       let audioInput;
