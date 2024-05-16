@@ -51,9 +51,8 @@ WORKDIR /app
 COPY --from=builder --chown=nodejs:nodejs /app .
 WORKDIR /app/apps/${PROJECT}
 
-ARG PORT=3000
-ENV PORT=${PORT}
 ENV NODE_ENV=production
-EXPOSE ${PORT}
+EXPOSE 4000
+EXPOSE 4001
 
 CMD node dist/index

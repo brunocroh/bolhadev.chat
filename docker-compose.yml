@@ -1,0 +1,13 @@
+services:
+  bolhadev-chat:
+    image: brunoroh/bolhadev-chat:latest
+    ports:
+      - "4000:4000"
+      - "4001:4001"
+
+  nginx:
+    build: ./docker/nginx/
+    ports:
+      - "80:80"
+    depends_on:
+      - bolhadev-chat
