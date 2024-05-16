@@ -25,6 +25,7 @@ export default function Page(): JSX.Element {
     setSelectedAudioDevice,
     selectedVideoDevice,
     setSelectedVideoDevice,
+    accessGranted,
   } = useUserMedia(videoRef.current!);
 
   const [me, setMe] = useState(null);
@@ -96,6 +97,7 @@ export default function Page(): JSX.Element {
         <div>
           <h1>Estamos procurando alguém para praticar inglês contigo</h1>
           <h1>QueueSize: {usersOnline}</h1>
+          <h1>acessGranted: {accessGranted}</h1>
           <video
             className="[transform:rotateY(180deg)] w-96 h-96"
             ref={videoRef}

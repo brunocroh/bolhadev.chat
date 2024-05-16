@@ -10,6 +10,7 @@ export const useUserMedia = (video: HTMLVideoElement) => {
   const [selectedAudioDevice, setSelectedAudioDevice] = useState("");
   const [selectedVideoDevice, setSelectedVideoDevice] = useState("");
   const [ready, setReady] = useState(false);
+  const [accessGranted, setAccessGranted] = useState(false);
 
   const getDevices = useCallback(async () => {
     try {
@@ -22,6 +23,7 @@ export const useUserMedia = (video: HTMLVideoElement) => {
 
   const updateUserMedia = useCallback(
     async (video: HTMLVideoElement, constraints: MediaConstraints) => {
+      console.log("requestAccess");
       const stream = await navigator.mediaDevices.getUserMedia({
         video: constraints.video
           ? { deviceId: { exact: constraints.video } }
@@ -31,9 +33,12 @@ export const useUserMedia = (video: HTMLVideoElement) => {
           : true,
       });
 
+      console.log({ stream });
+
       if (video) {
         video.srcObject = stream;
         video.play();
+        setAccessGranted(true);
       }
 
       setReady(true);
@@ -43,22 +48,29 @@ export const useUserMedia = (video: HTMLVideoElement) => {
 
   useEffect(() => {
     const init = async () => {
+      let audioInput;
+      let videoInput;
       const devices = await getDevices();
-      if (!devices) return;
+      if (devices) {
+        setDevices(devices);
 
-      setDevices(devices);
+        audioInput = devices.find((device) => device.kind === "audioinput");
+        videoInput = devices.find((device) => device.kind === "videoinput");
 
-      const audioInput = devices.find((device) => device.kind === "audioinput");
-      const videoInput = devices.find((device) => device.kind === "videoinput");
+        if (audioInput?.deviceId! && videoInput?.deviceId) {
+          setSelectedAudioDevice(audioInput?.deviceId);
+          setSelectedVideoDevice(videoInput?.deviceId);
 
-      if (!audioInput?.deviceId || !videoInput?.deviceId) return;
-
-      setSelectedAudioDevice(audioInput?.deviceId);
-      setSelectedVideoDevice(videoInput?.deviceId);
+          updateUserMedia(video, {
+            audio: audioInput.deviceId,
+            video: audioInput.deviceId,
+          });
+        }
+      }
 
       updateUserMedia(video, {
-        audio: audioInput.deviceId,
-        video: audioInput.deviceId,
+        audio: "",
+        video: "",
       });
     };
 
@@ -95,5 +107,6 @@ export const useUserMedia = (video: HTMLVideoElement) => {
     selectedVideoDevice,
     setSelectedVideoDevice,
     ready,
+    accessGranted,
   };
 };
