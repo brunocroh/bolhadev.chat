@@ -33,7 +33,6 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo docker image prune
             sudo docker pull ${{ vars.DOCKER_REPO }}/bolhadev-chat:latest
             sudo docker pull ${{ vars.DOCKER_REPO }}/bolhadev-nginx:latest
             sudo docker stop bolhadev-nginx || true
@@ -48,3 +47,4 @@ jobs:
             -v /etc/letsencrypt/ssl/privkey.pem:/etc/nginx/ssl/privkey.pem \
             --network internal \
             ${{ vars.DOCKER_REPO }}/bolhadev-nginx:latest
+            sudo docker image prune
