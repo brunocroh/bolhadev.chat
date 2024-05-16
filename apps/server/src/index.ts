@@ -56,7 +56,6 @@ wss.on("connection", (ws) => {
     switch (event.type) {
       case "me":
         const mee = JSON.stringify({ id: userId });
-        console.log({ size: users.size });
         ws.send(mee);
         broadcastMessage({ type: "usersOnline", size: users.size });
         break;
