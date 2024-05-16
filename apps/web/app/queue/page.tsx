@@ -90,8 +90,6 @@ export default function Page(): JSX.Element {
     sendJsonMessage({ type: inQueue ? "queueExit" : "queueJoin", userId: me });
   }, [inQueue, me]);
 
-  if (!ready) return <div>loading</div>;
-
   return (
     <main className="flex flex-col h-full">
       <Header />
