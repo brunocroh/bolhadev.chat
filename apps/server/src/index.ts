@@ -66,7 +66,6 @@ const users = new Map<string, any>();
 const rooms = new Map<string, Room>();
 
 wss.on("connection", (ws) => {
-  console.log("user Connected");
   const userId = uuid();
   users.set(userId, ws);
 
@@ -75,8 +74,7 @@ wss.on("connection", (ws) => {
 
     switch (event.type) {
       case "me":
-        const mee = JSON.stringify({ id: userId });
-        ws.send(mee);
+        ws.send(JSON.stringify({ type: "me", id: userId }));
         broadcastMessage({ type: "usersOnline", size: users.size });
         break;
       case "queueJoin":
@@ -125,19 +123,18 @@ const handleDisconnect = (userId: string) => {
   });
 };
 
-const onRoomEnter =
-  (socket: any) =>
-  ({ roomId, id }: any) => {
-    const room = rooms.get(roomId);
+const onRoomEnter = ({ roomId, id }: any) => {
+  const room = rooms.get(roomId);
 
-    if (!room) return;
+  if (!room) return;
 
-    room.users.push(id);
+  room.users.push(id);
 
-    if (room?.users.length === 2) {
-      socket.emit("hostCall", { to: room.users[0] });
-    }
-  };
+  if (room?.users.length === 2) {
+    const _user = users.get(room.users[0]);
+    _user.send({ type: "hostCall", to: room.users[0] });
+  }
+};
 
 const onSendOffer = ({ to, signal, from }: SendOfferEvent) => {
   if (!to) return;
@@ -185,23 +182,22 @@ server.listen(4000, () => {
   console.log("Server up");
 });
 
-// cron.schedule("*/5 * * * * *", () => {
-//   const _queue = Array.from(queue);
-//
-//   for (; _queue.length >= 2; ) {
-//     const roomId = uuid();
-//     const _users = Array.from(_queue.splice(0, 2));
-//     const room: Room = { users: _users, host: _users[0] };
-//
-//     rooms.set(roomId, { host: undefined, users: [] });
-//
-//     _users.forEach((user) => {
-//       queue.delete(user);
-//       users.get(user).emit("roomFound", { room, roomId });
-//     });
-//   }
-// });
-//
+cron.schedule("*/5 * * * * *", () => {
+  const _queue = Array.from(queue);
+
+  for (; _queue.length >= 2; ) {
+    const roomId = uuid();
+    const _users = Array.from(_queue.splice(0, 2));
+    const room: Room = { users: _users, host: _users[0] };
+
+    rooms.set(roomId, { host: undefined, users: [] });
+
+    _users.forEach((user) => {
+      queue.delete(user);
+      users.get(user).send(JSON.stringify({ type: "roomFound", room, roomId }));
+    });
+  }
+});
 
 fastify.get("/", function (_, reply) {
   reply.send({ hello: "world" });
