@@ -1,83 +1,112 @@
 "use client";
 
-import { useEffect, useRef, useState, ReactElement } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  ReactElement,
+  MutableRefObject,
+} from "react";
 import { socket as Socket } from "@/lib/socket";
 import { usePathname } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
 import { Header } from "@/components/header";
 import Peer from "simple-peer";
-import type { Socket as SocketClient } from "socket.io-client";
+import useWebSocket from "react-use-websocket";
 
 let socket: any;
 
 export default function Page(): JSX.Element {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const peerRef: MutableRefObject<Peer.Instance | null> = useRef(null);
+  const videoRef: MutableRefObject<HTMLVideoElement | null> = useRef(null);
   const remoteRef = useRef<HTMLVideoElement>(null);
 
   const pathname = usePathname();
   const roomId = pathname.split("/room/")[1];
 
   const [me, setMe] = useState("");
+  const [videoReady, setVideoReady] = useState(false);
 
-  const { ready } = useUserMedia(videoRef.current!);
+  const { ready, accessGranted, stream } = useUserMedia(videoRef.current!);
+
+  const { sendJsonMessage } = useWebSocket(
+    process.env.NEXT_PUBLIC_SOCKET_URL!,
+    {
+      onOpen: () => {
+        sendJsonMessage({
+          type: "me",
+        });
+      },
+      onMessage: (event) => {
+        const data = JSON.parse(event.data);
+
+        switch (data.type) {
+          case "me":
+            setMe(data.id);
+            break;
+          case "hostCall":
+            peerRef.current?.on("signal", (signalData) => {
+              console.log({ callToMyself: data.to === me });
+              if (signalData.type === "offer") {
+                sendJsonMessage({
+                  type: "sendOffer",
+                  to: data.to,
+                  signal: signalData,
+                  from: me,
+                });
+              }
+            });
+            break;
+          case "receiveOffer":
+            console.log("receiveOffer");
+            peerRef.current?.signal(data.signal);
+            peerRef.current?.on("signal", (signalData) => {
+              if (signalData.type === "answer") {
+                sendJsonMessage({
+                  type: "sendAnswer",
+                  to: data.from,
+                  signal: signalData,
+                });
+              }
+            });
+            break;
+          case "receiveAnswer":
+            console.log("receiveAnswer");
+            peerRef.current?.signal(data.signal);
+            break;
+          default:
+            break;
+        }
+      },
+    },
+  );
 
   useEffect(() => {
-    if (!ready || !videoRef?.current?.srcObject) return;
-    let me: string;
-    let peer = new Peer({
-      initiator: true,
-      trickle: false,
-      stream: videoRef.current.srcObject as MediaStream,
-    });
+    if (videoRef.current && stream) {
+      videoRef.current.srcObject = stream;
+      videoRef.current.play();
 
-    if (!socket) {
-      socket = Socket();
+      setVideoReady(true);
+
+      peerRef.current = new Peer({
+        initiator: true,
+        trickle: false,
+        stream: videoRef.current.srcObject as MediaStream,
+      });
+
+      peerRef.current?.on("stream", (remoteStream) => {
+        if (remoteRef.current) {
+          remoteRef.current.srcObject = remoteStream;
+        }
+      });
     }
+  }, [stream]);
 
-    socket.on("me", (_me: any) => {
-      me = _me;
-      setMe(me);
-
-      socket.emit("roomEnter", {
-        roomId,
-        id: me,
-      });
-    });
-
-    socket.on("hostCall", ({ to }: any) => {
-      peer.on("signal", (data) => {
-        if (data.type === "offer") {
-          socket.emit("sendOffer", { to, signal: data, from: me });
-        }
-      });
-    });
-
-    socket.on("receiveOffer", ({ from, signal }: any) => {
-      peer.signal(signal);
-      peer.on("signal", (data) => {
-        if (data.type === "answer") {
-          socket.emit("sendAnswer", { to: from, signal: data });
-        }
-      });
-    });
-
-    socket.on("receiveAnswer", ({ signal }: any) => {
-      console.log({ received: "receiveAnswer", signal });
-      peer.signal(signal);
-    });
-
-    peer.on("stream", (remoteStream) => {
-      if (remoteRef.current) {
-        remoteRef.current.srcObject = remoteStream;
-      }
-    });
-
-    return () => {
-      socket.off("me");
-      socket.off("hostCall");
-      socket.disconnect();
-    };
-  }, [ready]);
+  useEffect(() => {
+    if (videoReady && me) {
+      sendJsonMessage({ type: "roomEnter", roomId, id: me });
+    }
+  }, [me, videoReady]);
 
   return (
     <main className="flex flex-col h-full">
@@ -87,6 +116,8 @@ export default function Page(): JSX.Element {
       >
         <div>
           <h1>{me}</h1>
+          <h1>READY: {ready ? "ready" : "not Ready"}</h1>
+          <h1>ACCESS: {accessGranted ? "false" : "true"}</h1>
         </div>
         <div className="flex flex-row gap-2">
           <video
@@ -96,12 +127,7 @@ export default function Page(): JSX.Element {
             autoPlay={true}
             muted={true}
           ></video>
-          <video
-            ref={remoteRef}
-            playsInline
-            autoPlay={true}
-            muted={true}
-          ></video>
+          <video ref={remoteRef} playsInline autoPlay={true}></video>
         </div>
       </section>
     </main>

@@ -6,6 +6,7 @@ type MediaConstraints = {
 };
 
 export const useUserMedia = (video: HTMLVideoElement) => {
+  const [stream, setStream] = useState<MediaStream | null>(null);
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedAudioDevice, setSelectedAudioDevice] = useState("");
   const [selectedVideoDevice, setSelectedVideoDevice] = useState("");
@@ -29,12 +30,8 @@ export const useUserMedia = (video: HTMLVideoElement) => {
           : true,
       });
 
-      if (video) {
-        video.srcObject = stream;
-        video.play();
-        setAccessGranted(true);
-      }
-
+      setStream(stream);
+      setAccessGranted(true);
       setReady(true);
     },
     [setReady],
@@ -98,5 +95,6 @@ export const useUserMedia = (video: HTMLVideoElement) => {
     setSelectedVideoDevice,
     ready,
     accessGranted,
+    stream,
   };
 };

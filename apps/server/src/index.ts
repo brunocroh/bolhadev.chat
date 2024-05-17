@@ -114,7 +114,6 @@ wss.on("connection", (ws) => {
 // });
 
 const handleDisconnect = (userId: string) => {
-  console.log("user disconnected");
   queue.delete(userId);
   users.delete(userId);
   broadcastMessage({
@@ -131,8 +130,11 @@ const onRoomEnter = ({ roomId, id }: any) => {
   room.users.push(id);
 
   if (room?.users.length === 2) {
-    const _user = users.get(room.users[0]);
-    _user.send({ type: "hostCall", to: room.users[0] });
+    const host = room.users[0];
+    const participant = room.users[1];
+    room.host = host;
+    const _user = users.get(host);
+    _user.send(JSON.stringify({ type: "hostCall", to: participant }));
   }
 };
 
@@ -146,12 +148,14 @@ const onSendOffer = ({ to, signal, from }: SendOfferEvent) => {
     return;
   }
 
-  userTo.send({
-    type: "receiveOffer",
-    signal,
-    from,
-    to,
-  });
+  userTo.send(
+    JSON.stringify({
+      type: "receiveOffer",
+      signal,
+      from,
+      to,
+    }),
+  );
 };
 
 const onSendAnswer = ({ to, signal }: SendAnswerEvent) => {
@@ -164,10 +168,12 @@ const onSendAnswer = ({ to, signal }: SendAnswerEvent) => {
     return;
   }
 
-  userTo.send({
-    type: "receiveAnswer",
-    signal,
-  });
+  userTo.send(
+    JSON.stringify({
+      type: "receiveAnswer",
+      signal,
+    }),
+  );
 };
 
 const onQueueJoin = ({ userId }: QueueUpdateEvent) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useCallback } from "react";
+import { useRef, useState, useCallback, useEffect } from "react";
 import useWebSocket from "react-use-websocket";
 import {
   Select,
@@ -27,12 +27,19 @@ export default function Page(): JSX.Element {
     selectedVideoDevice,
     setSelectedVideoDevice,
     accessGranted,
+    stream,
   } = useUserMedia(videoRef.current!);
 
   const [me, setMe] = useState(null);
   const [usersOnline, setUsersOnline] = useState(null);
   const [inQueue, setInQueue] = useState(false);
 
+  useEffect(() => {
+    if (videoRef.current && stream) {
+      videoRef.current.srcObject = stream;
+      videoRef.current.play();
+    }
+  }, [stream]);
   const { sendJsonMessage } = useWebSocket(
     process.env.NEXT_PUBLIC_SOCKET_URL!,
     {
