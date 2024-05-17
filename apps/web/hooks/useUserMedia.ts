@@ -14,7 +14,7 @@ export const useUserMedia = (video: HTMLVideoElement) => {
 
   const updateUserMedia = useCallback(
     async (video: HTMLVideoElement, constraints: MediaConstraints) => {
-      let _video = false;
+      let _video: MediaTrackConstraints | boolean = false;
 
       if (constraints.video !== "off") {
         _video = constraints.video
