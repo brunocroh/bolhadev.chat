@@ -63,8 +63,12 @@ export default function Page(): JSX.Element {
             setMe(data.id);
             break;
           case "hostCall":
+            peerRef.current = new Peer({
+              initiator: true,
+              trickle: false,
+              stream: videoRef.current.srcObject as MediaStream,
+            });
             peerRef.current?.on("signal", (signalData) => {
-              console.log({ callToMyself: data.to === me });
               if (signalData.type === "offer") {
                 sendJsonMessage({
                   type: "sendOffer",
@@ -107,7 +111,7 @@ export default function Page(): JSX.Element {
       setVideoReady(true);
 
       peerRef.current = new Peer({
-        initiator: true,
+        initiator: false,
         trickle: false,
         stream: videoRef.current.srcObject as MediaStream,
       });
