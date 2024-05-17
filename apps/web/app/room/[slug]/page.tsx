@@ -13,6 +13,14 @@ import { useUserMedia } from "@/hooks/useUserMedia";
 import { Header } from "@/components/header";
 import Peer from "simple-peer";
 import useWebSocket from "react-use-websocket";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Mic } from "lucide-react";
 
 let socket: any;
 
@@ -27,7 +35,17 @@ export default function Page(): JSX.Element {
   const [me, setMe] = useState("");
   const [videoReady, setVideoReady] = useState(false);
 
-  const { ready, accessGranted, stream } = useUserMedia(videoRef.current!);
+  const {
+    ready,
+    accessGranted,
+    stream,
+    setSelectedAudioDevice,
+    setSelectedVideoDevice,
+    selectedAudioDevice,
+    selectedVideoDevice,
+    audioDevices,
+    videoDevices,
+  } = useUserMedia(videoRef.current!);
 
   const { sendJsonMessage } = useWebSocket(
     process.env.NEXT_PUBLIC_SOCKET_URL!,
@@ -128,6 +146,50 @@ export default function Page(): JSX.Element {
             muted={true}
           ></video>
           <video ref={remoteRef} playsInline autoPlay={true}></video>
+        </div>
+        <div className="flex flex-row gap-6 w-full">
+          <Select
+            onValueChange={setSelectedAudioDevice}
+            value={selectedAudioDevice}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Audio" />
+            </SelectTrigger>
+            <SelectContent>
+              {audioDevices.map((audio) => {
+                return (
+                  <SelectItem
+                    key={audio.deviceId}
+                    value={audio.deviceId || audio.label}
+                  >
+                    <div className="flex flex-row gap-2 items-center">
+                      <Mic size={12} /> {audio.label}
+                    </div>
+                  </SelectItem>
+                );
+              })}
+            </SelectContent>
+          </Select>
+          <Select
+            onValueChange={setSelectedVideoDevice}
+            value={selectedVideoDevice}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Video" />
+            </SelectTrigger>
+            <SelectContent>
+              {videoDevices.map((video) => {
+                return (
+                  <SelectItem
+                    key={video.deviceId}
+                    value={video.deviceId || video.label}
+                  >
+                    {video.label}
+                  </SelectItem>
+                );
+              })}
+            </SelectContent>
+          </Select>
         </div>
       </section>
     </main>
