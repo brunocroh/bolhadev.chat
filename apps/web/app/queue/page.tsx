@@ -44,10 +44,18 @@ export default function Page(): JSX.Element {
       },
       onMessage: (event) => {
         const data = JSON.parse(event.data);
+        console.log({ data });
 
         switch (data.type) {
+          case "me":
+            setMe(data.id);
+            break;
           case "usersOnline":
             setUsersOnline(data.size);
+            break;
+          case "roomFound":
+            console.log({ data });
+            router.push(`/room/${data.roomId}`);
             break;
           default:
             break;
@@ -56,40 +64,10 @@ export default function Page(): JSX.Element {
     },
   );
 
-  // useEffect(() => {
-  //   let me = null;
-  //
-  //
-  //   if (!socket) {
-  //     socket = Socket();
-  //   }
-  //
-  //   socket.on("me", (_me) => {
-  //     me = _me;
-  //     setMe(me);
-  //   });
-  //
-  //   socket.on("newUserConnect", ({ size }) => {
-  //     setUsersOnline(size);
-  //   });
-  //
-  //   socket.on("roomFound", ({ room, roomId }) => {
-  //     console.log({ room, roomId });
-  //     router.push(`/room/${roomId}?host=${room.host}`);
-  //   });
-  //
-  //   return () => {
-  //     socket.off("queueUpdated");
-  //     socket.off("newUserConnect");
-  //     socket.off("roomFound");
-  //     socket.close();
-  //   };
-  // }, []);
-
   const onConnect = useCallback(() => {
-    setInQueue(!inQueue);
+    setInQueue(!inQueue); // TODOO: Replace to update the state when receive it from backend
     sendJsonMessage({ type: inQueue ? "queueExit" : "queueJoin", userId: me });
-  }, [inQueue, me]);
+  }, [inQueue, me, sendJsonMessage]);
 
   return (
     <main className="flex flex-col h-full">
@@ -99,6 +77,7 @@ export default function Page(): JSX.Element {
           <h1>Estamos procurando alguém para praticar inglês contigo</h1>
           <h1>QueueSize: {usersOnline}</h1>
           <h1>acessGranted: {accessGranted}</h1>
+          <h1>userId: {me}</h1>
           <video
             className="[transform:rotateY(180deg)] w-96 h-96"
             ref={videoRef}
