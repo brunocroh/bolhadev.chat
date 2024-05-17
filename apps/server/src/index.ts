@@ -17,20 +17,40 @@ type Room = {
   users: string[];
 };
 
-type onQueueUpdate = {
-  userId: string;
-};
-
 type QueueMe = {
   type: "me";
 };
 
 type QueueUpdateEvent = {
   type: "queueJoin" | "queueExit";
-  id: string;
+  userId: string;
 };
 
-type SocketEvents = QueueUpdateEvent | QueueMe;
+type SendOfferEvent = {
+  type: "sendOffer";
+  to: string;
+  signal: any;
+  from: string;
+};
+
+type SendAnswerEvent = {
+  type: "sendAnswer";
+  to: string;
+  signal: any;
+};
+
+type RoomEnterEvent = {
+  type: "roomEnter";
+  id: string;
+  roomId: string;
+};
+
+type SocketEvents =
+  | QueueUpdateEvent
+  | QueueMe
+  | SendOfferEvent
+  | SendAnswerEvent
+  | RoomEnterEvent;
 
 function broadcastMessage(json: any) {
   const data = JSON.stringify(json);
@@ -60,10 +80,19 @@ wss.on("connection", (ws) => {
         broadcastMessage({ type: "usersOnline", size: users.size });
         break;
       case "queueJoin":
-        onQueueJoin({ userId: event.id });
+        onQueueJoin(event);
         break;
       case "queueExit":
-        onQueueExit({ userId: event.id });
+        onQueueExit(event);
+        break;
+      case "sendOffer":
+        onSendOffer(event);
+        break;
+      case "sendAnswer":
+        onSendAnswer(event);
+        break;
+      case "roomEnter":
+        onRoomEnter(event);
         break;
       default:
         break;
@@ -110,26 +139,45 @@ const onRoomEnter =
     }
   };
 
-const onSendOffer = ({ to, signal, from }: any) => {
+const onSendOffer = ({ to, signal, from }: SendOfferEvent) => {
   if (!to) return;
 
-  console.log(`user ${from} call to ${to} on ${signal}`);
+  const userTo = users.get(to);
 
-  //ws.to(to).emit("receiveOffer", { signal, from, to });
+  if (!userTo) {
+    // TODO: destroy room and tell to user that other user disconnect
+    return;
+  }
+
+  userTo.send({
+    type: "receiveOffer",
+    signal,
+    from,
+    to,
+  });
 };
 
-const onSendAnswer =
-  (socket: any) =>
-  ({ to, signal }: any) => {
-    console.log(`user ${socket.id} accept call of ${to} ${signal}`);
-    // ws.to(to).emit("receiveAnswer", { signal });
-  };
+const onSendAnswer = ({ to, signal }: SendAnswerEvent) => {
+  if (!to) return;
 
-const onQueueJoin = ({ userId }: onQueueUpdate) => {
+  const userTo = users.get(to);
+
+  if (!userTo) {
+    // TODO: destroy room and tell to user that other user disconnect
+    return;
+  }
+
+  userTo.send({
+    type: "receiveAnswer",
+    signal,
+  });
+};
+
+const onQueueJoin = ({ userId }: QueueUpdateEvent) => {
   queue.add(userId);
 };
 
-const onQueueExit = ({ userId }: onQueueUpdate) => {
+const onQueueExit = ({ userId }: QueueUpdateEvent) => {
   queue.delete(userId);
 };
 
