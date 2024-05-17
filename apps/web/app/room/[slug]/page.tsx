@@ -66,8 +66,9 @@ export default function Page(): JSX.Element {
             peerRef.current = new Peer({
               initiator: true,
               trickle: false,
-              stream: videoRef.current.srcObject as MediaStream,
+              stream: videoRef.current?.srcObject as MediaStream,
             });
+
             peerRef.current?.on("signal", (signalData) => {
               if (signalData.type === "offer") {
                 sendJsonMessage({
