@@ -69,6 +69,12 @@ export default function Page(): JSX.Element {
               stream: videoRef.current?.srcObject as MediaStream,
             });
 
+            peerRef.current?.on("stream", (remoteStream) => {
+              if (remoteRef.current) {
+                remoteRef.current.srcObject = remoteStream;
+              }
+            });
+
             peerRef.current?.on("signal", (signalData) => {
               if (signalData.type === "offer") {
                 sendJsonMessage({
