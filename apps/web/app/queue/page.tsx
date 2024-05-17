@@ -65,7 +65,7 @@ export default function Page(): JSX.Element {
   );
 
   const onConnect = useCallback(() => {
-    setInQueue(!inQueue); // TODOO: Replace to update the state when receive it from backend
+    setInQueue(!inQueue); // TODO: Replace to update the state when receive it from backend
     sendJsonMessage({ type: inQueue ? "queueExit" : "queueJoin", userId: me });
   }, [inQueue, me, sendJsonMessage]);
 
