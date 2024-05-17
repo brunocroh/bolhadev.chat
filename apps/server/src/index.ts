@@ -195,6 +195,7 @@ cron.schedule("*/5 * * * * *", () => {
     _users.forEach((user) => {
       queue.delete(user);
       users.get(user).send(JSON.stringify({ type: "roomFound", room, roomId }));
+      users.delete(user);
     });
   }
 });
