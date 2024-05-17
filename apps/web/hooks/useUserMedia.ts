@@ -14,11 +14,16 @@ export const useUserMedia = (video: HTMLVideoElement) => {
 
   const updateUserMedia = useCallback(
     async (video: HTMLVideoElement, constraints: MediaConstraints) => {
-      console.log("requestAccess");
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: constraints.video
+      let _video = false;
+
+      if (constraints.video !== "off") {
+        _video = constraints.video
           ? { deviceId: { exact: constraints.video } }
-          : true,
+          : true;
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: _video,
         audio: constraints.audio
           ? { deviceId: { exact: constraints.audio } }
           : true,
@@ -71,8 +76,16 @@ export const useUserMedia = (video: HTMLVideoElement) => {
   }, [devices]);
 
   const videoDevices = useMemo(() => {
-    return devices.filter(
-      (device) => device.kind === "videoinput" && !!device.deviceId,
+    return [
+      {
+        kind: "videoinput",
+        label: "Desligado",
+        deviceId: "off",
+      },
+    ].concat(
+      devices.filter(
+        (device) => device.kind === "videoinput" && !!device.deviceId,
+      ),
     );
   }, [devices]);
 
