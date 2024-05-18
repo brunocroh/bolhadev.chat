@@ -4,11 +4,9 @@ import {
   useEffect,
   useRef,
   useState,
-  ReactElement,
   MutableRefObject,
   useCallback,
 } from "react";
-import { socket as Socket } from "@/lib/socket";
 import { usePathname } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
 import { Header } from "@/components/header";
@@ -23,8 +21,6 @@ import {
 } from "@/components/ui/select";
 import { Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-let socket: any;
 
 export default function Page(): JSX.Element {
   const peerRef: MutableRefObject<Peer.Instance | null> = useRef(null);
