@@ -39,7 +39,8 @@ export default function Page(): JSX.Element {
     accessGranted,
     stream,
     setSelectedAudioDevice,
-    setSelectedVideoDevice,
+    switchVideo,
+    switchMic,
     selectedAudioDevice,
     selectedVideoDevice,
     audioDevices,
@@ -56,16 +57,18 @@ export default function Page(): JSX.Element {
       },
       onMessage: (event) => {
         const data = JSON.parse(event.data);
+        let isHost: boolean = false;
 
         switch (data.type) {
           case "me":
             setMe(data.id);
             break;
           case "hostCall":
+            isHost = me !== data.to;
             peerRef.current = new Peer({
-              initiator: true,
+              initiator: isHost,
               trickle: false,
-              stream: videoRef.current?.srcObject as MediaStream,
+              stream: stream!,
             });
 
             peerRef.current?.on("stream", (remoteStream) => {
@@ -74,21 +77,26 @@ export default function Page(): JSX.Element {
               }
             });
 
-            peerRef.current?.on("signal", (signalData) => {
-              if (signalData.type === "offer") {
-                sendJsonMessage({
-                  type: "sendOffer",
-                  to: data.to,
-                  signal: signalData,
-                  from: me,
-                });
-              }
-            });
+            if (isHost) {
+              peerRef.current?.on("signal", (signalData) => {
+                if (peerRef.current?.connected) return;
+
+                if (signalData.type === "offer") {
+                  sendJsonMessage({
+                    type: "sendOffer",
+                    to: data.to,
+                    signal: signalData,
+                    from: me,
+                  });
+                }
+              });
+            }
+
             break;
           case "receiveOffer":
-            console.log("receiveOffer");
             peerRef.current?.signal(data.signal);
             peerRef.current?.on("signal", (signalData) => {
+              if (peerRef.current?.connected) return;
               if (signalData.type === "answer") {
                 sendJsonMessage({
                   type: "sendAnswer",
@@ -99,7 +107,6 @@ export default function Page(): JSX.Element {
             });
             break;
           case "receiveAnswer":
-            console.log("receiveAnswer");
             peerRef.current?.signal(data.signal);
             break;
           default:
@@ -115,18 +122,6 @@ export default function Page(): JSX.Element {
       videoRef.current.play();
 
       setVideoReady(true);
-
-      peerRef.current = new Peer({
-        initiator: false,
-        trickle: false,
-        stream: videoRef.current.srcObject as MediaStream,
-      });
-
-      peerRef.current?.on("stream", (remoteStream) => {
-        if (remoteRef.current) {
-          remoteRef.current.srcObject = remoteStream;
-        }
-      });
     }
   }, [stream]);
 
@@ -135,6 +130,29 @@ export default function Page(): JSX.Element {
       sendJsonMessage({ type: "roomEnter", roomId, id: me });
     }
   }, [me, videoReady]);
+
+  useEffect(() => {
+    console.log({ stream });
+  }, [stream]);
+
+  const handleInputChange = async (
+    deviceId: string,
+    type: "audio" | "video",
+  ) => {
+    let result;
+
+    if (type === "audio") {
+      result = await switchMic(deviceId);
+    } else {
+      result = await switchVideo(deviceId);
+    }
+
+    peerRef.current?.replaceTrack(result.oldTrack, result.newTrack, stream!);
+
+    if (videoRef.current) {
+      videoRef.current.srcObject = result.newStream;
+    }
+  };
 
   const toggleMute = useCallback(() => {
     setMute((_mute) => !_mute);
@@ -173,7 +191,7 @@ export default function Page(): JSX.Element {
         </div>
         <div className="flex flex-row gap-6 w-full">
           <Select
-            onValueChange={setSelectedAudioDevice}
+            onValueChange={(deviceId) => handleInputChange(deviceId, "audio")}
             value={selectedAudioDevice}
           >
             <SelectTrigger className="w-[180px]">
@@ -195,7 +213,7 @@ export default function Page(): JSX.Element {
             </SelectContent>
           </Select>
           <Select
-            onValueChange={setSelectedVideoDevice}
+            onValueChange={(deviceId) => handleInputChange(deviceId, "video")}
             value={selectedVideoDevice}
           >
             <SelectTrigger className="w-[180px]">

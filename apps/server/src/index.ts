@@ -133,8 +133,10 @@ const onRoomEnter = ({ roomId, id }: any) => {
     const host = room.users[0];
     const participant = room.users[1];
     room.host = host;
-    const _user = users.get(host);
-    _user.send(JSON.stringify({ type: "hostCall", to: participant }));
+    room.users.forEach((user) => {
+      const _user = users.get(user);
+      _user.send(JSON.stringify({ type: "hostCall", to: participant }));
+    });
   }
 };
 
