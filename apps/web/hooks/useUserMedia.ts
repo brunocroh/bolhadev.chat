@@ -14,7 +14,7 @@ export const useUserMedia = (video: HTMLVideoElement) => {
   const [accessGranted, setAccessGranted] = useState(false);
 
   const updateUserMedia = useCallback(
-    async (video: HTMLVideoElement, constraints: MediaConstraints) => {
+    async (constraints: MediaConstraints) => {
       let _video: MediaTrackConstraints | boolean = false;
 
       if (constraints.video !== "off") {
@@ -92,7 +92,7 @@ export const useUserMedia = (video: HTMLVideoElement) => {
 
   useEffect(() => {
     const init = async () => {
-      updateUserMedia(video, {
+      updateUserMedia({
         audio: "",
         video: "",
       });
@@ -103,7 +103,7 @@ export const useUserMedia = (video: HTMLVideoElement) => {
 
   useEffect(() => {
     if (!selectedAudioDevice || !selectedAudioDevice) return;
-    updateUserMedia(video, {
+    updateUserMedia({
       audio: selectedAudioDevice,
       video: selectedVideoDevice,
     });
