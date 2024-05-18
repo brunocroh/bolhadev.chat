@@ -5,7 +5,7 @@ type MediaConstraints = {
   video: string;
 };
 
-export const useUserMedia = (video: HTMLVideoElement) => {
+export const useUserMedia = () => {
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [selectedAudioDevice, setSelectedAudioDevice] = useState("");
