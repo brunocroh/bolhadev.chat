@@ -28,7 +28,7 @@ export default function Page(): JSX.Element {
     setSelectedVideoDevice,
     accessGranted,
     stream,
-  } = useUserMedia(videoRef.current!);
+  } = useUserMedia();
 
   const [me, setMe] = useState(null);
   const [usersOnline, setUsersOnline] = useState(null);

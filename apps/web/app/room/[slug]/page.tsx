@@ -38,14 +38,13 @@ export default function Page(): JSX.Element {
     ready,
     accessGranted,
     stream,
-    setSelectedAudioDevice,
     switchVideo,
     switchMic,
     selectedAudioDevice,
     selectedVideoDevice,
     audioDevices,
     videoDevices,
-  } = useUserMedia(videoRef.current!);
+  } = useUserMedia();
 
   const { sendJsonMessage } = useWebSocket(
     process.env.NEXT_PUBLIC_SOCKET_URL!,
