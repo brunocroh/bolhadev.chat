@@ -92,6 +92,8 @@ export const useUserMedia = (video: HTMLVideoElement) => {
 
   useEffect(() => {
     const init = async () => {
+      // TODO: initialize with true
+      // after that identify if have access and if its true, change for default values
       updateUserMedia({
         audio: "",
         video: "",
