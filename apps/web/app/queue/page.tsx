@@ -44,14 +44,12 @@ export default function Page(): JSX.Element {
     process.env.NEXT_PUBLIC_SOCKET_URL!,
     {
       onOpen: () => {
-        console.log("connected");
         sendJsonMessage({
           type: "me",
         });
       },
       onMessage: (event) => {
         const data = JSON.parse(event.data);
-        console.log({ data });
 
         switch (data.type) {
           case "me":
@@ -61,7 +59,6 @@ export default function Page(): JSX.Element {
             setUsersOnline(data.size);
             break;
           case "roomFound":
-            console.log({ data });
             router.push(`/room/${data.roomId}`);
             break;
           default:
