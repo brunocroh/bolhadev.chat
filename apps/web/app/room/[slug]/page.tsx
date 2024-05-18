@@ -6,6 +6,7 @@ import {
   useState,
   ReactElement,
   MutableRefObject,
+  useCallback,
 } from "react";
 import { socket as Socket } from "@/lib/socket";
 import { usePathname } from "next/navigation";
@@ -21,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Mic } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 let socket: any;
 
@@ -33,6 +35,7 @@ export default function Page(): JSX.Element {
   const roomId = pathname.split("/room/")[1];
 
   const [me, setMe] = useState("");
+  const [mute, setMute] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
 
   const {
@@ -137,6 +140,10 @@ export default function Page(): JSX.Element {
     }
   }, [me, videoReady]);
 
+  const toggleMute = useCallback(() => {
+    setMute((_mute) => !_mute);
+  }, [setMute]);
+
   return (
     <main className="flex flex-col h-full">
       <Header />
@@ -149,14 +156,24 @@ export default function Page(): JSX.Element {
           <h1>ACCESS: {accessGranted ? "false" : "true"}</h1>
         </div>
         <div className="flex flex-row gap-2">
-          <video
-            className="[transform:rotateY(180deg)]"
-            ref={videoRef}
-            playsInline
-            autoPlay={true}
-            muted={true}
-          ></video>
-          <video ref={remoteRef} playsInline autoPlay={true}></video>
+          <div className="flex flex-col">
+            <video
+              className="[transform:rotateY(180deg)]"
+              ref={videoRef}
+              playsInline
+              autoPlay={true}
+              muted={true}
+            ></video>
+          </div>
+          <div className="felx flex-col">
+            <video
+              ref={remoteRef}
+              muted={mute}
+              playsInline
+              autoPlay={true}
+            ></video>
+            <Button onClick={toggleMute}>{mute ? "Unmute" : "Mute"}</Button>
+          </div>
         </div>
         <div className="flex flex-row gap-6 w-full">
           <Select
