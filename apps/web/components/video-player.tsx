@@ -1,3 +1,5 @@
+"use client"
+
 import React, { forwardRef } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Mic, Video } from "lucide-react";
@@ -53,7 +55,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(({
         </Select>
         <Select onValueChange={setActiveVideoDevice} value={activeVideoDevice}>
           <SelectTrigger className="z-10 w-[180px]">
-            <Video /> <SelectValue placeholder="Video" />
+            <Video size={18} /> <SelectValue placeholder="Video" />
           </SelectTrigger>
           <SelectContent>
             {videoDevices.map((video) => {
