@@ -23,7 +23,8 @@
     "tailwind-merge": "^2.1.0",
     "tailwindcss-animate": "^1.0.7",
     "utf-8-validate": "^5.0.10",
-    "ws": "^8.14.2"
+    "ws": "^8.14.2",
+    "zustand": "^4.5.2"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^14.0.2",

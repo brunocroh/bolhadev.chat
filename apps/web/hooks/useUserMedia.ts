@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { usePreferencesStore } from "./usePreferencesStore";
 
 type MediaConstraints = {
   audio: string;
@@ -6,10 +7,9 @@ type MediaConstraints = {
 };
 
 export const useUserMedia = () => {
+  const preferences = usePreferencesStore();
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
-  const [selectedAudioDevice, setSelectedAudioDevice] = useState("");
-  const [selectedVideoDevice, setSelectedVideoDevice] = useState("");
   const [ready, setReady] = useState(false);
   const [accessGranted, setAccessGranted] = useState(false);
 
@@ -60,7 +60,7 @@ export const useUserMedia = () => {
     ]);
 
     stopStreaming(stream!);
-    setSelectedAudioDevice(deviceId);
+    preferences.set(deviceId, "audio");
     setStream(newStream);
 
     return {
@@ -86,7 +86,7 @@ export const useUserMedia = () => {
     ]);
 
     stopStreaming(stream!);
-    setSelectedVideoDevice(deviceId);
+    preferences.set(deviceId, "video");
     setStream(newStream);
 
     return {
@@ -105,12 +105,13 @@ export const useUserMedia = () => {
   }, [accessGranted]);
 
   useEffect(() => {
+    console.log({ preferences });
     const init = async () => {
       // TODO: initialize with true
       // after that identify if have access and if its true, change for default values
       updateUserMedia({
-        audio: "",
-        video: "",
+        audio: preferences.audio,
+        video: preferences.video,
       });
     };
 
@@ -140,8 +141,8 @@ export const useUserMedia = () => {
   return {
     audioDevices,
     videoDevices,
-    selectedAudioDevice,
-    selectedVideoDevice,
+    selectedAudioDevice: preferences.audio,
+    selectedVideoDevice: preferences.video,
     ready,
     accessGranted,
     stream,
