@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
 import { Mic } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { VideoPlayer } from "@/components/video-player";
 
 export default function Page(): JSX.Element {
   const router = useRouter();
@@ -88,52 +89,16 @@ export default function Page(): JSX.Element {
             <div className="m-5 flex w-full flex-col items-center">
               <Card className="w-[500px] p-5">
                 <CardContent>
-                  <div className="z-10 h-[300px] w-[410px] overflow-hidden rounded-lg">
-                    <video
-                      className="h-[310px] w-[420px] rounded-lg [transform:rotateY(180deg)]"
-                      ref={videoRef}
-                      playsInline
-                      autoPlay={true}
-                      muted={true}
-                    ></video>
-                  </div>
-                  <div className="mt-5 flex w-full flex-row gap-6">
-                    <Select onValueChange={switchMic} value={selectedAudioDevice}>
-                      <SelectTrigger className="z-10 w-[200px]">
-                        <Mic size={18} /><SelectValue placeholder="Audio" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {audioDevices.map((audio) => {
-                          return (
-                            <SelectItem
-                              key={audio.deviceId}
-                              value={audio.deviceId || audio.label}
-                              className="flex flex-row items-center gap-2"
-                            >
-                             {audio.label}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
-                    <Select onValueChange={switchVideo} value={selectedVideoDevice}>
-                      <SelectTrigger className="z-10 w-[180px]">
-                        <SelectValue placeholder="Video" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {videoDevices.map((video) => {
-                          return (
-                            <SelectItem
-                              key={video.deviceId}
-                              value={video.deviceId || video.label}
-                            >
-                              {video.label}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
-                  </div>
+                  <VideoPlayer
+                    ref={videoRef}
+                    audioDevices={audioDevices}
+                    videoDevices={videoDevices}
+                    setActiveAudioDevice={switchMic}
+                    activeAudioDevice={selectedAudioDevice}
+                    setActiveVideoDevice={switchVideo}
+                    activeVideoDevice={selectedVideoDevice}
+                    muted={true}
+                  />
 
                   <div className="mt-6 flex h-12 w-full items-center justify-between gap-6">
                     <h2>

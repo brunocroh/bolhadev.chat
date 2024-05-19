@@ -126,17 +126,9 @@ export const useUserMedia = () => {
   }, [devices]);
 
   const videoDevices = useMemo(() => {
-    return [
-      {
-        kind: "videoinput",
-        label: "Desligado",
-        deviceId: "off",
-      },
-    ].concat(
-      devices.filter(
-        (device) => device.kind === "videoinput" && !!device.deviceId,
-      ),
-    );
+    return devices.filter(
+      (device) => device.kind === "videoinput" && !!device.deviceId,
+    )
   }, [devices]);
 
   return {
