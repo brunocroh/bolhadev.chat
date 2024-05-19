@@ -84,7 +84,11 @@ export default function Page(): JSX.Element {
       <section className="align-center flex h-full place-content-center content-center justify-center">
         <div>
           <h1 className="text-[2em]">Before you start practicing, make sure to check your microphone and camera.</h1>
-          <h2>users online now: {usersOnline}</h2>
+          <div>
+            <span className="absolute inline-flex size-full rounded-full bg-green-500 px-2 py-1 opacity-90">
+              Users Online: {usersOnline}
+            </span>
+          </div>
           <div className="flex flex-col justify-center">
             <div className="m-5 flex w-full flex-col items-center">
               <Card className="w-[500px] p-5">
