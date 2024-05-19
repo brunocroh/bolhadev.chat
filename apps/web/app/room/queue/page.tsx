@@ -12,8 +12,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
-import { Header } from "@/components/header";
 import { Mic } from "lucide-react";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
 export default function Page(): JSX.Element {
   const router = useRouter();
@@ -26,7 +26,6 @@ export default function Page(): JSX.Element {
     switchVideo,
     selectedVideoDevice,
     switchMic,
-    accessGranted,
     activeStream: stream,
     stopStreaming,
   } = useUserMedia();
@@ -77,71 +76,80 @@ export default function Page(): JSX.Element {
     return () => {
       stopStreaming(stream!);
     };
-  }, [stream]);
+  }, [stream, stopStreaming]);
 
   return (
-    <main className="flex flex-col h-full">
-      <Header />
-      <section className="flex h-full place-content-center justify-center content-center align-center">
+    <main className="flex h-full flex-col">
+      <section className="align-center flex h-full place-content-center content-center justify-center">
         <div>
-          <h1>Estamos procurando alguém para praticar inglês contigo</h1>
-          <h1>QueueSize: {usersOnline}</h1>
-          <h1>acessGranted: {accessGranted}</h1>
-          <h1>userId: {me}</h1>
-          <video
-            className="[transform:rotateY(180deg)] w-96 h-96"
-            ref={videoRef}
-            playsInline
-            autoPlay={true}
-            muted={true}
-          ></video>
-          <h2>Confira sue microfone e webcam, enquanto aguarda</h2>
-          <div className="flex flex-row gap-6 w-full">
-            <Select onValueChange={switchMic} value={selectedAudioDevice}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Audio" />
-              </SelectTrigger>
-              <SelectContent>
-                {audioDevices.map((audio) => {
-                  return (
-                    <SelectItem
-                      key={audio.deviceId}
-                      value={audio.deviceId || audio.label}
-                    >
-                      <div className="flex flex-row gap-2 items-center">
-                        <Mic size={12} /> {audio.label}
-                      </div>
-                    </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </Select>
-            <Select onValueChange={switchVideo} value={selectedVideoDevice}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Video" />
-              </SelectTrigger>
-              <SelectContent>
-                {videoDevices.map((video) => {
-                  return (
-                    <SelectItem
-                      key={video.deviceId}
-                      value={video.deviceId || video.label}
-                    >
-                      {video.label}
-                    </SelectItem>
-                  );
-                })}
-              </SelectContent>
-            </Select>
+          <h1 className="text-[2em]">Before you start practicing, make sure to check your microphone and camera.</h1>
+          <h2>users online now: {usersOnline}</h2>
+          <div className="flex flex-col justify-center">
+            <div className="m-5 flex w-full flex-col items-center">
+              <Card className="w-[500px] p-5">
+                <CardContent>
+                  <div className="z-10 h-[300px] w-[410px] overflow-hidden rounded-lg">
+                    <video
+                      className="h-[310px] w-[420px] rounded-lg [transform:rotateY(180deg)]"
+                      ref={videoRef}
+                      playsInline
+                      autoPlay={true}
+                      muted={true}
+                    ></video>
+                  </div>
+                  <div className="mt-5 flex w-full flex-row gap-6">
+                    <Select onValueChange={switchMic} value={selectedAudioDevice}>
+                      <SelectTrigger className="z-10 w-[200px]">
+                        <Mic size={18} /><SelectValue placeholder="Audio" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {audioDevices.map((audio) => {
+                          return (
+                            <SelectItem
+                              key={audio.deviceId}
+                              value={audio.deviceId || audio.label}
+                              className="flex flex-row items-center gap-2"
+                            >
+                             {audio.label}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
+                    <Select onValueChange={switchVideo} value={selectedVideoDevice}>
+                      <SelectTrigger className="z-10 w-[180px]">
+                        <SelectValue placeholder="Video" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {videoDevices.map((video) => {
+                          return (
+                            <SelectItem
+                              key={video.deviceId}
+                              value={video.deviceId || video.label}
+                            >
+                              {video.label}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="mt-6 flex h-12 w-full items-center justify-between gap-6">
+                    <h2>
+                      {inQueue
+                        ? "Finding a practice buddy"
+                        : "Hit the 'Ready' button when you feel ready to start practicing with someone."}
+                    </h2>
+                    <Button onClick={onConnect} className="z-10 rounded-xl">
+                      {inQueue ? "Cancel" : "I'm Ready"}
+                    </Button>
+                  </div>
+                </CardContent>
+
+              </Card>
+            </div>
           </div>
-          <h2>
-            {inQueue
-              ? "Procurando outro usuário"
-              : "Quando você estiver pronto entre em uma sala"}
-          </h2>
-          <Button onClick={onConnect}>
-            {inQueue ? "Cancelar" : "Entrar em uma sala"}
-          </Button>
         </div>
       </section>
     </main>

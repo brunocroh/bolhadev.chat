@@ -1,5 +1,10 @@
+import { Github } from "lucide-react";
 import "./globals.css";
+import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { Header } from "@/components/header";
 
 export const metadata: Metadata = {
   title: "Create Turborepo",
@@ -12,8 +17,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }): JSX.Element {
   return (
-    <html lang="en">
-      <body className="h-screen flex flex-col dark">{children}</body>
+    <html lang="en" className={GeistSans.className}>
+      <body className="dark flex h-screen flex-col">
+        <Header />
+        <Image
+          src="/light-ray.svg"
+          alt="Purple light ray"
+          width="800"
+          height="800"
+          className="animate-in fade-in slide-in-from-bottom-1 absolute"
+          style={{ color: "transparent", animationDuration: "10s" }}
+        />
+        <section>{children}</section>
+      </body>
     </html>
   );
 }
