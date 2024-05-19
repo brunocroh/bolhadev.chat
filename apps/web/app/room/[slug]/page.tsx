@@ -9,18 +9,8 @@ import {
 } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
-import { Header } from "@/components/header";
 import Peer from "simple-peer";
 import useWebSocket from "react-use-websocket";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Mic } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { VideoPlayer } from "@/components/video-player";
 
@@ -183,7 +173,6 @@ export default function Page(): JSX.Element {
 
   return (
     <main className="flex h-full flex-col">
-      <Header />
       <section
         className={"align-center flex h-full flex-col place-content-center"}
       >
