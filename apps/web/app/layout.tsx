@@ -13,7 +13,7 @@ export default function RootLayout({
 }): JSX.Element {
   return (
     <html lang="en">
-      <body className="h-screen flex flex-col">{children}</body>
+      <body className="h-screen flex flex-col dark">{children}</body>
     </html>
   );
 }

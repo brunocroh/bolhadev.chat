@@ -96,6 +96,11 @@ export const useUserMedia = () => {
     }
   }, []);
 
+  const stopAllStreaming = useCallback(async () => {
+    stream?.getTracks().forEach((track) => track.stop());
+    activeStream?.getTracks().forEach((track) => track.stop());
+  }, [stream, activeStream]);
+
   useEffect(() => {
     getDevices();
   }, [accessGranted]);
@@ -146,5 +151,6 @@ export const useUserMedia = () => {
     switchVideo,
     switchMic,
     stopStreaming,
+    stopAllStreaming,
   };
 };

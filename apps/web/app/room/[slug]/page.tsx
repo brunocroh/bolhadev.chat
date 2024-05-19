@@ -7,7 +7,7 @@ import {
   MutableRefObject,
   useCallback,
 } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
 import { Header } from "@/components/header";
 import Peer from "simple-peer";
@@ -23,6 +23,7 @@ import { Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function Page(): JSX.Element {
+  const router = useRouter();
   const peerRef: MutableRefObject<Peer.Instance | null> = useRef(null);
   const videoRef: MutableRefObject<HTMLVideoElement | null> = useRef(null);
   const remoteRef = useRef<HTMLVideoElement>(null);
@@ -44,7 +45,7 @@ export default function Page(): JSX.Element {
     selectedVideoDevice,
     audioDevices,
     videoDevices,
-    stopStreaming,
+    stopAllStreaming,
   } = useUserMedia();
 
   const { sendJsonMessage, getWebSocket } = useWebSocket(
@@ -130,7 +131,7 @@ export default function Page(): JSX.Element {
     return () => {
       peerRef.current?.destroy();
       peerRef.current = null;
-      stopStreaming(stream!);
+      stopAllStreaming();
     };
   }, []);
 
@@ -167,6 +168,12 @@ export default function Page(): JSX.Element {
       videoRef.current.srcObject = result.newStream;
     }
   };
+
+  const handleFinishCall = useCallback(async () => {
+    stopAllStreaming();
+    peerRef.current?.destroy();
+    location.replace(`${roomId}/feedback`);
+  }, [stopAllStreaming, router]);
 
   const toggleMute = useCallback(() => {
     setMute((_mute) => !_mute);
@@ -246,6 +253,7 @@ export default function Page(): JSX.Element {
               })}
             </SelectContent>
           </Select>
+          <Button onClick={handleFinishCall}>Desligar</Button>
         </div>
       </section>
     </main>
