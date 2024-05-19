@@ -180,10 +180,10 @@ export default function Page(): JSX.Element {
   }, [setMute]);
 
   return (
-    <main className="flex flex-col h-full">
+    <main className="flex h-full flex-col">
       <Header />
       <section
-        className={"flex flex-col h-full place-content-center align-center"}
+        className={"align-center flex h-full flex-col place-content-center"}
       >
         <div>
           <h1>{me}</h1>
@@ -210,7 +210,7 @@ export default function Page(): JSX.Element {
             <Button onClick={toggleMute}>{mute ? "Unmute" : "Mute"}</Button>
           </div>
         </div>
-        <div className="flex flex-row gap-6 w-full">
+        <div className="flex w-full flex-row gap-6">
           <Select
             onValueChange={(deviceId) => handleInputChange(deviceId, "audio")}
             value={selectedAudioDevice}
@@ -225,7 +225,7 @@ export default function Page(): JSX.Element {
                     key={audio.deviceId}
                     value={audio.deviceId || audio.label}
                   >
-                    <div className="flex flex-row gap-2 items-center">
+                    <div className="flex flex-row items-center gap-2">
                       <Mic size={12} /> {audio.label}
                     </div>
                   </SelectItem>

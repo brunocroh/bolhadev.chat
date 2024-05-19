@@ -4,14 +4,14 @@ import React from "react";
 
 export const Header = () => {
   return (
-    <nav className="flex p-5 justify-between z-10">
+    <nav className="z-10 flex justify-between p-5">
       <Link href="/">
         <h1 className="text-base font-semibold text-purple-200">
           BolhaDev.Chat
         </h1>
       </Link>
       <Link href="https://github.com/brunocroh/bolhadev.chat">
-        <h2 className="hover:bg-white hover:text-black p-1 rounded-lg">
+        <h2 className="rounded-lg p-1 hover:bg-white hover:text-black">
           <Github color="currentColor" />
         </h2>
       </Link>
