@@ -36,11 +36,14 @@ export default function Page(): JSX.Element {
   const [inQueue, setInQueue] = useState(false);
 
   useEffect(() => {
-    console.log("STREMA CHANGE");
     if (videoRef.current && stream) {
       videoRef.current.srcObject = stream;
       videoRef.current.play();
     }
+
+    return () => {
+      stopStreaming(stream!);
+    };
   }, [stream]);
 
   const { sendJsonMessage } = useWebSocket(
@@ -139,7 +142,6 @@ export default function Page(): JSX.Element {
           <Button onClick={onConnect}>
             {inQueue ? "Cancelar" : "Entrar em uma sala"}
           </Button>
-          <Button onClick={() => stopStreaming(stream!)}>Desligar</Button>
         </div>
       </section>
     </main>

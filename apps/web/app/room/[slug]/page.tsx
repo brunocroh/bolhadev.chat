@@ -44,6 +44,7 @@ export default function Page(): JSX.Element {
     selectedVideoDevice,
     audioDevices,
     videoDevices,
+    stopStreaming,
   } = useUserMedia();
 
   const { sendJsonMessage } = useWebSocket(
@@ -122,6 +123,11 @@ export default function Page(): JSX.Element {
 
       setVideoReady(true);
     }
+
+    return () => {
+      stopStreaming(stream!);
+      peerRef.current?.destroy();
+    };
   }, [stream]);
 
   useEffect(() => {
@@ -129,10 +135,6 @@ export default function Page(): JSX.Element {
       sendJsonMessage({ type: "roomEnter", roomId, id: me });
     }
   }, [me, videoReady]);
-
-  useEffect(() => {
-    console.log({ stream });
-  }, [stream]);
 
   const handleInputChange = async (
     deviceId: string,
