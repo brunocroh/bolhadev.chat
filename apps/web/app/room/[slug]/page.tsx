@@ -47,13 +47,16 @@ export default function Page(): JSX.Element {
     stopStreaming,
   } = useUserMedia();
 
-  const { sendJsonMessage } = useWebSocket(
+  const { sendJsonMessage, getWebSocket } = useWebSocket(
     process.env.NEXT_PUBLIC_SOCKET_URL!,
     {
       onOpen: () => {
         sendJsonMessage({
           type: "me",
         });
+      },
+      onClose: () => {
+        console.log("websocket disconnected");
       },
       onMessage: (event) => {
         const data = JSON.parse(event.data);
@@ -117,17 +120,20 @@ export default function Page(): JSX.Element {
   );
 
   useEffect(() => {
+    return () => {
+      peerRef.current?.destroy();
+      peerRef.current = null;
+      stopStreaming();
+    };
+  }, []);
+
+  useEffect(() => {
     if (videoRef.current && stream) {
       videoRef.current.srcObject = stream;
       videoRef.current.play();
 
       setVideoReady(true);
     }
-
-    return () => {
-      stopStreaming(stream!);
-      peerRef.current?.destroy();
-    };
   }, [stream]);
 
   useEffect(() => {

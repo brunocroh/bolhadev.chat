@@ -27,24 +27,13 @@ export default function Page(): JSX.Element {
     selectedVideoDevice,
     switchMic,
     accessGranted,
-    stream,
+    activeStream: stream,
     stopStreaming,
   } = useUserMedia();
 
   const [me, setMe] = useState(null);
   const [usersOnline, setUsersOnline] = useState(null);
   const [inQueue, setInQueue] = useState(false);
-
-  useEffect(() => {
-    if (videoRef.current && stream) {
-      videoRef.current.srcObject = stream;
-      videoRef.current.play();
-    }
-
-    return () => {
-      stopStreaming(stream!);
-    };
-  }, [stream]);
 
   const { sendJsonMessage } = useWebSocket(
     process.env.NEXT_PUBLIC_SOCKET_URL!,
@@ -78,6 +67,17 @@ export default function Page(): JSX.Element {
     setInQueue(!inQueue); // TODO: Replace to update the state when receive it from backend
     sendJsonMessage({ type: inQueue ? "queueExit" : "queueJoin", userId: me });
   }, [inQueue, me, sendJsonMessage]);
+
+  useEffect(() => {
+    if (videoRef.current && stream) {
+      videoRef.current.srcObject = stream;
+      videoRef.current.play();
+    }
+
+    return () => {
+      stopStreaming(stream!);
+    };
+  }, [stream]);
 
   return (
     <main className="flex flex-col h-full">
