@@ -107,7 +107,6 @@ export default function Page(): JSX.Element {
                     </Button>
                   </div>
                 </CardContent>
-
               </Card>
             </div>
           </div>

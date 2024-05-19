@@ -21,6 +21,8 @@ import {
 } from "@/components/ui/select";
 import { Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { VideoPlayer } from "@/components/video-player";
 
 export default function Page(): JSX.Element {
   const router = useRouter();
@@ -133,7 +135,7 @@ export default function Page(): JSX.Element {
       peerRef.current = null;
       stopAllStreaming();
     };
-  }, []);
+  }, [stopAllStreaming]);
 
   useEffect(() => {
     if (videoRef.current && stream) {
@@ -148,7 +150,7 @@ export default function Page(): JSX.Element {
     if (videoReady && me) {
       sendJsonMessage({ type: "roomEnter", roomId, id: me });
     }
-  }, [me, videoReady]);
+  }, [me, videoReady, roomId, sendJsonMessage]);
 
   const handleInputChange = async (
     deviceId: string,
@@ -173,7 +175,7 @@ export default function Page(): JSX.Element {
     stopAllStreaming();
     peerRef.current?.destroy();
     location.replace(`${roomId}/feedback`);
-  }, [stopAllStreaming, router]);
+  }, [stopAllStreaming, roomId]);
 
   const toggleMute = useCallback(() => {
     setMute((_mute) => !_mute);
@@ -191,69 +193,34 @@ export default function Page(): JSX.Element {
           <h1>ACCESS: {accessGranted ? "false" : "true"}</h1>
         </div>
         <div className="flex flex-row gap-2">
-          <div className="flex flex-col">
-            <video
-              className="[transform:rotateY(180deg)]"
-              ref={videoRef}
-              playsInline
-              autoPlay={true}
-              muted={true}
-            ></video>
-          </div>
-          <div className="felx flex-col">
-            <video
-              ref={remoteRef}
-              muted={mute}
-              playsInline
-              autoPlay={true}
-            ></video>
-            <Button onClick={toggleMute}>{mute ? "Unmute" : "Mute"}</Button>
-          </div>
-        </div>
-        <div className="flex w-full flex-row gap-6">
-          <Select
-            onValueChange={(deviceId) => handleInputChange(deviceId, "audio")}
-            value={selectedAudioDevice}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Audio" />
-            </SelectTrigger>
-            <SelectContent>
-              {audioDevices.map((audio) => {
-                return (
-                  <SelectItem
-                    key={audio.deviceId}
-                    value={audio.deviceId || audio.label}
-                  >
-                    <div className="flex flex-row items-center gap-2">
-                      <Mic size={12} /> {audio.label}
-                    </div>
-                  </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
-          <Select
-            onValueChange={(deviceId) => handleInputChange(deviceId, "video")}
-            value={selectedVideoDevice}
-          >
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Video" />
-            </SelectTrigger>
-            <SelectContent>
-              {videoDevices.map((video) => {
-                return (
-                  <SelectItem
-                    key={video.deviceId}
-                    value={video.deviceId || video.label}
-                  >
-                    {video.label}
-                  </SelectItem>
-                );
-              })}
-            </SelectContent>
-          </Select>
-          <Button onClick={handleFinishCall}>Desligar</Button>
+          <Card>
+            <CardContent className="p-5">
+              <VideoPlayer
+                ref={videoRef}
+                activeAudioDevice={selectedAudioDevice}
+                setActiveAudioDevice={(deviceId) => handleInputChange(deviceId, 'audio') }
+                activeVideoDevice={selectedVideoDevice}
+                setActiveVideoDevice={(deviceId) => handleInputChange(deviceId, 'video') }
+                muted={true}
+                audioDevices={audioDevices}
+                videoDevices={videoDevices}
+              />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent className="p-5">
+              <VideoPlayer
+                ref={remoteRef}
+                activeAudioDevice={selectedAudioDevice}
+                setActiveAudioDevice={(deviceId) => handleInputChange(deviceId, 'audio') }
+                activeVideoDevice={selectedVideoDevice}
+                setActiveVideoDevice={(deviceId) => handleInputChange(deviceId, 'video') }
+                muted={true}
+                audioDevices={audioDevices}
+                videoDevices={videoDevices}
+              />
+            </CardContent>
+          </Card>
         </div>
       </section>
     </main>
