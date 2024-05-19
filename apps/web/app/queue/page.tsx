@@ -23,11 +23,12 @@ export default function Page(): JSX.Element {
     audioDevices,
     videoDevices,
     selectedAudioDevice,
-    setSelectedAudioDevice,
+    switchVideo,
     selectedVideoDevice,
-    setSelectedVideoDevice,
+    switchMic,
     accessGranted,
     stream,
+    stopStreaming,
   } = useUserMedia();
 
   const [me, setMe] = useState(null);
@@ -35,11 +36,13 @@ export default function Page(): JSX.Element {
   const [inQueue, setInQueue] = useState(false);
 
   useEffect(() => {
+    console.log("STREMA CHANGE");
     if (videoRef.current && stream) {
       videoRef.current.srcObject = stream;
       videoRef.current.play();
     }
   }, [stream]);
+
   const { sendJsonMessage } = useWebSocket(
     process.env.NEXT_PUBLIC_SOCKET_URL!,
     {
@@ -91,10 +94,7 @@ export default function Page(): JSX.Element {
           ></video>
           <h2>Confira sue microfone e webcam, enquanto aguarda</h2>
           <div className="flex flex-row gap-6 w-full">
-            <Select
-              onValueChange={setSelectedAudioDevice}
-              value={selectedAudioDevice}
-            >
+            <Select onValueChange={switchMic} value={selectedAudioDevice}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Audio" />
               </SelectTrigger>
@@ -113,10 +113,7 @@ export default function Page(): JSX.Element {
                 })}
               </SelectContent>
             </Select>
-            <Select
-              onValueChange={setSelectedVideoDevice}
-              value={selectedVideoDevice}
-            >
+            <Select onValueChange={switchVideo} value={selectedVideoDevice}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Video" />
               </SelectTrigger>
@@ -142,6 +139,7 @@ export default function Page(): JSX.Element {
           <Button onClick={onConnect}>
             {inQueue ? "Cancelar" : "Entrar em uma sala"}
           </Button>
+          <Button onClick={() => stopStreaming(stream!)}>Desligar</Button>
         </div>
       </section>
     </main>

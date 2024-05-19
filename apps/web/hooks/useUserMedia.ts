@@ -30,6 +30,8 @@ export const useUserMedia = () => {
           : true,
       });
 
+      stream?.getTracks().forEach((track) => track.stop);
+
       setStream(_stream);
       setAccessGranted(true);
       setReady(true);
@@ -57,6 +59,10 @@ export const useUserMedia = () => {
       ...(stream?.getVideoTracks() || []),
     ]);
 
+    stopStreaming(stream!);
+    setSelectedAudioDevice(deviceId);
+    setStream(newStream);
+
     return {
       oldTrack,
       newTrack,
@@ -79,11 +85,19 @@ export const useUserMedia = () => {
       ...(stream?.getAudioTracks() || []),
     ]);
 
+    stopStreaming(stream!);
+    setSelectedVideoDevice(deviceId);
+    setStream(newStream);
+
     return {
       oldTrack,
       newTrack,
       newStream,
     };
+  };
+
+  const stopStreaming = async (_stream: MediaStream) => {
+    _stream?.getTracks().forEach((track) => track.stop());
   };
 
   useEffect(() => {
@@ -102,14 +116,6 @@ export const useUserMedia = () => {
 
     init();
   }, []);
-
-  useEffect(() => {
-    if (!selectedAudioDevice || !selectedAudioDevice) return;
-    updateUserMedia({
-      audio: selectedAudioDevice,
-      video: selectedVideoDevice,
-    });
-  }, [selectedAudioDevice, selectedVideoDevice]);
 
   const audioDevices = useMemo(() => {
     return devices.filter(
@@ -135,13 +141,12 @@ export const useUserMedia = () => {
     audioDevices,
     videoDevices,
     selectedAudioDevice,
-    setSelectedAudioDevice,
     selectedVideoDevice,
-    setSelectedVideoDevice,
     ready,
     accessGranted,
     stream,
     switchVideo,
     switchMic,
+    stopStreaming,
   };
 };
