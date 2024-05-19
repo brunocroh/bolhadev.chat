@@ -114,6 +114,7 @@ wss.on("connection", (ws) => {
 // });
 
 const handleDisconnect = (userId: string) => {
+  console.log("USER DISCONNECTED");
   queue.delete(userId);
   users.delete(userId);
   broadcastMessage({
@@ -192,6 +193,8 @@ server.listen(4000, () => {
 
 cron.schedule("*/5 * * * * *", () => {
   const _queue = Array.from(queue);
+
+  console.log({ users: users.size, queue: queue.size });
 
   for (; _queue.length >= 2; ) {
     const roomId = uuid();

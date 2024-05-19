@@ -80,6 +80,13 @@ export default function Page(): JSX.Element {
               }
             });
 
+            peerRef.current.on("connect", () => {
+              const ws = getWebSocket();
+              if (ws) {
+                ws.close();
+              }
+            });
+
             if (isHost) {
               peerRef.current?.on("signal", (signalData) => {
                 if (peerRef.current?.connected) return;
@@ -123,7 +130,7 @@ export default function Page(): JSX.Element {
     return () => {
       peerRef.current?.destroy();
       peerRef.current = null;
-      stopStreaming();
+      stopStreaming(stream!);
     };
   }, []);
 
