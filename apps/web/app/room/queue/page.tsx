@@ -2,18 +2,10 @@
 
 import { useRef, useState, useCallback, useEffect } from "react";
 import useWebSocket from "react-use-websocket";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
-import { Mic } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { VideoPlayer } from "@/components/video-player";
 
 export default function Page(): JSX.Element {
