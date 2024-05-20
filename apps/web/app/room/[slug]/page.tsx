@@ -7,7 +7,7 @@ import {
   MutableRefObject,
   useCallback,
 } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
 import Peer from "simple-peer";
 import useWebSocket from "react-use-websocket";
@@ -15,7 +15,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { VideoPlayer } from "@/components/video-player";
 
 export default function Page(): JSX.Element {
-  const router = useRouter();
   const peerRef: MutableRefObject<Peer.Instance | null> = useRef(null);
   const videoRef: MutableRefObject<HTMLVideoElement | null> = useRef(null);
   const remoteRef = useRef<HTMLVideoElement>(null);

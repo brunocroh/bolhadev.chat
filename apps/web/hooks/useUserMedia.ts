@@ -12,20 +12,16 @@ export const useUserMedia = () => {
   const [activeStream, setActiveStream] = useState<MediaStream | null>(null);
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
   const [ready, setReady] = useState(false);
+
   const [accessGranted, setAccessGranted] = useState(false);
+
 
   const updateUserMedia = useCallback(
     async (constraints: MediaConstraints) => {
-      let _video: MediaTrackConstraints | boolean = false;
-
-      if (constraints.video !== "off") {
-        _video = constraints.video
-          ? { deviceId: { exact: constraints.video } }
-          : true;
-      }
-
       const _stream = await navigator.mediaDevices.getUserMedia({
-        video: _video,
+        video: constraints.video
+          ? { deviceId: { exact: constraints.video } }
+          : true,
         audio: constraints.audio
           ? { deviceId: { exact: constraints.audio } }
           : true,
@@ -33,7 +29,6 @@ export const useUserMedia = () => {
 
       setStream(_stream);
       setActiveStream(_stream);
-      setAccessGranted(true);
       setReady(true);
     },
     [setReady],
@@ -64,7 +59,7 @@ export const useUserMedia = () => {
         newStream,
       };
     },
-    [activeStream],
+    [preferences, stream],
   );
 
   const switchVideo = useCallback(
@@ -87,14 +82,9 @@ export const useUserMedia = () => {
         newStream,
       };
     },
-    [activeStream],
+    [preferences, stream],
   );
 
-  const stopStreaming = useCallback(async (_stream?: MediaStream) => {
-    if (_stream) {
-      _stream?.getTracks().forEach((track) => track.stop());
-    }
-  }, []);
 
   const stopAllStreaming = useCallback(async () => {
     stream?.getTracks().forEach((track) => track.stop());
@@ -102,22 +92,10 @@ export const useUserMedia = () => {
   }, [stream, activeStream]);
 
   useEffect(() => {
-    getDevices();
-  }, [accessGranted]);
-
-  useEffect(() => {
-    console.log({ preferences });
-    const init = async () => {
-      // TODO: initialize with true
-      // after that identify if have access and if its true, change for default values
-      updateUserMedia({
-        audio: preferences.audio,
-        video: preferences.video,
-      });
-    };
-
-    init();
-  }, []);
+    if(accessGranted) {
+      getDevices();
+    }
+  }, [getDevices, accessGranted]);
 
   const audioDevices = useMemo(() => {
     return devices.filter(
@@ -130,6 +108,47 @@ export const useUserMedia = () => {
       (device) => device.kind === "videoinput" && !!device.deviceId,
     )
   }, [devices]);
+
+  useEffect(() => {
+    const requestAccess = async () => {
+      const _stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+
+      _stream.getTracks().forEach(track => track.stop)
+      setAccessGranted(true)
+    }
+
+    if(!accessGranted && !devices.length) {
+      requestAccess()
+    }
+  }, [devices, accessGranted])
+
+  useEffect(() => {
+    if(accessGranted) {
+      updateUserMedia({
+        audio: preferences.audio || 'default',
+        video: preferences.video || 'default',
+      });
+    }
+  }, [updateUserMedia, preferences, accessGranted])
+
+  useEffect(() => {
+    const init = async () => {
+      // TODO: initialize with true
+      // after that identify if have access and if its true, change for default values
+    };
+    if(!ready) {
+      init();
+    }
+  }, [ready, preferences, updateUserMedia, audioDevices, videoDevices]);
+
+  const stopStreaming = useCallback(async (_stream?: MediaStream) => {
+    if (_stream) {
+      _stream?.getTracks().forEach((track) => track.stop());
+    }
+  }, []);
 
   return {
     stream,

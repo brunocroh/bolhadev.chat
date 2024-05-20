@@ -65,10 +65,6 @@ export default function Page(): JSX.Element {
       videoRef.current.srcObject = stream;
       videoRef.current.play();
     }
-
-    return () => {
-      stopStreaming(stream!);
-    };
   }, [stream, stopStreaming]);
 
   return (

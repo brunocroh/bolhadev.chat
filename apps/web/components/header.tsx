@@ -7,7 +7,6 @@ export const Header = () => {
     <nav className="z-10 flex justify-between p-5">
       <Link href="/">
         <h1 className="text-base font-semibold text-purple-200">
-          BolhaDev.Chat
         </h1>
       </Link>
       <Link href="https://github.com/brunocroh/bolhadev.chat">

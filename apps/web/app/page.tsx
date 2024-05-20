@@ -11,11 +11,11 @@ export default function Page(): JSX.Element {
         <div className="flex w-full flex-row">
           <div className="flex">
             <video
-              className="w-full max-w-4xl"
+              className="w-full max-w-5xl"
               style={{
                 display: "block",
-                width: "600px",
-                height: "400px",
+                width: "700px",
+                height: "500px",
               }}
               playsInline
               loop={true}

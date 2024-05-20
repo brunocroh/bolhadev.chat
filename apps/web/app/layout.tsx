@@ -18,7 +18,7 @@ export default function RootLayout({
 }): JSX.Element {
   return (
     <html lang="en" className={GeistSans.className}>
-      <body className="dark flex h-screen flex-col">
+      <body className="dark flex h-screen flex-col ">
         <Header />
         <Image
           src="/light-ray.svg"

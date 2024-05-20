@@ -10,8 +10,8 @@ interface PreferencesState {
 export const usePreferencesStore = create<PreferencesState>()(
   persist(
     (set) => ({
-      audio: "",
-      video: "",
+      audio: "default",
+      video: "default",
       set: (deviceId, type) => set({ [type]: deviceId }),
     }),
     {
