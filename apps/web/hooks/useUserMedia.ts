@@ -80,22 +80,31 @@ export const useUserMedia = () => {
 
   const switchMic = useCallback(
     async (deviceId: string) => {
-      const oldTrack = activeStream?.getAudioTracks()[0]!;
+    const oldVideoTrack = activeStream?.getVideoTracks()[0]!;
+    const oldAudioTrack = activeStream?.getAudioTracks()[0]!;
 
-      const newStream = await navigator.mediaDevices.getUserMedia({
+      const tempStream = await navigator.mediaDevices.getUserMedia({
         audio: { deviceId: { exact: deviceId } },
         video: { deviceId: { exact: preferences.video } },
       });
 
-      const newTrack = newStream.getAudioTracks()[0]!;
+      const newAudioTrack = tempStream.getAudioTracks()[0]!;
+      const newVideoTrack = tempStream.getVideoTracks()[0]!;
+
+      const newStream = new MediaStream()
+
+      newStream.addTrack(newVideoTrack)
+      newStream.addTrack(newAudioTrack)
 
       stopStreaming(activeStream!)
       preferences.set(deviceId, 'audio')
       setActiveStream(newStream)
 
       return {
-        oldTrack,
-        newTrack,
+        oldVideoTrack,
+        newVideoTrack,
+        oldAudioTrack,
+        newAudioTrack,
         newStream,
       };
     },
@@ -103,23 +112,35 @@ export const useUserMedia = () => {
   );
 
   const switchVideo = useCallback(async (deviceId: string) => {
-    const oldTrack = activeStream?.getVideoTracks()[0]!;
+    const oldVideoTrack = activeStream?.getVideoTracks()[0]!;
+    const oldAudioTrack = activeStream?.getAudioTracks()[0]!;
 
-    const newStream = await navigator.mediaDevices.getUserMedia({
-      audio: { deviceId: { exact: preferences.audio }},
+    const tempStream = await navigator.mediaDevices.getUserMedia({
+      audio: {deviceId: { exact: preferences.audio } },
       video: { deviceId: { exact: deviceId }},
     });
 
-    const newTrack = newStream.getVideoTracks()[0]!;
+    const newVideoTrack = tempStream.getVideoTracks()[0]!;
+    const newAudioTrack = tempStream.getAudioTracks()[0]!;
+
+    const newStream = new MediaStream()
+
+    if(oldAudioTrack) {
+      newStream.addTrack(oldAudioTrack)
+    }
+
+    newStream.addTrack(newVideoTrack)
 
     stopStreaming(activeStream!)
     preferences.set(deviceId, 'video')
     setActiveStream(newStream)
 
     return {
-      oldTrack,
-      newTrack,
-      newStream,
+      oldVideoTrack,
+      newVideoTrack,
+      oldAudioTrack,
+      newAudioTrack,
+      newStream: tempStream,
     };
   }, [activeStream, preferences, stopStreaming]);
 

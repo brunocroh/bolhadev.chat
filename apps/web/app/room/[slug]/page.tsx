@@ -146,10 +146,11 @@ export default function Page(): JSX.Element {
       result = await switchVideo(deviceId);
     }
 
-    peerRef.current?.replaceTrack(result.oldTrack, result.newTrack, stream!);
+    peerRef.current?.replaceTrack(result?.oldVideoTrack!, result?.newVideoTrack!, stream!);
+    peerRef.current?.replaceTrack(result?.oldAudioTrack!, result?.newAudioTrack!, stream!);
 
     if (videoRef.current) {
-      videoRef.current.srcObject = result.newStream;
+      videoRef.current.srcObject = result?.newStream!;
     }
   };
 
