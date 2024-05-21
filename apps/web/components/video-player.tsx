@@ -1,8 +1,10 @@
 "use client"
 
-import React, { forwardRef } from "react";
+import React, { forwardRef, useCallback, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Mic, Video } from "lucide-react";
+import { Button } from "./ui/button";
+import clsx from "clsx";
 
 type VideoPlayer = {
   audioDevices?: MediaDeviceInfo[]
@@ -27,7 +29,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(({
       <>
         <div className="z-10 h-[300px] w-[410px] overflow-hidden rounded-lg">
           <video
-            className="h-[310px] w-[420px] rounded-lg [transform:rotateY(180deg)]"
+            className={clsx("h-[310px] w-[420px] rounded-lg ", {  '[transform:rotateY(180deg)]': !remote})}
             ref={videoRef}
             playsInline
             autoPlay={true}
