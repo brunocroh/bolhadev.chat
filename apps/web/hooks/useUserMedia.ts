@@ -6,6 +6,8 @@ type MediaConstraints = {
   video: string;
 };
 
+const streams: MediaStream[] = []
+
 export const useUserMedia = () => {
   const preferences = usePreferencesStore();
   const [stream, setStream] = useState<MediaStream | null>(null);
@@ -15,43 +17,87 @@ export const useUserMedia = () => {
 
   const [accessGranted, setAccessGranted] = useState(false);
 
+  const checkPermission = useCallback(async () => {
+    const videoPermission = await navigator.permissions.query({ name: 'camera' });
+    const audioPermission = await navigator.permissions.query({ name: 'microphone' });
+
+    const permission =  {
+      video: videoPermission.state === 'granted',
+      audio: audioPermission.state === 'granted'
+    }
+
+    console.log({
+      permission
+
+    })
+    if(permission.video && permission.audio){
+      setAccessGranted(true)
+    }
+
+    return permission
+  }, [setAccessGranted])
+
+
+  const stopStreaming = useCallback(async (_stream?: MediaStream) => {
+    if (_stream) {
+      _stream?.getTracks().forEach((track) => track.stop());
+    }
+  }, []);
+
+  const requestPermission = useCallback(
+    async () => {
+      const _stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+      });
+
+      stopStreaming(_stream)
+      checkPermission()
+    },
+    [stopStreaming, checkPermission],
+  );
 
   const updateUserMedia = useCallback(
     async (constraints: MediaConstraints) => {
       const _stream = await navigator.mediaDevices.getUserMedia({
-        video: constraints.video
-          ? { deviceId: { exact: constraints.video } }
-          : true,
-        audio: constraints.audio
-          ? { deviceId: { exact: constraints.audio } }
-          : true,
+        video: { deviceId: { exact: constraints.video } },
+        audio: { deviceId: { exact: constraints.audio } }
       });
 
-      setStream(_stream);
+      console.log('UPDATE')
       setActiveStream(_stream);
       setReady(true);
+      return _stream
     },
-    [setReady],
+    [],
   );
 
   const getDevices = useCallback(async () => {
+    console.log("GET DEVICES")
     const devices = await navigator.mediaDevices.enumerateDevices();
     setDevices(devices || []);
-  }, []);
+  }, [setDevices]);
 
   const switchMic = useCallback(
     async (deviceId: string) => {
       const oldTrack = stream?.getAudioTracks()[0]!;
 
-      const newStream = await navigator.mediaDevices.getUserMedia({
+      const tempStream = await navigator.mediaDevices.getUserMedia({
         audio: { deviceId: { exact: deviceId } },
         video: { deviceId: { exact: preferences.video } },
       });
 
-      const newTrack = newStream.getAudioTracks()[0]!;
+      const newTrack = tempStream.getAudioTracks()[0]!;
 
-      preferences.set(deviceId, "audio");
-      setActiveStream(newStream);
+      const newStream = new MediaStream([
+        newTrack,
+        ...(stream?.getVideoTracks() || []),
+      ]);
+
+
+      stopStreaming(activeStream!)
+      preferences.set(deviceId, 'audio')
+      // setActiveStream(newStream)
 
       return {
         oldTrack,
@@ -59,37 +105,40 @@ export const useUserMedia = () => {
         newStream,
       };
     },
-    [preferences, stream],
+    [preferences, stream, stopStreaming, activeStream],
   );
 
-  const switchVideo = useCallback(
-    async (deviceId: string) => {
-      const oldTrack = stream?.getVideoTracks()[0]!;
+  const switchVideo = useCallback(async (deviceId: string) => {
+    console.log("SWITCH")
+    const oldTrack = activeStream?.getVideoTracks()[0]!;
 
-      const newStream = await navigator.mediaDevices.getUserMedia({
-        audio: { deviceId: { exact: preferences.audio } },
-        video: { deviceId: { exact: deviceId } },
-      });
+    const tempStream = await navigator.mediaDevices.getUserMedia({
+      audio: false,
+      video: { deviceId: { exact: deviceId } },
+    });
 
-      const newTrack = newStream.getVideoTracks()[0]!;
+    const newTrack = tempStream.getVideoTracks()[0]!;
 
-      preferences.set(deviceId, "video");
-      setActiveStream(newStream);
+    const newStream = new MediaStream([
+      newTrack,
+      ...(stream?.getAudioTracks() || []),
+    ]);
 
-      return {
-        oldTrack,
-        newTrack,
-        newStream,
-      };
-    },
-    [preferences, stream],
-  );
+    stopStreaming(activeStream!)
+    preferences.set(deviceId, 'video')
+    // setActiveStream(newStream)
+
+    return {
+      oldTrack,
+      newTrack,
+      newStream,
+    };
+  }, [stopStreaming, activeStream, preferences, stream]);
 
 
   const stopAllStreaming = useCallback(async () => {
     stream?.getTracks().forEach((track) => track.stop());
-    activeStream?.getTracks().forEach((track) => track.stop());
-  }, [stream, activeStream]);
+  }, [stream]);
 
   useEffect(() => {
     if(accessGranted) {
@@ -110,45 +159,47 @@ export const useUserMedia = () => {
   }, [devices]);
 
   useEffect(() => {
-    const requestAccess = async () => {
-      const _stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-
-      _stream.getTracks().forEach(track => track.stop)
-      setAccessGranted(true)
+    if(stream !== null && !streams.find(s => s.id === stream?.id)) {
+      streams.push(stream!)
+      console.log({streams})
     }
 
-    if(!accessGranted && !devices.length) {
-      requestAccess()
+    if(activeStream !== null && !streams.find(s => s.id === activeStream?.id )) {
+      streams.push(activeStream!)
+      console.log({streams})
     }
-  }, [devices, accessGranted])
 
-  useEffect(() => {
-    if(accessGranted) {
-      updateUserMedia({
-        audio: preferences.audio || 'default',
-        video: preferences.video || 'default',
-      });
-    }
-  }, [updateUserMedia, preferences, accessGranted])
+  }, [stream, activeStream])
 
   useEffect(() => {
     const init = async () => {
-      // TODO: initialize with true
-      // after that identify if have access and if its true, change for default values
-    };
-    if(!ready) {
-      init();
-    }
-  }, [ready, preferences, updateUserMedia, audioDevices, videoDevices]);
+      const permission = await checkPermission()
 
-  const stopStreaming = useCallback(async (_stream?: MediaStream) => {
-    if (_stream) {
-      _stream?.getTracks().forEach((track) => track.stop());
+      if(!permission.audio || !permission.video) {
+        requestPermission()
+      }
     }
-  }, []);
+
+    init()
+  }, [checkPermission, getDevices, requestPermission])
+
+
+  useEffect(() => {
+    const init = async () => {
+      getDevices()
+      const _stream = await updateUserMedia({
+        audio: preferences.audio,
+        video: preferences.video
+      })
+
+      setStream(_stream)
+    }
+
+
+    if(accessGranted && !stream) {
+      init()
+    }
+  }, [preferences.audio, preferences.video, updateUserMedia, accessGranted, stream])
 
   return {
     stream,

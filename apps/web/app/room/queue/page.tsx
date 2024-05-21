@@ -20,7 +20,6 @@ export default function Page(): JSX.Element {
     selectedVideoDevice,
     switchMic,
     activeStream: stream,
-    stopStreaming,
   } = useUserMedia();
 
   const [me, setMe] = useState(null);
@@ -65,7 +64,7 @@ export default function Page(): JSX.Element {
       videoRef.current.srcObject = stream;
       videoRef.current.play();
     }
-  }, [stream, stopStreaming]);
+  }, [stream]);
 
   return (
     <main className="flex h-full flex-col">
@@ -89,7 +88,6 @@ export default function Page(): JSX.Element {
                     activeAudioDevice={selectedAudioDevice}
                     setActiveVideoDevice={switchVideo}
                     activeVideoDevice={selectedVideoDevice}
-                    muted={true}
                   />
 
                   <div className="mt-6 flex h-12 w-full items-center justify-between gap-6">

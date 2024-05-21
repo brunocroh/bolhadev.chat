@@ -30,6 +30,7 @@ export default function Page(): JSX.Element {
     ready,
     accessGranted,
     stream,
+    activeStream,
     switchVideo,
     switchMic,
     selectedAudioDevice,
@@ -119,21 +120,15 @@ export default function Page(): JSX.Element {
   );
 
   useEffect(() => {
-    return () => {
-      peerRef.current?.destroy();
-      peerRef.current = null;
-      stopAllStreaming();
-    };
-  }, [stopAllStreaming]);
-
-  useEffect(() => {
-    if (videoRef.current && stream) {
-      videoRef.current.srcObject = stream;
-      videoRef.current.play();
+    if (videoRef.current && activeStream) {
+      videoRef.current.srcObject = activeStream;
+      if(!videoReady) {
+        videoRef.current.play();
+      }
 
       setVideoReady(true);
     }
-  }, [stream]);
+  }, [activeStream, videoReady]);
 
   useEffect(() => {
     if (videoReady && me) {
@@ -141,7 +136,7 @@ export default function Page(): JSX.Element {
     }
   }, [me, videoReady, roomId, sendJsonMessage]);
 
-  const handleInputChange = async (
+ const handleInputChange = async (
     deviceId: string,
     type: "audio" | "video",
   ) => {
@@ -189,7 +184,6 @@ export default function Page(): JSX.Element {
                 setActiveAudioDevice={(deviceId) => handleInputChange(deviceId, 'audio') }
                 activeVideoDevice={selectedVideoDevice}
                 setActiveVideoDevice={(deviceId) => handleInputChange(deviceId, 'video') }
-                muted={true}
                 audioDevices={audioDevices}
                 videoDevices={videoDevices}
               />
@@ -197,16 +191,7 @@ export default function Page(): JSX.Element {
           </Card>
           <Card>
             <CardContent className="p-5">
-              <VideoPlayer
-                ref={remoteRef}
-                activeAudioDevice={selectedAudioDevice}
-                setActiveAudioDevice={(deviceId) => handleInputChange(deviceId, 'audio') }
-                activeVideoDevice={selectedVideoDevice}
-                setActiveVideoDevice={(deviceId) => handleInputChange(deviceId, 'video') }
-                muted={true}
-                audioDevices={audioDevices}
-                videoDevices={videoDevices}
-              />
+              <VideoPlayer remote ref={remoteRef} />
             </CardContent>
           </Card>
         </div>
