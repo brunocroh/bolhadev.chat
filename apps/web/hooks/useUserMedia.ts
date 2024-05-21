@@ -108,8 +108,8 @@ export const useUserMedia = () => {
     const oldTrack = activeStream?.getVideoTracks()[0]!;
 
     const newStream = await navigator.mediaDevices.getUserMedia({
-      audio: false,
-      video: { deviceId: { exact: deviceId } },
+      audio: { deviceId: { exact: preferences.audio }},
+      video: { deviceId: { exact: deviceId }},
     });
 
     const newTrack = newStream.getVideoTracks()[0]!;
