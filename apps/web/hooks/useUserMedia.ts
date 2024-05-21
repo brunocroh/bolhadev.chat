@@ -83,18 +83,14 @@ export const useUserMedia = () => {
     const oldVideoTrack = activeStream?.getVideoTracks()[0]!;
     const oldAudioTrack = activeStream?.getAudioTracks()[0]!;
 
-      const tempStream = await navigator.mediaDevices.getUserMedia({
+      const newStream = await navigator.mediaDevices.getUserMedia({
         audio: { deviceId: { exact: deviceId } },
         video: { deviceId: { exact: preferences.video } },
       });
 
-      const newAudioTrack = tempStream.getAudioTracks()[0]!;
-      const newVideoTrack = tempStream.getVideoTracks()[0]!;
+      const newAudioTrack = newStream.getAudioTracks()[0]!;
+      const newVideoTrack = newStream.getVideoTracks()[0]!;
 
-      const newStream = new MediaStream()
-
-      newStream.addTrack(newVideoTrack)
-      newStream.addTrack(newAudioTrack)
 
       stopStreaming(activeStream!)
       preferences.set(deviceId, 'audio')
@@ -115,21 +111,13 @@ export const useUserMedia = () => {
     const oldVideoTrack = activeStream?.getVideoTracks()[0]!;
     const oldAudioTrack = activeStream?.getAudioTracks()[0]!;
 
-    const tempStream = await navigator.mediaDevices.getUserMedia({
+    const newStream = await navigator.mediaDevices.getUserMedia({
       audio: {deviceId: { exact: preferences.audio } },
       video: { deviceId: { exact: deviceId }},
     });
 
-    const newVideoTrack = tempStream.getVideoTracks()[0]!;
-    const newAudioTrack = tempStream.getAudioTracks()[0]!;
-
-    const newStream = new MediaStream()
-
-    if(oldAudioTrack) {
-      newStream.addTrack(oldAudioTrack)
-    }
-
-    newStream.addTrack(newVideoTrack)
+    const newVideoTrack = newStream.getVideoTracks()[0]!;
+    const newAudioTrack = newStream.getAudioTracks()[0]!;
 
     stopStreaming(activeStream!)
     preferences.set(deviceId, 'video')
@@ -140,7 +128,7 @@ export const useUserMedia = () => {
       newVideoTrack,
       oldAudioTrack,
       newAudioTrack,
-      newStream: tempStream,
+      newStream,
     };
   }, [activeStream, preferences, stopStreaming]);
 
