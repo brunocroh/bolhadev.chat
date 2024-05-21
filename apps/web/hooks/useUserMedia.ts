@@ -89,7 +89,6 @@ export const useUserMedia = () => {
 
       const newTrack = newStream.getAudioTracks()[0]!;
 
-
       stopStreaming(activeStream!)
       preferences.set(deviceId, 'audio')
       setActiveStream(newStream)
@@ -100,11 +99,10 @@ export const useUserMedia = () => {
         newStream,
       };
     },
-    [preferences, stopStreaming, activeStream],
+    [preferences, activeStream, stopStreaming],
   );
 
   const switchVideo = useCallback(async (deviceId: string) => {
-    console.log("SWITCH")
     const oldTrack = activeStream?.getVideoTracks()[0]!;
 
     const newStream = await navigator.mediaDevices.getUserMedia({
@@ -123,7 +121,7 @@ export const useUserMedia = () => {
       newTrack,
       newStream,
     };
-  }, [stopStreaming, activeStream, preferences, stream]);
+  }, [activeStream, preferences, stopStreaming]);
 
 
   const stopAllStreaming = useCallback(async () => {
@@ -189,7 +187,7 @@ export const useUserMedia = () => {
     if(accessGranted && !stream) {
       init()
     }
-  }, [preferences.audio, preferences.video, updateUserMedia, accessGranted, stream])
+  }, [preferences.audio, preferences.video, updateUserMedia, accessGranted, stream, getDevices])
 
   return {
     stream,

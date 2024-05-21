@@ -122,9 +122,7 @@ export default function Page(): JSX.Element {
   useEffect(() => {
     if (videoRef.current && activeStream) {
       videoRef.current.srcObject = activeStream;
-      if(!videoReady) {
-        videoRef.current.play();
-      }
+      videoRef.current.play();
 
       setVideoReady(true);
     }
