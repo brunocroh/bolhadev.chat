@@ -80,24 +80,19 @@ export const useUserMedia = () => {
 
   const switchMic = useCallback(
     async (deviceId: string) => {
-      const oldTrack = stream?.getAudioTracks()[0]!;
+      const oldTrack = activeStream?.getAudioTracks()[0]!;
 
-      const tempStream = await navigator.mediaDevices.getUserMedia({
+      const newStream = await navigator.mediaDevices.getUserMedia({
         audio: { deviceId: { exact: deviceId } },
         video: { deviceId: { exact: preferences.video } },
       });
 
-      const newTrack = tempStream.getAudioTracks()[0]!;
-
-      const newStream = new MediaStream([
-        newTrack,
-        ...(stream?.getVideoTracks() || []),
-      ]);
+      const newTrack = newStream.getAudioTracks()[0]!;
 
 
       stopStreaming(activeStream!)
       preferences.set(deviceId, 'audio')
-      // setActiveStream(newStream)
+      setActiveStream(newStream)
 
       return {
         oldTrack,
@@ -105,28 +100,23 @@ export const useUserMedia = () => {
         newStream,
       };
     },
-    [preferences, stream, stopStreaming, activeStream],
+    [preferences, stopStreaming, activeStream],
   );
 
   const switchVideo = useCallback(async (deviceId: string) => {
     console.log("SWITCH")
     const oldTrack = activeStream?.getVideoTracks()[0]!;
 
-    const tempStream = await navigator.mediaDevices.getUserMedia({
+    const newStream = await navigator.mediaDevices.getUserMedia({
       audio: false,
       video: { deviceId: { exact: deviceId } },
     });
 
-    const newTrack = tempStream.getVideoTracks()[0]!;
-
-    const newStream = new MediaStream([
-      newTrack,
-      ...(stream?.getAudioTracks() || []),
-    ]);
+    const newTrack = newStream.getVideoTracks()[0]!;
 
     stopStreaming(activeStream!)
     preferences.set(deviceId, 'video')
-    // setActiveStream(newStream)
+    setActiveStream(newStream)
 
     return {
       oldTrack,

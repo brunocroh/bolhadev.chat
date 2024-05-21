@@ -20,6 +20,7 @@ export default function Page(): JSX.Element {
     selectedVideoDevice,
     switchMic,
     activeStream: stream,
+    stopAllStreaming,
   } = useUserMedia();
 
   const [me, setMe] = useState(null);
@@ -65,6 +66,12 @@ export default function Page(): JSX.Element {
       videoRef.current.play();
     }
   }, [stream]);
+
+  useEffect(() => {
+    return () => {
+      stopAllStreaming()
+    }
+  }, [])
 
   return (
     <main className="flex h-full flex-col">
