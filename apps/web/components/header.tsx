@@ -6,7 +6,7 @@ export const Header = () => {
   return (
     <nav className="z-10 flex justify-between p-5">
       <Link href="/">
-        <h1 className="text-base font-semibold text-purple-200">
+        <h1 className="text-base font-semibold text-white">
           Bolhadev.chat
         </h1>
       </Link>
