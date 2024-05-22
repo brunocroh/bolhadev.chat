@@ -154,17 +154,10 @@ export default function Page(): JSX.Element {
   }, [setMute]);
 
   return (
-    <main className="flex h-full flex-col">
-      <section
-        className={"align-center flex h-full flex-col place-content-center"}
-      >
-        <div>
-          <h1>{me}</h1>
-          <h1>READY: {ready ? "ready" : "not Ready"}</h1>
-          <h1>ACCESS: {accessGranted ? "false" : "true"}</h1>
-        </div>
-        <div className="flex flex-row gap-2">
-          <Card>
+    <section className="container flex h-full content-center items-center justify-center">
+      <div className="flex w-full items-center ">
+        <div className="flex flex-col gap-2 bg-red-500 md:flex-row md:items-center">
+          <Card className="md:w-1/2 ">
             <CardContent className="p-5">
               <VideoPlayer
                 ref={videoRef}
@@ -177,13 +170,13 @@ export default function Page(): JSX.Element {
               />
             </CardContent>
           </Card>
-          <Card>
-            <CardContent className="p-5">
+          <Card className="md:w-1/2 md:self-start">
+            <CardContent className="h-full p-5">
               <VideoPlayer remote ref={remoteRef} />
             </CardContent>
           </Card>
         </div>
-      </section>
-    </main>
+      </div>
+    </section>
   );
 }

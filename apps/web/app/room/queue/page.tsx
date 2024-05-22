@@ -88,7 +88,7 @@ export default function Page(): JSX.Element {
           </div>
           <div className="flex flex-col justify-center">
             <div className="m-5 flex w-full flex-col items-center">
-              <Card className="w-[500px] p-5">
+              <Card className="w-3/4 pt-6">
                 <CardContent>
                   <VideoPlayer
                     ref={videoRef}

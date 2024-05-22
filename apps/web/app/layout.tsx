@@ -25,10 +25,10 @@ export default function RootLayout({
           alt="Purple light ray"
           width="1600"
           height="800"
-          className="animate-in fade-in slide-in-from-bottom-1 absolute"
+          className="animate-in fade-in slide-in-from-bottom-1 absolute -z-10"
           style={{ color: "transparent", animationDuration: "10s" }}
         />
-        <section>{children}</section>
+        <main className="h-full">{children}</main>
       </body>
     </html>
   );

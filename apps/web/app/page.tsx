@@ -11,7 +11,7 @@ export default function Page(): JSX.Element {
         <div className="flex w-full flex-row">
           <div className="flex">
             <video
-              className="w-full max-w-5xl"
+              className="-z-20 w-full max-w-5xl"
               style={{
                 display: "block",
                 width: "700px",
