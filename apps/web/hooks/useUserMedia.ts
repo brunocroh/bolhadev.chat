@@ -78,49 +78,31 @@ export const useUserMedia = () => {
     setDevices(devices || []);
   }, [setDevices]);
 
-  const switchMic = useCallback(
-    async (deviceId: string) => {
+  const switchInput = useCallback(async (deviceId: string, type: 'audio' | 'video') => {
+    let newStream: MediaStream;
     const oldVideoTrack = activeStream?.getVideoTracks()[0]!;
     const oldAudioTrack = activeStream?.getAudioTracks()[0]!;
 
-      const newStream = await navigator.mediaDevices.getUserMedia({
+    if(type === 'audio') {
+      newStream = await navigator.mediaDevices.getUserMedia({
         audio: { deviceId: { exact: deviceId } },
         video: { deviceId: { exact: preferences.video } },
       });
-
-      const newAudioTrack = newStream.getAudioTracks()[0]!;
-      const newVideoTrack = newStream.getVideoTracks()[0]!;
-
-
-      stopStreaming(activeStream!)
       preferences.set(deviceId, 'audio')
-      setActiveStream(newStream)
+    } else {
+      newStream = await navigator.mediaDevices.getUserMedia({
+        audio: { deviceId: { exact: preferences.audio } },
+        video: { deviceId: { exact: deviceId }},
+      });
+      preferences.set(deviceId, 'video')
+    }
 
-      return {
-        oldVideoTrack,
-        newVideoTrack,
-        oldAudioTrack,
-        newAudioTrack,
-        newStream,
-      };
-    },
-    [preferences, activeStream, stopStreaming],
-  );
-
-  const switchVideo = useCallback(async (deviceId: string) => {
-    const oldVideoTrack = activeStream?.getVideoTracks()[0]!;
-    const oldAudioTrack = activeStream?.getAudioTracks()[0]!;
-
-    const newStream = await navigator.mediaDevices.getUserMedia({
-      audio: {deviceId: { exact: preferences.audio } },
-      video: { deviceId: { exact: deviceId }},
-    });
+    if(!newStream) return
 
     const newVideoTrack = newStream.getVideoTracks()[0]!;
     const newAudioTrack = newStream.getAudioTracks()[0]!;
 
     stopStreaming(activeStream!)
-    preferences.set(deviceId, 'video')
     setActiveStream(newStream)
 
     return {
@@ -207,8 +189,7 @@ export const useUserMedia = () => {
     selectedVideoDevice: preferences.video,
     ready,
     accessGranted,
-    switchVideo,
-    switchMic,
+    switchInput,
     stopStreaming,
     stopAllStreaming,
   };

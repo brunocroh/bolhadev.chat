@@ -31,12 +31,11 @@ export default function Page(): JSX.Element {
     accessGranted,
     stream,
     activeStream,
-    switchVideo,
-    switchMic,
     selectedAudioDevice,
     selectedVideoDevice,
     audioDevices,
     videoDevices,
+    switchInput,
     stopAllStreaming,
   } = useUserMedia();
 
@@ -138,20 +137,10 @@ export default function Page(): JSX.Element {
     deviceId: string,
     type: "audio" | "video",
   ) => {
-    let result;
 
-    if (type === "audio") {
-      result = await switchMic(deviceId);
-    } else {
-      result = await switchVideo(deviceId);
-    }
-
+    const result = await switchInput(deviceId, type)
     peerRef.current?.replaceTrack(result?.oldVideoTrack!, result?.newVideoTrack!, stream!);
     peerRef.current?.replaceTrack(result?.oldAudioTrack!, result?.newAudioTrack!, stream!);
-
-    if (videoRef.current) {
-      videoRef.current.srcObject = result?.newStream!;
-    }
   };
 
   const handleFinishCall = useCallback(async () => {

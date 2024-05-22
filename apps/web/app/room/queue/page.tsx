@@ -16,9 +16,8 @@ export default function Page(): JSX.Element {
     audioDevices,
     videoDevices,
     selectedAudioDevice,
-    switchVideo,
     selectedVideoDevice,
-    switchMic,
+    switchInput,
     activeStream: stream,
     stopAllStreaming,
   } = useUserMedia();
@@ -60,6 +59,10 @@ export default function Page(): JSX.Element {
     sendJsonMessage({ type: inQueue ? "queueExit" : "queueJoin", userId: me });
   }, [inQueue, me, sendJsonMessage]);
 
+  const onInputChange = useCallback((deviceId: string, type: 'audio' | 'video') => {
+    switchInput(deviceId, type)
+  }, [switchInput])
+
   useEffect(() => {
     if (videoRef.current && stream) {
       videoRef.current.srcObject = stream;
@@ -91,9 +94,9 @@ export default function Page(): JSX.Element {
                     ref={videoRef}
                     audioDevices={audioDevices}
                     videoDevices={videoDevices}
-                    setActiveAudioDevice={switchMic}
+                    setActiveAudioDevice={(deviceId) => onInputChange(deviceId, 'audio')}
                     activeAudioDevice={selectedAudioDevice}
-                    setActiveVideoDevice={switchVideo}
+                    setActiveVideoDevice={(deviceId) => onInputChange(deviceId, 'video')}
                     activeVideoDevice={selectedVideoDevice}
                   />
 
