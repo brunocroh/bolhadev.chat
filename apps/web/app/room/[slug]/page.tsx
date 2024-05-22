@@ -156,7 +156,7 @@ export default function Page(): JSX.Element {
   return (
     <section className="container flex h-full content-center items-center justify-center">
       <div className="flex w-full items-center ">
-        <div className="flex flex-col gap-2 bg-red-500 md:flex-row md:items-center">
+        <div className="flex flex-col gap-2 md:flex-row md:items-center">
           <Card className="md:w-1/2 ">
             <CardContent className="p-5">
               <VideoPlayer
