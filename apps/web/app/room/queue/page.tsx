@@ -85,7 +85,7 @@ export default function Page(): JSX.Element {
             <span className="absolute inline-flex size-full rounded-full bg-green-500 px-2 py-1 opacity-90">
               Users Online: {usersOnline}
             </span>
-          </div>"
+          </div>
           <div className="flex flex-col justify-center">
             <div className="flex w-full flex-col items-center p-5">
               <Card className="w-3/4 pt-6">
