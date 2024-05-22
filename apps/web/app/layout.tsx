@@ -1,9 +1,8 @@
-import { Github } from "lucide-react";
+import { GoogleAnalytics } from '@next/third-parties/google'
 import "./globals.css";
 import { GeistSans } from "geist/font/sans";
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { Header } from "@/components/header";
 
 export const metadata: Metadata = {
@@ -30,6 +29,7 @@ export default function RootLayout({
         />
         <main className="h-full">{children}</main>
       </body>
+      <GoogleAnalytics gaId="G-STY9BKWKT4" />
     </html>
   );
 }

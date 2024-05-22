@@ -27,11 +27,11 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(({
 }, videoRef) => {
     return (
       <>
-        <div className="m-0 size-full min-w-[400px] overflow-hidden">
+        <div className="m-0 size-full min-w-[400px] max-w-[900px] overflow-hidden">
           <video
             className={clsx("rounded-lg w-full ", { '[transform:scaleX(-1)]': !remote})}
             ref={videoRef}
-            poster="/earth.mp4"
+            poster="/thumbnail.png"
             playsInline
             autoPlay={true}
             muted={!remote}
