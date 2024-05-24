@@ -11,6 +11,7 @@ const streams: MediaStream[] = []
 export const useUserMedia = () => {
   const preferences = usePreferencesStore();
   const [muted, setMuted] = useState<boolean>(false);
+  const [videoOff, setVideoOff] = useState<boolean>(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [activeStream, setActiveStream] = useState<MediaStream | null>(null);
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
@@ -87,6 +88,15 @@ export const useUserMedia = () => {
         return !_muted
     })
   }, [stream, setMuted])
+
+  const toggleVideo = useCallback(async () => {
+    setVideoOff(_videoOff => {
+        stream?.getVideoTracks().forEach(track => {
+          track.enabled = _videoOff 
+        })
+        return !_videoOff
+    })
+  }, [stream, setVideoOff])
 
   const switchInput = useCallback(async (deviceId: string, type: 'audio' | 'video') => {
     let newStream: MediaStream;
@@ -203,6 +213,8 @@ export const useUserMedia = () => {
     stopStreaming,
     stopAllStreaming,
     toggleMute,
+    toggleVideo,
     muted,
+    videoOff
   };
 };

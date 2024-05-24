@@ -2,7 +2,7 @@
 
 import React, { forwardRef, useCallback, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import { Mic, Video } from "lucide-react";
+import { Mic, MicOff, Video, VideoOff } from "lucide-react";
 import { Button } from "./ui/button";
 import clsx from "clsx";
 
@@ -13,7 +13,11 @@ type VideoPlayer = {
   activeVideoDevice?: string,
   setActiveAudioDevice?: (deviceId: string) => void;
   setActiveVideoDevice?: (deviceId: string) => void,
+  onMute?: () => void,
+  onVideoOff?: () => void,
   remote?: boolean
+  muted?: boolean;
+  videoOff?: boolean;
 }
 
 export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(({
@@ -23,20 +27,34 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(({
   activeAudioDevice,
   setActiveVideoDevice,
   activeVideoDevice,
+  onMute,
+  onVideoOff,
   remote = false,
+  muted = false,
+  videoOff = false,
 }, videoRef) => {
     return (
       <>
         <div className="m-0 size-full min-w-[400px] max-w-[900px] overflow-hidden">
-          <video
-            className={clsx("rounded-lg w-full ", { '[transform:scaleX(-1)]': !remote})}
-            ref={videoRef}
-            poster="/thumbnail.png"
-            playsInline
-            autoPlay={true}
-            muted={!remote}
-          ></video>
-        {!remote && (
+          <div className="relative flex flex-col items-center">
+            <video
+              className={clsx("rounded-lg w-full ", { '[transform:scaleX(-1)]': !remote})}
+              ref={videoRef}
+              poster="/thumbnail.png"
+              playsInline
+              autoPlay={true}
+              muted={!remote}
+            ></video>
+            {!remote && <div className="absolute bottom-2 flex gap-2">
+              <Button onClick={onMute} className="size-8 rounded-full p-2" variant={muted ? 'destructive' : 'secondary'}>
+                {muted ? <MicOff className="size-4"  /> : <Mic className="size-4"  />}
+              </Button>
+              <Button onClick={onVideoOff} className="size-8 rounded-full p-2" variant={videoOff ? 'destructive' : 'secondary'}>
+                {videoOff ? <Video className="size-4"  /> : <VideoOff className="size-4"  />}
+              </Button>
+            </div>}
+          </div>
+          {!remote && (
             <div className="mt-5 flex justify-center">
               <div className="flex w-fit gap-6">
                 <Select onValueChange={setActiveAudioDevice} value={activeAudioDevice}>
@@ -74,7 +92,6 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(({
                     })}
                   </SelectContent>
                 </Select>
-
               </div>
             </div>
           )}

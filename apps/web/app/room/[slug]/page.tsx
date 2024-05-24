@@ -13,6 +13,7 @@ import Peer from "simple-peer";
 import useWebSocket from "react-use-websocket";
 import { Card, CardContent } from "@/components/ui/card";
 import { VideoPlayer } from "@/components/video-player";
+import { Button } from "@/components/ui/button";
 
 export default function Page(): JSX.Element {
   const peerRef: MutableRefObject<Peer.Instance | null> = useRef(null);
@@ -23,12 +24,13 @@ export default function Page(): JSX.Element {
   const roomId = pathname.split("/room/")[1];
 
   const [me, setMe] = useState("");
-  const [mute, setMute] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
 
   const {
-    ready,
-    accessGranted,
+    muted,
+    toggleMute,
+    toggleVideo,
+    videoOff,
     stream,
     activeStream,
     selectedAudioDevice,
@@ -149,10 +151,6 @@ export default function Page(): JSX.Element {
     location.replace(`${roomId}/feedback`);
   }, [stopAllStreaming, roomId]);
 
-  const toggleMute = useCallback(() => {
-    setMute((_mute) => !_mute);
-  }, [setMute]);
-
   return (
     <section className="container flex h-full content-center items-center justify-center">
       <div className="flex w-full items-center ">
@@ -167,6 +165,10 @@ export default function Page(): JSX.Element {
                 setActiveVideoDevice={(deviceId) => handleInputChange(deviceId, 'video') }
                 audioDevices={audioDevices}
                 videoDevices={videoDevices}
+                muted={muted}
+                videoOff={videoOff}
+                onMute={toggleMute}
+                onVideoOff={toggleVideo}
               />
             </CardContent>
           </Card>
