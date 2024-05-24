@@ -79,7 +79,7 @@ export default function Page(): JSX.Element {
 
   return (
     <main className="flex h-full flex-col">
-      <section className="align-center flex h-full place-content-center content-center justify-center">
+      <section className="align-center container flex h-full place-content-center content-center justify-center">
         <div>
           <h1 className="text-[2em]">Before you start practicing, make sure to check your microphone and camera.</h1>
           <div>
@@ -87,7 +87,7 @@ export default function Page(): JSX.Element {
               Users Online: {usersOnline}
             </span>
           </div>
-          <div className="flex flex-col justify-center">
+          <div className="mt-8 flex flex-col justify-center">
             <div className="flex w-full flex-col items-center p-5">
               <Card className="w-3/4 pt-6">
                 <CardContent>
