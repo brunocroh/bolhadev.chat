@@ -52,7 +52,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(({
                 {muted ? <MicOff className="size-4"  /> : <Mic className="size-4"  />}
               </Button>
               <Button onClick={onVideoOff} className="size-8 rounded-full p-2 active:scale-95" variant={videoOff ? 'destructive' : 'secondary'}>
-                {videoOff ? <Video className="size-4"  /> : <VideoOff className="size-4"  />}
+                {videoOff ? <VideoOff className="size-4"  /> : <VideoOff className="size-4"  />}
               </Button>
               { onTurnOff && (
                 <Button onClick={onTurnOff} className="size-8 rounded-full p-2 active:scale-95" variant={'destructive'}>

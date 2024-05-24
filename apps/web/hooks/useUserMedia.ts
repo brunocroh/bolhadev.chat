@@ -28,10 +28,6 @@ export const useUserMedia = () => {
       audio: audioPermission.state === 'granted'
     }
 
-    console.log({
-      permission
-
-    })
     if(permission.video && permission.audio){
       setAccessGranted(true)
     }
@@ -66,7 +62,6 @@ export const useUserMedia = () => {
         audio: { deviceId: { exact: constraints.audio } }
       });
 
-      console.log('UPDATE')
       setActiveStream(_stream);
       setReady(true);
       return _stream
@@ -75,7 +70,6 @@ export const useUserMedia = () => {
   );
 
   const getDevices = useCallback(async () => {
-    console.log("GET DEVICES")
     const devices = await navigator.mediaDevices.enumerateDevices();
     setDevices(devices || []);
   }, [setDevices]);
@@ -91,12 +85,12 @@ export const useUserMedia = () => {
 
   const toggleVideo = useCallback(async () => {
     setVideoOff(_videoOff => {
-        stream?.getVideoTracks().forEach(track => {
+        activeStream?.getVideoTracks().forEach(track => {
           track.enabled = _videoOff 
         })
         return !_videoOff
     })
-  }, [stream, setVideoOff])
+  }, [activeStream, setVideoOff])
 
   const switchInput = useCallback(async (deviceId: string, type: 'audio' | 'video') => {
     let newStream: MediaStream;
@@ -122,6 +116,9 @@ export const useUserMedia = () => {
     const newVideoTrack = newStream.getVideoTracks()[0]!;
     const newAudioTrack = newStream.getAudioTracks()[0]!;
 
+    newVideoTrack.enabled = !videoOff
+    newAudioTrack.enabled = !muted
+
     stopStreaming(activeStream!)
     setActiveStream(newStream)
 
@@ -132,7 +129,7 @@ export const useUserMedia = () => {
       newAudioTrack,
       newStream,
     };
-  }, [activeStream, preferences, stopStreaming]);
+  }, [activeStream, preferences, stopStreaming, muted, videoOff]);
 
 
   const stopAllStreaming = useCallback(async () => {
@@ -156,19 +153,6 @@ export const useUserMedia = () => {
       (device) => device.kind === "videoinput" && !!device.deviceId,
     )
   }, [devices]);
-
-  useEffect(() => {
-    if(stream !== null && !streams.find(s => s.id === stream?.id)) {
-      streams.push(stream!)
-      console.log({streams})
-    }
-
-    if(activeStream !== null && !streams.find(s => s.id === activeStream?.id )) {
-      streams.push(activeStream!)
-      console.log({streams})
-    }
-
-  }, [stream, activeStream])
 
   useEffect(() => {
     const init = async () => {

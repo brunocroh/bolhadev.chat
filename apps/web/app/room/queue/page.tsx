@@ -20,6 +20,10 @@ export default function Page(): JSX.Element {
     switchInput,
     activeStream: stream,
     stopAllStreaming,
+    videoOff,
+    muted,
+    toggleMute,
+    toggleVideo,
   } = useUserMedia();
 
   const [me, setMe] = useState(null);
@@ -99,6 +103,10 @@ export default function Page(): JSX.Element {
                     activeAudioDevice={selectedAudioDevice}
                     setActiveVideoDevice={(deviceId) => onInputChange(deviceId, 'video')}
                     activeVideoDevice={selectedVideoDevice}
+                    muted={muted}
+                    onMute={toggleMute}
+                    videoOff={videoOff}
+                    onVideoOff={toggleVideo}
                   />
 
                   <div className="mt-6 flex h-12 w-full items-center justify-between gap-6">
