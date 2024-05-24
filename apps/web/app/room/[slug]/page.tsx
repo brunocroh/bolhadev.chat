@@ -169,6 +169,7 @@ export default function Page(): JSX.Element {
                 videoOff={videoOff}
                 onMute={toggleMute}
                 onVideoOff={toggleVideo}
+                onTurnOff={handleFinishCall}
               />
             </CardContent>
           </Card>

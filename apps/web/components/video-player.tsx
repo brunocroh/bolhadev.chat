@@ -2,7 +2,7 @@
 
 import React, { forwardRef, useCallback, useState } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
-import { Mic, MicOff, Video, VideoOff } from "lucide-react";
+import { Mic, MicOff, PhoneOff, Video, VideoOff } from "lucide-react";
 import { Button } from "./ui/button";
 import clsx from "clsx";
 
@@ -15,6 +15,7 @@ type VideoPlayer = {
   setActiveVideoDevice?: (deviceId: string) => void,
   onMute?: () => void,
   onVideoOff?: () => void,
+  onTurnOff?: () => void,
   remote?: boolean
   muted?: boolean;
   videoOff?: boolean;
@@ -29,6 +30,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(({
   activeVideoDevice,
   onMute,
   onVideoOff,
+  onTurnOff,
   remote = false,
   muted = false,
   videoOff = false,
@@ -46,12 +48,17 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(({
               muted={!remote}
             ></video>
             {!remote && <div className="absolute bottom-2 flex gap-2">
-              <Button onClick={onMute} className="size-8 rounded-full p-2" variant={muted ? 'destructive' : 'secondary'}>
+              <Button onClick={onMute} className="size-8 rounded-full p-2 active:scale-95" variant={muted ? 'destructive' : 'secondary'}>
                 {muted ? <MicOff className="size-4"  /> : <Mic className="size-4"  />}
               </Button>
-              <Button onClick={onVideoOff} className="size-8 rounded-full p-2" variant={videoOff ? 'destructive' : 'secondary'}>
+              <Button onClick={onVideoOff} className="size-8 rounded-full p-2 active:scale-95" variant={videoOff ? 'destructive' : 'secondary'}>
                 {videoOff ? <Video className="size-4"  /> : <VideoOff className="size-4"  />}
               </Button>
+              { onTurnOff && (
+                <Button onClick={onTurnOff} className="size-8 rounded-full p-2 active:scale-95" variant={'destructive'}>
+                  <PhoneOff />
+                </Button>
+              )}
             </div>}
           </div>
           {!remote && (
