@@ -13,7 +13,6 @@ import Peer from "simple-peer";
 import useWebSocket from "react-use-websocket";
 import { Card, CardContent } from "@/components/ui/card";
 import { VideoPlayer } from "@/components/video-player";
-import { Button } from "@/components/ui/button";
 
 export default function Page(): JSX.Element {
   const peerRef: MutableRefObject<Peer.Instance | null> = useRef(null);

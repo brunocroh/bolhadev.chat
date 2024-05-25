@@ -48,15 +48,15 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(({
               muted={!remote}
             ></video>
             {!remote && <div className="absolute bottom-2 flex gap-2">
-              <Button onClick={onMute} className="size-8 rounded-full p-2 active:scale-95" variant={muted ? 'destructive' : 'secondary'}>
-                {muted ? <MicOff className="size-4"  /> : <Mic className="size-4"  />}
+              <Button onClick={onMute} className="size-6 rounded-full p-3 active:scale-95" variant={muted ? 'destructive' : 'secondary'}>
+                {muted ? <MicOff size={18}  /> : <Mic size={18}  />}
               </Button>
-              <Button onClick={onVideoOff} className="size-8 rounded-full p-2 active:scale-95" variant={videoOff ? 'destructive' : 'secondary'}>
-                {videoOff ? <VideoOff className="size-4"  /> : <VideoOff className="size-4"  />}
+              <Button onClick={onVideoOff} className="size-6 rounded-full p-3 active:scale-95" variant={videoOff ? 'destructive' : 'secondary'}>
+                {videoOff ? <VideoOff size={18} className="size-3"  /> : <Video size={18}  />}
               </Button>
               { onTurnOff && (
-                <Button onClick={onTurnOff} className="size-8 rounded-full p-2 active:scale-95" variant={'destructive'}>
-                  <PhoneOff />
+                <Button onClick={onTurnOff} className="size-6 rounded-full p-3 active:scale-95" variant={'destructive'}>
+                  <PhoneOff size={18} />
                 </Button>
               )}
             </div>}
