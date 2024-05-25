@@ -76,7 +76,6 @@ export default function Page(): JSX.Element {
 
   useEffect(() => {
     return () => {
-      console.log("stop all streaming")
       stopAllStreaming()
     }
   }, [stopAllStreaming])

@@ -13,6 +13,7 @@ import Peer from "simple-peer";
 import useWebSocket from "react-use-websocket";
 import { Card, CardContent } from "@/components/ui/card";
 import { VideoPlayer } from "@/components/video-player";
+import Countdown from "@/components/countdown";
 
 export default function Page(): JSX.Element {
   const peerRef: MutableRefObject<Peer.Instance | null> = useRef(null);
@@ -151,7 +152,8 @@ export default function Page(): JSX.Element {
   }, [stopAllStreaming, roomId]);
 
   return (
-    <section className="container flex h-full content-center items-center justify-center">
+    <section className="container flex h-full flex-col content-center items-center justify-center gap-4">
+      <Countdown onFinishTime={handleFinishCall} startTime={600_000} />
       <div className="flex w-full items-center ">
         <div className="flex flex-col gap-2 md:flex-row md:items-center">
           <Card className="md:w-1/2 ">
