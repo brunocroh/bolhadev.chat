@@ -8,8 +8,6 @@ type MediaConstraints = {
 
 export const useUserMedia = () => {
   const preferences = usePreferencesStore();
-  const [muted, setMuted] = useState<boolean>(false);
-  const [videoOff, setVideoOff] = useState<boolean>(false);
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [activeStream, setActiveStream] = useState<MediaStream | null>(null);
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
@@ -60,6 +58,14 @@ export const useUserMedia = () => {
         audio: { deviceId: { exact: constraints.audio } }
       });
 
+      _stream.getVideoTracks().forEach(track => {
+        track.enabled = !preferences.videoOff
+      })
+
+      _stream.getAudioTracks().forEach(track => {
+        track.enabled = !preferences.muted
+      })
+
       setActiveStream(_stream);
       setReady(true);
       return _stream
@@ -73,22 +79,19 @@ export const useUserMedia = () => {
   }, [setDevices]);
 
   const toggleMute = useCallback(async () => {
-    setMuted(_muted => {
-        stream?.getAudioTracks().forEach(track => {
-          track.enabled = _muted 
-        })
-        return !_muted
+    console.log({muted: preferences.muted})
+    activeStream?.getAudioTracks().forEach(track => {
+      track.enabled = preferences.muted 
     })
-  }, [stream, setMuted])
+    preferences.toggleMute()
+  }, [preferences, activeStream])
 
   const toggleVideo = useCallback(async () => {
-    setVideoOff(_videoOff => {
-        activeStream?.getVideoTracks().forEach(track => {
-          track.enabled = _videoOff 
-        })
-        return !_videoOff
+    activeStream?.getVideoTracks().forEach(track => {
+      track.enabled = preferences.videoOff 
     })
-  }, [activeStream, setVideoOff])
+    preferences.toggleVideoOff()
+  }, [preferences, activeStream])
 
   const switchInput = useCallback(async (deviceId: string, type: 'audio' | 'video') => {
     let newStream: MediaStream;
@@ -114,8 +117,8 @@ export const useUserMedia = () => {
     const newVideoTrack = newStream.getVideoTracks()[0]!;
     const newAudioTrack = newStream.getAudioTracks()[0]!;
 
-    newVideoTrack.enabled = !videoOff
-    newAudioTrack.enabled = !muted
+    newVideoTrack.enabled = !preferences.videoOff
+    newAudioTrack.enabled = !preferences.muted
 
     stopStreaming(activeStream!)
     setActiveStream(newStream)
@@ -127,7 +130,7 @@ export const useUserMedia = () => {
       newAudioTrack,
       newStream,
     };
-  }, [activeStream, preferences, stopStreaming, muted, videoOff]);
+  }, [activeStream, preferences, stopStreaming]);
 
 
   const stopAllStreaming = useCallback(async () => {
@@ -196,7 +199,7 @@ export const useUserMedia = () => {
     stopAllStreaming,
     toggleMute,
     toggleVideo,
-    muted,
-    videoOff
+    muted: preferences.muted,
+    videoOff: preferences.videoOff
   };
 };
