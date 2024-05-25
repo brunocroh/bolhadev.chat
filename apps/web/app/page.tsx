@@ -1,7 +1,8 @@
 import React from "react";
 import Link from "next/link";
-import { ChevronRight, Dumbbell, Heart, MessageCircle, PiggyBank } from "lucide-react";
+import Image from "next/image";
 
+import { ChevronRight, Dumbbell, Heart, MessageCircle, PiggyBank } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InfoCard } from "./components/info-card";
 
@@ -61,7 +62,14 @@ export default function Page(): JSX.Element {
         </div>
       </section>
       <section className="border-slate-6 relative mt-20 flex max-w-5xl flex-col items-center rounded-3xl border-t px-6 py-12 sm:py-24 md:max-w-7xl">
-        <div className="flex w-full flex-col flex-wrap items-center justify-center gap-10 md:flex-row">
+        <div
+          aria-hidden="true"
+          className="center pointer-events-none absolute -top-1 left-1/2 -z-20 h-[200px] w-full max-w-[200px] -translate-x-1/2 -translate-y-1/2 md:max-w-[400px]"
+          style={{
+            background: "conic-gradient(from 90deg at 50% 50%, #00000000 50%, #000 50%),radial-gradient(rgba(200,200,200,0.1) 0%, transparent 80%)"
+          }}
+          />
+        <div className="mt-10 flex w-full flex-col flex-wrap items-center justify-center gap-10 md:flex-row">
           {infoCardContent.map((card, i) => <InfoCard icon={card.icon} content={card.content} key={i}/>)}
         </div>
       </section>

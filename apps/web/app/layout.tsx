@@ -23,9 +23,9 @@ export default function RootLayout({
         <Image
           src="/light-ray.svg"
           alt="Purple light ray"
-          width="1000"
+          width="1200"
           height="800"
-          className="animate-in fade-in slide-in-from-bottom-1 absolute -z-10"
+          className="animate-in fade-in slide-in-from-bottom-1 absolute -z-10 size-full"
           style={{ color: "transparent", animationDuration: "10s" }}
         />
         <main className="h-full">{children}</main>
