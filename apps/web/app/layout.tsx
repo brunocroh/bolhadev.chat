@@ -23,7 +23,7 @@ export default function RootLayout({
         <Image
           src="/light-ray.svg"
           alt="Purple light ray"
-          width="1600"
+          width="1000"
           height="800"
           className="animate-in fade-in slide-in-from-bottom-1 absolute -z-10"
           style={{ color: "transparent", animationDuration: "10s" }}
