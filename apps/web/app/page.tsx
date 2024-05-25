@@ -61,7 +61,7 @@ export default function Page(): JSX.Element {
         </div>
       </section>
       <section className="border-slate-6 relative mt-20 flex max-w-5xl flex-col items-center rounded-3xl border-t px-6 py-12 sm:py-24 md:max-w-7xl">
-        <div className="flex w-full flex-wrap items-center justify-center gap-10">
+        <div className="flex w-full flex-col flex-wrap items-center justify-center gap-10 md:flex-row">
           {infoCardContent.map((card, i) => <InfoCard icon={card.icon} content={card.content} key={i}/>)}
         </div>
       </section>
