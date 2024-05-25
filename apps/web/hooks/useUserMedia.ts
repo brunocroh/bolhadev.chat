@@ -6,8 +6,6 @@ type MediaConstraints = {
   video: string;
 };
 
-const streams: MediaStream[] = []
-
 export const useUserMedia = () => {
   const preferences = usePreferencesStore();
   const [muted, setMuted] = useState<boolean>(false);
