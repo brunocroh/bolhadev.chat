@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";
 
 import { ChevronRight, Dumbbell, Heart, MessageCircle, PiggyBank } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -29,23 +28,8 @@ const infoCardContent = [
 export default function Page(): JSX.Element {
   return (
     <main className="container flex h-full flex-col">
-      <section className="flex w-full flex-row">
-        <div className="flex">
-          <video
-            className="-z-20 w-full max-w-2xl"
-            style={{
-              display: "block",
-              width: "700px",
-              height: "500px",
-            }}
-            playsInline
-            loop={true}
-            autoPlay={true}
-            muted={true}
-            src="/earth.mp4"
-          ></video>
-        </div>
-        <div className="z-10 mt-16 w-full p-10">
+      <section className="flex w-full flex-col lg:flex-row-reverse">
+        <div className="z-10 mt-16 w-full p-10 lg:w-1/2">
           <h2
             className="text-slate-6 w-full text-center text-[3rem] leading-10">
             Practice english for free
@@ -61,6 +45,21 @@ export default function Page(): JSX.Element {
               </Button>
             </Link>
           </div>
+        </div>
+        <div className="flex w-full justify-center lg:w-1/2">
+          <video
+            className="-z-20 w-full max-w-2xl"
+            style={{
+              display: "block",
+              width: "700px",
+              height: "500px",
+            }}
+            playsInline
+            loop={true}
+            autoPlay={true}
+            muted={true}
+            src="/earth-2.mp4"
+          ></video>
         </div>
       </section>
       <section style={{boxShadow: "0px -20px 44px -60px rgb(255 255 255)"}} className="border-slate-6 relative mt-20 flex max-w-5xl flex-col items-center rounded-3xl border-t px-6 py-12 sm:py-24 md:max-w-7xl">
