@@ -25,6 +25,7 @@ const infoCardContent = [
   }
 ]
 
+
 export default function Page(): JSX.Element {
   return (
     <main className="container flex h-full flex-col">
@@ -45,7 +46,8 @@ export default function Page(): JSX.Element {
           ></video>
         </div>
         <div className="z-10 mt-16 w-full p-10">
-          <h2 className="w-full text-center text-[3rem] leading-10 text-gray-300">
+          <h2
+            className="text-slate-6 w-full text-center text-[3rem] leading-10">
             Practice english for free
           </h2>
           <h3 className="my-4 text-center text-[1rem] text-slate-400 antialiased">
@@ -61,7 +63,7 @@ export default function Page(): JSX.Element {
           </div>
         </div>
       </section>
-      <section className="border-slate-6 relative mt-20 flex max-w-5xl flex-col items-center rounded-3xl border-t px-6 py-12 sm:py-24 md:max-w-7xl">
+      <section style={{boxShadow: "0px -20px 44px -60px rgb(255 255 255)"}} className="border-slate-6 relative mt-20 flex max-w-5xl flex-col items-center rounded-3xl border-t px-6 py-12 sm:py-24 md:max-w-7xl">
         <div
           aria-hidden="true"
           className="center pointer-events-none absolute -top-1 left-1/2 -z-20 h-[200px] w-full max-w-[200px] -translate-x-1/2 -translate-y-1/2 md:max-w-[400px]"
