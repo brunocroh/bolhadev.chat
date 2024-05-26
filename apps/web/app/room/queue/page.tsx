@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useUserMedia } from "@/hooks/useUserMedia";
 import { Card, CardContent } from "@/components/ui/card";
 import { VideoPlayer } from "@/components/video-player";
+import { Badge } from "@/components/ui/badge";
 
 export default function Page(): JSX.Element {
   const router = useRouter();
@@ -85,11 +86,9 @@ export default function Page(): JSX.Element {
       <section className="align-center container flex h-full place-content-center content-center justify-center">
         <div>
           <h1 className="text-[2em]">Before you start practicing, make sure to check your microphone and camera.</h1>
-          <div>
-            <span className="absolute inline-flex size-full rounded-full bg-green-500 px-2 py-1 opacity-90">
+            <Badge>
               Users Online: {usersOnline}
-            </span>
-          </div>
+            </Badge>
           <div className="mt-8 flex flex-col justify-center">
             <div className="flex w-full flex-col items-center p-5">
               <Card className="w-3/4 pt-6">
