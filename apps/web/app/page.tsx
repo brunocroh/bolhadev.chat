@@ -58,7 +58,7 @@ export default function Page(): JSX.Element {
             loop={true}
             autoPlay={true}
             muted={true}
-            src="/earth-2.mp4"
+            src="/earth.mp4"
           ></video>
         </div>
       </section>

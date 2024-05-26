@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { Badge } from './ui/badge';
+import clsx from 'clsx';
 
 
 const toMinutesAndSeconds = (time: number) => {
@@ -34,6 +35,7 @@ type Countdown = {
 }
 
 const Countdown: React.FC<Countdown> = ({ startTime = 600_000, onFinishTime }) => {
+  const [minutesLeft, setMinutesLeft] = useState<number | null>(null)
   const [time, setTimer] = useState('')
 
   useEffect(() => {
@@ -45,6 +47,8 @@ const Countdown: React.FC<Countdown> = ({ startTime = 600_000, onFinishTime }) =
         }
         const formatedTime = toMinutesAndSeconds(timeRemaning)
 
+
+        setMinutesLeft(formatedTime.minutes)
         setTimer(`${formatedTime.minutes.toString().padStart(2, '0')}:${formatedTime.seconds.toString().padStart(2, '0')}`)
       }, 1000);
 
@@ -52,8 +56,13 @@ const Countdown: React.FC<Countdown> = ({ startTime = 600_000, onFinishTime }) =
   }, [onFinishTime, startTime])
 
   return (
-    <Badge variant="destructive">{time}</Badge>
+    <Badge
+      variant="destructive"
+      className={clsx('invisible', minutesLeft !== null && minutesLeft <= 1 && 'visible')}
+    >
+      {time}
+    </Badge>
   )
-}
+};
 
 export default Countdown
