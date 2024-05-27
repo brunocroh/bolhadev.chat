@@ -47,4 +47,4 @@ jobs:
             -v /etc/letsencrypt/ssl/privkey.pem:/etc/nginx/ssl/privkey.pem \
             --network internal \
             ${{ vars.DOCKER_REPO }}/bolhadev-nginx:latest
-            sudo docker image prune
+            docker image prune
