@@ -122,6 +122,7 @@ const onRoomEnter = ({ roomId, id }: any) => {
     room.host = host
     room.users.forEach((user) => {
       const _user = users.get(user)
+      // TODO: if user is not connected, send a event to other user to navigate back to queue screen
       _user.send(JSON.stringify({ type: "hostCall", to: participant }))
     })
   }

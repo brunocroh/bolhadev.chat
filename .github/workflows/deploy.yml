@@ -39,7 +39,7 @@ jobs:
             sudo docker stop bolhadev-chat || true
             sudo docker rm bolhadev-nginx || true
             sudo docker rm bolhadev-chat || true
-            sudo docker run -d -p 4000:4000 -p 4001:4001 --name bolhadev-chat --network internal ${{ vars.DOCKER_REPO }}/bolhadev-chat:latest
+            sudo docker run -d -p 4000:4000 -p 4001:4001 --name bolhadev-chat --always --network internal ${{ vars.DOCKER_REPO }}/bolhadev-chat:latest
             sudo docker run -d -p 80:80 -p 443:443 \
             --name bolhadev-nginx \
             -v /var/www/certbot:/var/www/certbot \
