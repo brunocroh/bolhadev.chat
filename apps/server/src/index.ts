@@ -100,19 +100,6 @@ wss.on("connection", (ws) => {
   ws.on("close", () => handleDisconnect(userId))
 })
 
-// ws.on("connection", (socket) => {
-//   socket.emit("me", socket.id);
-//   users.set(socket.id, socket);
-//   ws.emit("newUserConnect", { size: ws.engine.clientsCount });
-//
-//   socket.on("disconnect", () => handleDisconnect(socket)());
-//   socket.on("queueJoin", onQueueJoin(socket));
-//   socket.on("queueExit", onQueueExit(socket));
-//   socket.on("sendOffer", onSendOffer(socket));
-//   socket.on("sendAnswer", onSendAnswer(socket));
-//   socket.on("roomEnter", onRoomEnter(socket));
-// });
-
 const handleDisconnect = (userId: string) => {
   queue.delete(userId)
   users.delete(userId)
