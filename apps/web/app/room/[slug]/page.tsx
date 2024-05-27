@@ -121,6 +121,12 @@ export default function Page(): JSX.Element {
   );
 
   useEffect(() => {
+    return () => {
+      peerRef.current?.destroy();
+    }
+  },[])
+
+  useEffect(() => {
     if (videoRef.current && activeStream) {
       videoRef.current.srcObject = activeStream;
       videoRef.current.play();
