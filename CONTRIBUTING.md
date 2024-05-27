@@ -64,13 +64,13 @@ You can use the `pnpm --filter=[WORKSPACE]` command to start the development pro
 pnpm run dev
 ```
 
-2. To run only client
+2. To run client
 
 ```bash
 pnpm run dev --filter web
 ```
 
-2. To run only the backend:
+3. To run backend:
 
 ```bash
 pnpm run dev --filter server
