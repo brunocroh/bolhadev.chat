@@ -35,4 +35,4 @@ Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 
 ## Contributing
 
-Please read the [contributing guide](https://github.com/brunocroh/bolhadev.chat/blob/main/README.md)
+Please read the [contributing guide](https://github.com/brunocroh/bolhadev.chat/blob/main/CONTRIBUTING.md)
