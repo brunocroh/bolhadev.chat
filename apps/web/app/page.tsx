@@ -29,7 +29,7 @@ export default function Page(): JSX.Element {
   return (
     <main className="container flex h-full flex-col">
       <section className="flex w-full flex-col lg:flex-row-reverse">
-        <div className="z-10 mt-16 w-full p-10 lg:w-1/2">
+        <div className="z-10 mt-16 flex w-full flex-col justify-center p-10 lg:w-1/2">
           <h2
             className="text-slate-6 w-full text-center text-[3rem] leading-10">
             Practice english for free

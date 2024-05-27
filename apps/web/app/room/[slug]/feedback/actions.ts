@@ -14,7 +14,7 @@ export async function sendFeedback(formData: FormData) {
 
   if(data.twitter || data.content) {
     const { error } = await supabase.from('feedbacks').insert(data)
-    console.log({error})
+    console.error("Fail to insert feedback", error)
   }
 
 
