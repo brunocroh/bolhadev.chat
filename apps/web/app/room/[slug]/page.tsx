@@ -156,7 +156,7 @@ export default function Page(): JSX.Element {
       <Countdown onFinishTime={handleFinishCall} startTime={600_000} />
       <div className="flex w-full items-center ">
         <div className="flex flex-col gap-2 md:flex-row md:items-center">
-          <Card className="md:w-1/2 ">
+          <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 md:w-1/2 ">
             <CardContent className="p-5">
               <VideoPlayer
                 ref={videoRef}
@@ -174,7 +174,7 @@ export default function Page(): JSX.Element {
               />
             </CardContent>
           </Card>
-          <Card className="md:w-1/2 md:self-start">
+          <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 md:w-1/2 md:self-start ">
             <CardContent className="h-full p-5">
               <VideoPlayer remote ref={remoteRef} />
             </CardContent>
