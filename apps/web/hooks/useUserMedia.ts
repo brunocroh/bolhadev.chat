@@ -2,8 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { usePreferencesStore } from "./usePreferencesStore";
 
 type MediaConstraints = {
-  audio: string;
-  video: string;
+  audio?: string;
+  video?: string;
 };
 
 export const useUserMedia = () => {
@@ -54,8 +54,8 @@ export const useUserMedia = () => {
   const updateUserMedia = useCallback(
     async (constraints: MediaConstraints) => {
       const _stream = await navigator.mediaDevices.getUserMedia({
-        video: { deviceId: { exact: constraints.video } },
-        audio: { deviceId: { exact: constraints.audio } }
+        video: constraints.video ? { deviceId: { exact: constraints.video } } : false,
+        audio: constraints.video ? { deviceId: { exact: constraints.audio } } : false,
       });
 
       _stream.getVideoTracks().forEach(track => {
@@ -70,12 +70,13 @@ export const useUserMedia = () => {
       setReady(true);
       return _stream
     },
-    [],
+    [preferences.muted, preferences.videoOff],
   );
 
   const getDevices = useCallback(async () => {
     const devices = await navigator.mediaDevices.enumerateDevices();
     setDevices(devices || []);
+    return devices
   }, [setDevices]);
 
   const toggleMute = useCallback(async () => {
@@ -170,10 +171,32 @@ export const useUserMedia = () => {
 
   useEffect(() => {
     const init = async () => {
-      getDevices()
+      const _devices = await getDevices()
+
+      let audio = preferences.audio
+      let video = preferences.video
+
+      if(!_devices || !devices.length) {
+        return
+      }
+
+      if(!audio && !video) {
+        audio = _devices.find(device => device.kind === 'audioinput')?.deviceId
+        video = _devices.find(device => device.kind === 'videoinput')?.deviceId
+      }
+
+      if(video) {
+        preferences.set(video, 'video')
+      }
+
+      if(audio) {
+        preferences.set(audio, 'audio')
+      }
+
+
       const _stream = await updateUserMedia({
-        audio: preferences.audio,
-        video: preferences.video
+        audio,
+        video,
       })
 
       setStream(_stream)
@@ -183,7 +206,7 @@ export const useUserMedia = () => {
     if(accessGranted && !stream) {
       init()
     }
-  }, [preferences.audio, preferences.video, updateUserMedia, accessGranted, stream, getDevices])
+  }, [preferences.audio, preferences.video, updateUserMedia, accessGranted, stream, getDevices, devices.length])
 
   return {
     stream,
