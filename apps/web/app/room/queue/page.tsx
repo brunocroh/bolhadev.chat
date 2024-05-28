@@ -25,6 +25,7 @@ export default function Page(): JSX.Element {
     muted,
     toggleMute,
     toggleVideo,
+    accessGranted,
   } = useUserMedia();
 
   const [me, setMe] = useState(null);
@@ -81,42 +82,55 @@ export default function Page(): JSX.Element {
     }
   }, [stopAllStreaming])
 
+  const handleRefresh = useCallback(() => {
+    location.replace(`/room/queue`);
+  }, [])
+
   return (
     <main className="flex h-full flex-col">
       <section className="align-center container flex h-full place-content-center content-center justify-center">
         <div>
           <h1 className="text-[2em]">Before you start practicing, make sure to check your microphone and camera first.</h1>
-            <Badge>
-              Users Online: {usersOnline}
-            </Badge>
+          <Badge>
+            Users Online: {usersOnline}
+          </Badge>
           <div className="mt-8 flex flex-col justify-center">
             <div className="flex w-full flex-col items-center p-5">
               <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 pt-6">
                 <CardContent>
-                  <VideoPlayer
-                    ref={videoRef}
-                    audioDevices={audioDevices}
-                    videoDevices={videoDevices}
-                    setActiveAudioDevice={(deviceId) => onInputChange(deviceId, 'audio')}
-                    activeAudioDevice={selectedAudioDevice}
-                    setActiveVideoDevice={(deviceId) => onInputChange(deviceId, 'video')}
-                    activeVideoDevice={selectedVideoDevice}
-                    muted={muted}
-                    onMute={toggleMute}
-                    videoOff={videoOff}
-                    onVideoOff={toggleVideo}
-                  />
+                  {accessGranted ? (
+                    <>
+                      <VideoPlayer
+                        ref={videoRef}
+                        audioDevices={audioDevices}
+                        videoDevices={videoDevices}
+                        setActiveAudioDevice={(deviceId) => onInputChange(deviceId, 'audio')}
+                        activeAudioDevice={selectedAudioDevice}
+                        setActiveVideoDevice={(deviceId) => onInputChange(deviceId, 'video')}
+                        activeVideoDevice={selectedVideoDevice}
+                        muted={muted}
+                        onMute={toggleMute}
+                        videoOff={videoOff}
+                        onVideoOff={toggleVideo}
+                      />
 
-                  <div className="mt-6 flex h-12 w-full items-center justify-between gap-6">
-                    <h2>
-                      {inQueue
-                        ? "Finding a practice buddy"
-                        : "Hit the 'Ready' button when you feel ready to start practicing with someone."}
-                    </h2>
-                    <Button onClick={onConnect} className="z-10 rounded-xl">
-                      {inQueue ? "Cancel" : "I'm Ready"}
-                    </Button>
-                  </div>
+                      <div className="mt-6 flex h-12 w-full items-center justify-between gap-6">
+                        <h2>
+                          {inQueue
+                            ? "Finding a practice buddy"
+                            : "Hit the 'Ready' button when you feel ready to start practicing with someone."}
+                        </h2>
+                        <Button onClick={onConnect} className="z-10 rounded-xl">
+                          {inQueue ? "Cancel" : "I'm Ready"}
+                        </Button>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center gap-5 p-5">
+                      <h2 className="text-lg">We need access to your microphone and camera. Please enable permissions to continue.</h2>
+                      <Button onClick={handleRefresh}>Refresh</Button>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </div>

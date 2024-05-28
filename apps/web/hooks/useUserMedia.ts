@@ -223,6 +223,7 @@ export const useUserMedia = () => {
     toggleMute,
     toggleVideo,
     muted: preferences.muted,
-    videoOff: preferences.videoOff
+    videoOff: preferences.videoOff,
+    checkPermission,
   };
 };
