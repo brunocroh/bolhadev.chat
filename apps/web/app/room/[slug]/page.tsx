@@ -81,6 +81,10 @@ export default function Page(): JSX.Element {
               }
             });
 
+            peerRef.current.on("close", () => {
+              location.replace(`${roomId}/feedback`);
+            });
+
             if (isHost) {
               peerRef.current?.on("signal", (signalData) => {
                 if (peerRef.current?.connected) return;
@@ -151,15 +155,14 @@ export default function Page(): JSX.Element {
     peerRef.current?.replaceTrack(result?.oldAudioTrack!, result?.newAudioTrack!, stream!);
   };
 
-  const handleFinishCall = useCallback(async () => {
+  const handleHangUp = useCallback(async () => {
     stopAllStreaming();
     peerRef.current?.destroy();
-    location.replace(`${roomId}/feedback`);
-  }, [stopAllStreaming, roomId]);
+  }, [stopAllStreaming]);
 
   return (
     <section className="container flex h-full flex-col content-center items-center justify-center gap-4">
-      <Countdown onFinishTime={handleFinishCall} startTime={600_000} />
+      <Countdown onFinishTime={handleHangUp} startTime={600_000} />
       <div className="flex w-full items-center ">
         <div className="flex flex-col gap-2 md:flex-row md:items-center">
           <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 md:w-1/2 ">
@@ -176,7 +179,7 @@ export default function Page(): JSX.Element {
                 videoOff={videoOff}
                 onMute={toggleMute}
                 onVideoOff={toggleVideo}
-                onTurnOff={handleFinishCall}
+                onTurnOff={handleHangUp}
               />
             </CardContent>
           </Card>
