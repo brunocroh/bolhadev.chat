@@ -14,6 +14,7 @@ import useWebSocket from "react-use-websocket";
 import { Card, CardContent } from "@/components/ui/card";
 import { VideoPlayer } from "@/components/video-player";
 import Countdown from "@/components/countdown";
+import { clsx } from "clsx";
 
 export default function Page(): JSX.Element {
   const peerRef: MutableRefObject<Peer.Instance | null> = useRef(null);
@@ -24,6 +25,7 @@ export default function Page(): JSX.Element {
   const roomId = pathname.split("/room/")[1];
 
   const [me, setMe] = useState("");
+  const [connected, setConnected] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
 
   const {
@@ -79,6 +81,7 @@ export default function Page(): JSX.Element {
               if (ws) {
                 ws.close();
               }
+              setConnected(true)
             });
 
             peerRef.current.on("close", () => {
@@ -125,6 +128,10 @@ export default function Page(): JSX.Element {
   );
 
   useEffect(() => {
+    console.log({connected})
+  }, [connected])
+
+  useEffect(() => {
     return () => {
       peerRef.current?.destroy();
     }
@@ -145,11 +152,10 @@ export default function Page(): JSX.Element {
     }
   }, [me, videoReady, roomId, sendJsonMessage]);
 
- const handleInputChange = async (
+  const handleInputChange = async (
     deviceId: string,
     type: "audio" | "video",
   ) => {
-
     const result = await switchInput(deviceId, type)
     peerRef.current?.replaceTrack(result?.oldVideoTrack!, result?.newVideoTrack!, stream!);
     peerRef.current?.replaceTrack(result?.oldAudioTrack!, result?.newAudioTrack!, stream!);
@@ -165,29 +171,34 @@ export default function Page(): JSX.Element {
       <Countdown onFinishTime={handleHangUp} startTime={600_000} />
       <div className="flex w-full items-center ">
         <div className="flex flex-col gap-2 md:flex-row md:items-center">
-          <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 md:w-1/2 ">
-            <CardContent className="p-5">
-              <VideoPlayer
-                ref={videoRef}
-                activeAudioDevice={selectedAudioDevice}
-                setActiveAudioDevice={(deviceId) => handleInputChange(deviceId, 'audio') }
-                activeVideoDevice={selectedVideoDevice}
-                setActiveVideoDevice={(deviceId) => handleInputChange(deviceId, 'video') }
-                audioDevices={audioDevices}
-                videoDevices={videoDevices}
-                muted={muted}
-                videoOff={videoOff}
-                onMute={toggleMute}
-                onVideoOff={toggleVideo}
-                onTurnOff={handleHangUp}
-              />
-            </CardContent>
-          </Card>
-          <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 md:w-1/2 md:self-start ">
-            <CardContent className="h-full p-5">
-              <VideoPlayer remote ref={remoteRef} />
-            </CardContent>
-          </Card>
+            <div className={clsx(!connected && 'invisible')}>
+              <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 md:w-1/2 ">
+                <CardContent className="p-5">
+                  <VideoPlayer
+                    ref={videoRef}
+                    activeAudioDevice={selectedAudioDevice}
+                    setActiveAudioDevice={(deviceId) => handleInputChange(deviceId, 'audio') }
+                    activeVideoDevice={selectedVideoDevice}
+                    setActiveVideoDevice={(deviceId) => handleInputChange(deviceId, 'video') }
+                    audioDevices={audioDevices}
+                    videoDevices={videoDevices}
+                    muted={muted}
+                    videoOff={videoOff}
+                    onMute={toggleMute}
+                    onVideoOff={toggleVideo}
+                    onTurnOff={handleHangUp}
+                  />
+                </CardContent>
+              </Card>
+              <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 md:w-1/2 md:self-start ">
+                <CardContent className="h-full p-5">
+                  <VideoPlayer remote ref={remoteRef} />
+                </CardContent>
+              </Card>
+            </div>
+            <div className={clsx(connected && 'invisible')}>
+              <h2>Carregando...</h2>
+            </div>
         </div>
       </div>
     </section>
