@@ -171,7 +171,7 @@ export default function Page(): JSX.Element {
       <Countdown onFinishTime={handleHangUp} startTime={600_000} />
       <div className="flex w-full flex-col items-center ">
         <div className={clsx(connected && 'invisible')}>
-          <h2>Carregando...</h2>
+          <h2>Loading...</h2>
         </div>
         <div className={clsx('flex gap-2 md:flex-row md:items-center', !connected && 'invisible')}>
           <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 md:w-1/2 ">

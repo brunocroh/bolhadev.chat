@@ -7,7 +7,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Bolhadev.chat',
-  description: 'A free way to Brazilians developers improve your english skills',
+  description: 'A free way for Brazilian developers to improve their English skills.',
   metadataBase: new URL('https://bolhadev.chat'),
 };
 
