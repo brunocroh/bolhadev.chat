@@ -32,7 +32,7 @@ export default function Page(): JSX.Element {
         <div className="z-10 mt-16 flex w-full flex-col justify-center p-10 lg:w-1/2">
           <h2
             className="text-slate-6 w-full text-center text-[3rem] leading-10">
-            Practice english for free
+            Practice English for free
           </h2>
           <h3 className="my-4 text-center text-[1rem] text-slate-400">The quickest path to learning English is to speak it regularly. Just find someone to chat with.</h3>
           <div className="flex w-full justify-center">
