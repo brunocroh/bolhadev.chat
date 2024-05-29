@@ -138,10 +138,6 @@ export default function Page(): JSX.Element {
   );
 
   useEffect(() => {
-    console.log({connected})
-  }, [connected])
-
-  useEffect(() => {
     return () => {
       peerRef.current?.destroy();
     }
@@ -174,7 +170,8 @@ export default function Page(): JSX.Element {
   const handleHangUp = useCallback(async () => {
     stopAllStreaming();
     peerRef.current?.destroy();
-  }, [stopAllStreaming]);
+    location.replace(`/room/${roomId}/feedback`);
+  }, [roomId, stopAllStreaming]);
 
   const handleBackToQueue = useCallback(async () => {
     stopAllStreaming();
