@@ -27,6 +27,7 @@ export default function Page(): JSX.Element {
 
   const [me, setMe] = useState("");
   const [connected, setConnected] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [videoReady, setVideoReady] = useState(false);
   const [error, setError] = useState('');
 
@@ -66,6 +67,7 @@ export default function Page(): JSX.Element {
             break;
           case "createRoomFail":
             setError("Unable to connect to the room. Please check your network connection and try again.")
+            setLoading(false)
             break
           case "hostCall":
             isHost = me !== data.to;
@@ -87,6 +89,7 @@ export default function Page(): JSX.Element {
                 ws.close();
               }
               setConnected(true)
+              setLoading(false)
             });
 
             peerRef.current.on("close", () => {
@@ -190,7 +193,7 @@ export default function Page(): JSX.Element {
             Back to queue
           </Button>
         </div>
-        <div className={clsx(connected || error && 'invisible')}>
+        <div className={clsx(!loading && 'invisible')}>
           <h2>Loading...</h2>
         </div>
         <div className={clsx('flex gap-2 md:flex-row md:items-center', !connected && 'invisible')}>
