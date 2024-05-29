@@ -85,7 +85,7 @@ export default function Page(): JSX.Element {
             });
 
             peerRef.current.on("close", () => {
-              location.replace(`${roomId}/feedback`);
+              location.replace(`/room/${roomId}/feedback`);
             });
 
             if (isHost) {
