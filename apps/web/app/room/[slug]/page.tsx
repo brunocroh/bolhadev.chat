@@ -15,6 +15,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { VideoPlayer } from "@/components/video-player";
 import Countdown from "@/components/countdown";
 import { clsx } from "clsx";
+import { Button } from "@/components/ui/button";
 
 export default function Page(): JSX.Element {
   const peerRef: MutableRefObject<Peer.Instance | null> = useRef(null);
@@ -27,6 +28,7 @@ export default function Page(): JSX.Element {
   const [me, setMe] = useState("");
   const [connected, setConnected] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
+  const [error, setError] = useState();
 
   const {
     muted,
@@ -62,6 +64,9 @@ export default function Page(): JSX.Element {
           case "me":
             setMe(data.id);
             break;
+          case "createRoomFail":
+            setError("Unable to connect to the room. Please check your network connection and try again.")
+            break
           case "hostCall":
             isHost = me !== data.to;
             peerRef.current = new Peer({
@@ -85,7 +90,9 @@ export default function Page(): JSX.Element {
             });
 
             peerRef.current.on("close", () => {
-              location.replace(`/room/${roomId}/feedback`);
+              if(!error) {
+                location.replace(`/room/${roomId}/feedback`);
+              }
             });
 
             if (isHost) {
@@ -166,11 +173,24 @@ export default function Page(): JSX.Element {
     peerRef.current?.destroy();
   }, [stopAllStreaming]);
 
+  const handleBackToQueue = useCallback(async () => {
+    stopAllStreaming();
+    peerRef.current?.destroy();
+    location.replace(`/room/queue`);
+
+  }, [stopAllStreaming])
+
   return (
     <section className="container flex h-full flex-col content-center items-center justify-center gap-4">
       <Countdown onFinishTime={handleHangUp} startTime={600_000} />
       <div className="flex w-full flex-col items-center ">
-        <div className={clsx(connected && 'invisible')}>
+        <div className={clsx('flex flex-col gap-4', !error && 'invisible')}>
+          <h3 className="text-lg">{error}</h3>
+          <Button onClick={handleBackToQueue}>
+            Back to queue
+          </Button>
+        </div>
+        <div className={clsx(connected || error && 'invisible')}>
           <h2>Loading...</h2>
         </div>
         <div className={clsx('flex gap-2 md:flex-row md:items-center', !connected && 'invisible')}>

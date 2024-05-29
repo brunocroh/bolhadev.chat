@@ -109,20 +109,10 @@ const handleDisconnect = (userId: string) => {
   })
 }
 
-const pause = () => {
-  return new Promise((res) => {
-    setTimeout(() => {
-      res(true)
-    }, 2000)
-  })
-}
-
 const onRoomEnter = async ({ roomId, id }: any) => {
   let room
   try {
     room = rooms.get(roomId)
-
-    await pause()
 
     if (!room) return
 
@@ -208,7 +198,7 @@ server.listen(4000, () => {
   console.log("Server up")
 })
 
-cron.schedule("*/5 * * * * *", () => {
+cron.schedule("*/15 * * * * *", () => {
   const _queue = Array.from(queue).sort(() => Math.random() - 0.5)
 
   for (; _queue.length >= 2; ) {
