@@ -104,27 +104,57 @@ const handleDisconnect = (userId: string) => {
   queue.delete(userId)
   users.delete(userId)
   broadcastMessage({
-    type: "teste",
+    type: "usersOnline",
     size: users.size,
   })
 }
 
-const onRoomEnter = ({ roomId, id }: any) => {
-  const room = rooms.get(roomId)
+const pause = () => {
+  return new Promise((res) => {
+    setTimeout(() => {
+      res(true)
+    }, 2000)
+  })
+}
 
-  if (!room) return
+const onRoomEnter = async ({ roomId, id }: any) => {
+  let room
+  try {
+    room = rooms.get(roomId)
 
-  room.users.push(id)
+    await pause()
 
-  if (room?.users.length === 2) {
-    const host = room.users[0]
-    const participant = room.users[1]
-    room.host = host
-    room.users.forEach((user) => {
-      const _user = users.get(user)
-      // TODO: if user is not connected, send a event to other user to navigate back to queue screen
-      _user.send(JSON.stringify({ type: "hostCall", to: participant }))
-    })
+    if (!room) return
+
+    room.users.push(id)
+
+    if (room?.users.length === 2) {
+      const host = room.users[0]
+      const participant = room.users[1]
+      room.host = host
+      room.users.forEach((user) => {
+        const _user = users.get(user)
+        // TODO: if user is not connected, send a event to other user to navigate back to queue screen
+        _user.send(JSON.stringify({ type: "hostCall", to: participant }))
+      })
+    }
+  } catch (e) {
+    console.error("Fail to create room", e)
+
+    if (room) {
+      room?.users.forEach((user) => {
+        const _user = users.get(user)
+        if (!_user) return
+        _user.send(JSON.stringify({ type: "createRoomFail" }))
+      })
+      return
+    }
+
+    const _user = users.get(id)
+
+    if (_user) {
+      _user.send(JSON.stringify({ type: "createRoomFail" }))
+    }
   }
 }
 
@@ -179,7 +209,7 @@ server.listen(4000, () => {
 })
 
 cron.schedule("*/5 * * * * *", () => {
-  const _queue = Array.from(queue)
+  const _queue = Array.from(queue).sort(() => Math.random() - 0.5)
 
   for (; _queue.length >= 2; ) {
     const roomId = uuid()
@@ -188,11 +218,27 @@ cron.schedule("*/5 * * * * *", () => {
 
     rooms.set(roomId, { host: undefined, users: [] })
 
-    _users.forEach((user) => {
-      queue.delete(user)
-      users.get(user).send(JSON.stringify({ type: "roomFound", room, roomId }))
-      users.delete(user)
-    })
+    try {
+      _users
+        .map((userId) => {
+          const userSocket = users.get(userId)
+          if (!userSocket) {
+            throw "User is not connected"
+          }
+
+          return {
+            ws: userSocket,
+            userId,
+          }
+        })
+        .forEach(({ ws, userId }) => {
+          ws.send(JSON.stringify({ type: "roomFound", room, roomId }))
+          users.delete(userId)
+          queue.delete(userId)
+        })
+    } catch (e) {
+      console.warn("Fail to create a room", e)
+    }
   }
 })
 
