@@ -169,36 +169,34 @@ export default function Page(): JSX.Element {
   return (
     <section className="container flex h-full flex-col content-center items-center justify-center gap-4">
       <Countdown onFinishTime={handleHangUp} startTime={600_000} />
-      <div className="flex w-full items-center ">
-        <div className="flex flex-col gap-2 md:flex-row md:items-center">
-            <div className={clsx(!connected && 'invisible')}>
-              <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 md:w-1/2 ">
-                <CardContent className="p-5">
-                  <VideoPlayer
-                    ref={videoRef}
-                    activeAudioDevice={selectedAudioDevice}
-                    setActiveAudioDevice={(deviceId) => handleInputChange(deviceId, 'audio') }
-                    activeVideoDevice={selectedVideoDevice}
-                    setActiveVideoDevice={(deviceId) => handleInputChange(deviceId, 'video') }
-                    audioDevices={audioDevices}
-                    videoDevices={videoDevices}
-                    muted={muted}
-                    videoOff={videoOff}
-                    onMute={toggleMute}
-                    onVideoOff={toggleVideo}
-                    onTurnOff={handleHangUp}
-                  />
-                </CardContent>
-              </Card>
-              <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 md:w-1/2 md:self-start ">
-                <CardContent className="h-full p-5">
-                  <VideoPlayer remote ref={remoteRef} />
-                </CardContent>
-              </Card>
-            </div>
-            <div className={clsx(connected && 'invisible')}>
-              <h2>Carregando...</h2>
-            </div>
+      <div className="flex w-full flex-col items-center ">
+        <div className={clsx(connected && 'invisible')}>
+          <h2>Carregando...</h2>
+        </div>
+        <div className={clsx('flex gap-2 md:flex-row md:items-center', !connected && 'invisible')}>
+          <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 md:w-1/2 ">
+            <CardContent className="p-5">
+              <VideoPlayer
+                ref={videoRef}
+                activeAudioDevice={selectedAudioDevice}
+                setActiveAudioDevice={(deviceId) => handleInputChange(deviceId, 'audio') }
+                activeVideoDevice={selectedVideoDevice}
+                setActiveVideoDevice={(deviceId) => handleInputChange(deviceId, 'video') }
+                audioDevices={audioDevices}
+                videoDevices={videoDevices}
+                muted={muted}
+                videoOff={videoOff}
+                onMute={toggleMute}
+                onVideoOff={toggleVideo}
+                onTurnOff={handleHangUp}
+              />
+            </CardContent>
+          </Card>
+          <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 md:w-1/2 md:self-start ">
+            <CardContent className="h-full p-5">
+              <VideoPlayer remote ref={remoteRef} />
+            </CardContent>
+          </Card>
         </div>
       </div>
     </section>
