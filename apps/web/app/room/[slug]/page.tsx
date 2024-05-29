@@ -28,7 +28,7 @@ export default function Page(): JSX.Element {
   const [me, setMe] = useState("");
   const [connected, setConnected] = useState(false);
   const [videoReady, setVideoReady] = useState(false);
-  const [error, setError] = useState();
+  const [error, setError] = useState('');
 
   const {
     muted,
