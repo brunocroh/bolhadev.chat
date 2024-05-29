@@ -113,8 +113,12 @@ export default function Page(): JSX.Element {
                         videoOff={videoOff}
                         onVideoOff={toggleVideo}
                       />
-
-                      <div className="mt-6 flex h-12 w-full items-center justify-between gap-6">
+                      <div className="mt-6 flex h-12 w-full items-center justify-between">
+                        <h2 className="text-slate-500">
+                          Each conversation room lasts for 10 minutes. When there are less than 2 minutes remaining, a timer will appear above the users' videos to indicate the time left.
+                        </h2>
+                      </div>
+                      <div className="mt-2 flex h-12 w-full items-center justify-between gap-6">
                         <h2>
                           {inQueue
                             ? "Finding a practice buddy"

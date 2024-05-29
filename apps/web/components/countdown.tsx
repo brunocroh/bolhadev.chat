@@ -60,7 +60,7 @@ const Countdown: React.FC<Countdown> = ({ startTime = 600_000, onFinishTime }) =
       variant="destructive"
       className={clsx('invisible', minutesLeft !== null && minutesLeft <= 1 && 'visible')}
     >
-      {time}
+       Ends in: {time}
     </Badge>
   )
 };
