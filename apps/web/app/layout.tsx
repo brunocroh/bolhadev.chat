@@ -28,7 +28,7 @@ export default function RootLayout({
           className="animate-in fade-in slide-in-from-bottom-1 absolute -z-10 size-full"
           style={{ color: "transparent", animationDuration: "10s" }}
         />
-        <main className="h-full">{children}</main>
+        {children}
       </body>
       <GoogleAnalytics gaId="G-STY9BKWKT4" />
     </html>
