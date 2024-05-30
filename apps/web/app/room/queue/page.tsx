@@ -1,17 +1,17 @@
-"use client";
+"use client"
 
-import { useRef, useState, useCallback, useEffect } from "react";
-import useWebSocket from "react-use-websocket";
-import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
-import { useUserMedia } from "@/hooks/useUserMedia";
-import { Card, CardContent } from "@/components/ui/card";
-import { VideoPlayer } from "@/components/video-player";
-import { Badge } from "@/components/ui/badge";
+import { useRef, useState, useCallback, useEffect } from "react"
+import useWebSocket from "react-use-websocket"
+import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
+import { useUserMedia } from "@/hooks/useUserMedia"
+import { Card, CardContent } from "@/components/ui/card"
+import { VideoPlayer } from "@/components/video-player"
+import { Badge } from "@/components/ui/badge"
 
 export default function Page(): JSX.Element {
-  const router = useRouter();
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const router = useRouter()
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   const {
     audioDevices,
@@ -26,11 +26,11 @@ export default function Page(): JSX.Element {
     toggleMute,
     toggleVideo,
     accessGranted,
-  } = useUserMedia();
+  } = useUserMedia()
 
-  const [me, setMe] = useState(null);
-  const [usersOnline, setUsersOnline] = useState(null);
-  const [inQueue, setInQueue] = useState(false);
+  const [me, setMe] = useState(null)
+  const [usersOnline, setUsersOnline] = useState(null)
+  const [inQueue, setInQueue] = useState(false)
 
   const { sendJsonMessage } = useWebSocket(
     process.env.NEXT_PUBLIC_SOCKET_URL!,
@@ -38,43 +38,46 @@ export default function Page(): JSX.Element {
       onOpen: () => {
         sendJsonMessage({
           type: "me",
-        });
+        })
       },
       onMessage: (event) => {
-        const data = JSON.parse(event.data);
+        const data = JSON.parse(event.data)
 
         switch (data.type) {
           case "me":
-            setMe(data.id);
-            break;
+            setMe(data.id)
+            break
           case "usersOnline":
-            setUsersOnline(data.size);
-            break;
+            setUsersOnline(data.size)
+            break
           case "roomFound":
-            router.push(`/room/${data.roomId}`);
-            break;
+            router.push(`/room/${data.roomId}`)
+            break
           default:
-            break;
+            break
         }
       },
-    },
-  );
+    }
+  )
 
   const onConnect = useCallback(() => {
-    setInQueue(!inQueue); // TODO: Replace to update the state when receive it from backend
-    sendJsonMessage({ type: inQueue ? "queueExit" : "queueJoin", userId: me });
-  }, [inQueue, me, sendJsonMessage]);
+    setInQueue(!inQueue) // TODO: Replace to update the state when receive it from backend
+    sendJsonMessage({ type: inQueue ? "queueExit" : "queueJoin", userId: me })
+  }, [inQueue, me, sendJsonMessage])
 
-  const onInputChange = useCallback((deviceId: string, type: 'audio' | 'video') => {
-    switchInput(deviceId, type)
-  }, [switchInput])
+  const onInputChange = useCallback(
+    (deviceId: string, type: "audio" | "video") => {
+      switchInput(deviceId, type)
+    },
+    [switchInput]
+  )
 
   useEffect(() => {
     if (videoRef.current && stream) {
-      videoRef.current.srcObject = stream;
-      videoRef.current.play();
+      videoRef.current.srcObject = stream
+      videoRef.current.play()
     }
-  }, [stream]);
+  }, [stream])
 
   useEffect(() => {
     return () => {
@@ -83,17 +86,18 @@ export default function Page(): JSX.Element {
   }, [stopAllStreaming])
 
   const handleRefresh = useCallback(() => {
-    location.replace(`/room/queue`);
+    location.replace(`/room/queue`)
   }, [])
 
   return (
     <main className="flex h-full flex-col">
       <section className="align-center container flex h-full place-content-center content-center justify-center">
         <div>
-          <h1 className="text-[2em]">Before you start practicing, make sure to check your microphone and camera first.</h1>
-          <Badge>
-            Users Online: {usersOnline}
-          </Badge>
+          <h1 className="text-[2em]">
+            Before you start practicing, make sure to check your microphone and
+            camera first.
+          </h1>
+          <Badge>Users Online: {usersOnline}</Badge>
           <div className="mt-8 flex flex-col justify-center">
             <div className="flex w-full flex-col items-center p-5">
               <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 pt-6">
@@ -104,9 +108,13 @@ export default function Page(): JSX.Element {
                         ref={videoRef}
                         audioDevices={audioDevices}
                         videoDevices={videoDevices}
-                        setActiveAudioDevice={(deviceId) => onInputChange(deviceId, 'audio')}
+                        setActiveAudioDevice={(deviceId) =>
+                          onInputChange(deviceId, "audio")
+                        }
                         activeAudioDevice={selectedAudioDevice}
-                        setActiveVideoDevice={(deviceId) => onInputChange(deviceId, 'video')}
+                        setActiveVideoDevice={(deviceId) =>
+                          onInputChange(deviceId, "video")
+                        }
                         activeVideoDevice={selectedVideoDevice}
                         muted={muted}
                         onMute={toggleMute}
@@ -115,7 +123,9 @@ export default function Page(): JSX.Element {
                       />
                       <div className="mt-6 flex h-12 w-full items-center justify-between">
                         <h2 className="text-slate-500">
-                          {"Each conversation room lasts for 10 minutes. When there are less than 2 minutes remaining, a timer will appear above the users' videos to indicate the time left."}
+                          {
+                            "Each conversation room lasts for 10 minutes. When there are less than 2 minutes remaining, a timer will appear above the users' videos to indicate the time left."
+                          }
                         </h2>
                       </div>
                       <div className="mt-2 flex h-12 w-full items-center justify-between gap-6">
@@ -131,7 +141,10 @@ export default function Page(): JSX.Element {
                     </>
                   ) : (
                     <div className="flex flex-col items-center justify-center gap-5 p-5">
-                      <h2 className="text-lg">We need access to your microphone and camera. Please enable permissions to continue.</h2>
+                      <h2 className="text-lg">
+                        We need access to your microphone and camera. Please
+                        enable permissions to continue.
+                      </h2>
                       <Button onClick={handleRefresh}>Refresh</Button>
                     </div>
                   )}
@@ -142,5 +155,5 @@ export default function Page(): JSX.Element {
         </div>
       </section>
     </main>
-  );
+  )
 }
