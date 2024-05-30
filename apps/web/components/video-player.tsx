@@ -98,8 +98,8 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
                   onValueChange={setActiveAudioDevice}
                   value={activeAudioDevice}
                 >
-                  <SelectTrigger className="w-[200px]">
-                    <Mic size={18} />
+                  <SelectTrigger className="w-[180px]">
+                    <Mic className="flex-shrink-0" size={18} />
                     <SelectValue placeholder="Audio" />
                   </SelectTrigger>
                   <SelectContent>
@@ -121,7 +121,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
                   value={activeVideoDevice}
                 >
                   <SelectTrigger className="w-[180px]">
-                    <Video size={18} /> <SelectValue placeholder="Video" />
+                    <Video className="flex-shrink-0" size={18} /> <SelectValue placeholder="Video" />
                   </SelectTrigger>
                   <SelectContent>
                     {videoDevices?.map((video) => {
