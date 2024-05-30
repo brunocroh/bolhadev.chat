@@ -7,9 +7,6 @@ services:
       args:
         PROJECT: server
     image: brunoroh/bolhadev-chat:latest
-    ports:
-      - "4000:4000"
-      - "4001:4001"
 
   nginx:
     build: ./docker/nginx/
