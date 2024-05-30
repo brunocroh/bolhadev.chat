@@ -87,16 +87,15 @@ export default function Page(): JSX.Element {
   }, [])
 
   return (
-    <main className="flex h-full flex-col">
-      <section className="align-center container flex h-full place-content-center content-center justify-center">
+    <main className="flex h-auto flex-col">
+      <section className="align-center container mb-5 flex h-full place-content-center content-center justify-center">
         <div>
           <h1 className="text-[2em]">Before you start practicing, make sure to check your microphone and camera first.</h1>
           <Badge>
             Users Online: {usersOnline}
           </Badge>
-          <div className="mt-8 flex flex-col justify-center">
-            <div className="flex w-full flex-col items-center p-5">
-              <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 pt-6">
+            <div className="mt-8 flex w-full flex-col items-center sm:p-5">
+              <Card className="border-slate-5 bg-slate-6 w-full border border-b-0 pt-6 sm:w-3/4">
                 <CardContent>
                   {accessGranted ? (
                     <>
@@ -113,18 +112,18 @@ export default function Page(): JSX.Element {
                         videoOff={videoOff}
                         onVideoOff={toggleVideo}
                       />
-                      <div className="mt-6 flex h-12 w-full items-center justify-between">
-                        <h2 className="text-slate-500">
+                      <div className="mt-6 flex w-full items-center justify-between">
+                        <h2 className="mt-2 text-sm text-slate-500 sm:mt-0 sm:text-base">
                           {"Each conversation room lasts for 10 minutes. When there are less than 2 minutes remaining, a timer will appear above the users' videos to indicate the time left."}
                         </h2>
                       </div>
-                      <div className="mt-2 flex h-12 w-full items-center justify-between gap-6">
-                        <h2>
+                      <div className="mt-2 flex w-full flex-col items-center justify-between gap-6 sm:flex-row">
+                        <h2 className="text-sm sm:text-base">
                           {inQueue
                             ? "Finding a practice buddy"
                             : "Hit the 'Ready' button when you feel ready to start practicing with someone."}
                         </h2>
-                        <Button onClick={onConnect} className="z-10 rounded-xl">
+                        <Button onClick={onConnect} className="z-10 w-full rounded-xl sm:w-auto">
                           {inQueue ? "Cancel" : "I'm Ready"}
                         </Button>
                       </div>
@@ -139,7 +138,6 @@ export default function Page(): JSX.Element {
               </Card>
             </div>
           </div>
-        </div>
       </section>
     </main>
   );

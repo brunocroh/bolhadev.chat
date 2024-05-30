@@ -37,7 +37,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(({
 }, videoRef) => {
     return (
       <>
-        <div className="m-0 size-full min-w-[400px] max-w-[900px] overflow-hidden">
+        <div className="m-0 size-full w-full max-w-[900px] overflow-hidden">
           <div className="relative flex flex-col items-center">
             <video
               className={clsx("rounded-lg w-full ", { '[transform:scaleX(-1)]': !remote})}
@@ -63,9 +63,9 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(({
           </div>
           {!remote && (
             <div className="mt-5 flex justify-center">
-              <div className="flex w-fit gap-6">
+              <div className="flex w-full flex-col gap-2 sm:flex-row md:w-fit md:gap-6">
                 <Select onValueChange={setActiveAudioDevice} value={activeAudioDevice}>
-                  <SelectTrigger className="w-[200px]">
+                  <SelectTrigger className="w-full sm:max-w-48">
                     <Mic size={18} /><SelectValue placeholder="Audio" />
                   </SelectTrigger>
                   <SelectContent>
@@ -83,7 +83,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(({
                   </SelectContent>
                 </Select>
                 <Select onValueChange={setActiveVideoDevice} value={activeVideoDevice}>
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="w-full sm:max-w-48">
                     <Video size={18} /> <SelectValue placeholder="Video" />
                   </SelectTrigger>
                   <SelectContent>
