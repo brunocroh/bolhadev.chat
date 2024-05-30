@@ -1,53 +1,50 @@
 ARG NODE_VERSION=18.19
 
 # Setup pnpm and turbo on the alpine base
-FROM alpine as base
-RUN npm install pnpm@9.1.1 turbo --global
-RUN pnpm config set store-dir ~/.pnpm-store
+FROM node:${NODE_VERSION}-alpine AS base
+ARG PROJECT
+WORKDIR /app
+
+ENV PNPM_HOME=/usr/local/bin
+RUN corepack enable && \
+    pnpm install turbo --global
 
 # Prune projects
 FROM base AS pruner
-ARG PROJECT
 
-WORKDIR /app
 COPY . .
 RUN turbo prune --scope=${PROJECT} --docker
 
 # Build the project
 FROM base AS builder
-ARG PROJECT
 
-WORKDIR /app
+# Build dependencies
+RUN apk add --no-cache build-base python3
 
 # Copy lockfile and package.json's of isolated subworkspace
-COPY --from=pruner /app/out/pnpm-lock.yaml ./pnpm-lock.yaml
-COPY --from=pruner /app/out/pnpm-workspace.yaml ./pnpm-workspace.yaml
-COPY --from=pruner /app/out/json/ .
+COPY --from=pruner /app/out/pnpm-lock.yaml /app/out/pnpm-workspace.yaml .
+COPY --from=pruner /app/out/json .
 
 # First install the dependencies (as they change less often)
-RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm install --frozen-lockfile
+RUN --mount=type=cache,id=pnpm,target=${PNPM_HOME}/store \
+    pnpm install --frozen-lockfile
 
-# Copy source code of isolated subworkspace
-COPY --from=pruner /app/out/full/ .
-
+# Copy source code of isolated subworkspace and build it
+COPY --from=pruner /app/out/full .
 RUN turbo build --filter=${PROJECT}
-RUN --mount=type=cache,id=pnpm,target=~/.pnpm-store pnpm prune --prod --no-optional
-RUN rm -rf ./**/*/src
+RUN --mount=type=cache,id=pnpm,target=${PNPM_HOME}/store \
+    pnpm prune --prod --no-optional && \
+    rm -rf apps/*/src
 
 # Final image
-FROM alpine AS runner
-ARG PROJECT
+FROM base AS runner
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nodejs
-USER nodejs
-
-WORKDIR /app
-COPY --from=builder --chown=nodejs:nodejs /app .
+# Exists on base image
+USER node
+COPY --from=builder --chown=node:node /app .
 WORKDIR /app/apps/${PROJECT}
 
 ENV NODE_ENV=production
-EXPOSE 4000
-EXPOSE 4001
+EXPOSE 4000 4001
 
-CMD node dist/index
+CMD ["node", "dist/index"]
