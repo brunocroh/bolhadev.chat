@@ -13,5 +13,6 @@ services:
     image: brunoroh/bolhadev-nginx:latest
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - bolhadev-chat
