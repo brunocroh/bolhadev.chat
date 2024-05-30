@@ -1,9 +1,4 @@
-ARG NODE_VERSION=18.19.0
-
-# Alpine image
-FROM node:${NODE_VERSION}-alpine AS alpine
-RUN apk update
-RUN apk add --no-cache libc6-compat python3 py3-pip make g++
+ARG NODE_VERSION=18.19
 
 # Setup pnpm and turbo on the alpine base
 FROM alpine as base
