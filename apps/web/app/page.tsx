@@ -34,8 +34,8 @@ const infoCardContent = [
 
 export default function Page(): JSX.Element {
   return (
-    <main className="container flex h-full flex-col">
-      <section className="flex w-full flex-col lg:flex-row-reverse">
+    <main className="flex flex-col">
+      <section className="flex w-full flex-col lg:container lg:flex-row-reverse">
         <div className="z-10 mt-16 flex w-full flex-col justify-center p-10 lg:w-1/2">
           <h2 className="text-slate-6 w-full text-center text-[3rem] leading-10">
             Practice English for free
@@ -53,7 +53,7 @@ export default function Page(): JSX.Element {
             </Link>
           </div>
         </div>
-        <div className="flex w-full justify-center lg:w-1/2">
+        <div className="flex w-full justify-center overflow-hidden lg:w-1/2">
           <video
             className="-z-20 w-full max-w-2xl"
             style={{
@@ -70,9 +70,8 @@ export default function Page(): JSX.Element {
         </div>
       </section>
       <section
-        style={{ boxShadow: "0px -20px 44px -60px rgb(255 255 255)" }}
-        className="border-slate-6 relative mt-20 flex max-w-5xl flex-col items-center rounded-3xl border-t px-6 py-12 sm:py-24 md:max-w-7xl"
-      >
+        style={{boxShadow: "0px -20px 44px -60px rgb(255 255 255)"}}
+        className="border-slate-6 relative mt-10 flex flex-col items-center overflow-hidden rounded-3xl border-t px-6 py-12 lg:container sm:mx-5 sm:py-24 md:mx-10 lg:mx-auto">
         <div
           aria-hidden="true"
           className="center pointer-events-none absolute -top-1 left-1/2 -z-20 h-[200px] w-full max-w-[200px] -translate-x-1/2 -translate-y-1/2 md:max-w-[400px]"

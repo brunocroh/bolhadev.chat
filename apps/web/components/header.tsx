@@ -4,7 +4,7 @@ import React from "react"
 
 export const Header = () => {
   return (
-    <nav className="container z-10 flex justify-between p-5 px-10">
+    <nav className="container z-10 flex justify-between p-5">
       <Link href="/">
         <h1 className="text-base font-semibold text-white">Bolhadev.chat</h1>
       </Link>

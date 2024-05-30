@@ -62,7 +62,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
   ) => {
     return (
       <>
-        <div className="size-full m-0 min-w-[400px] max-w-[900px] overflow-hidden">
+        <div className="m-0 size-full w-full max-w-[900px] overflow-hidden">
           <div className="relative flex flex-col items-center">
             <video
               className={clsx("w-full rounded-lg ", {
@@ -109,14 +109,10 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
           </div>
           {!remote && (
             <div className="mt-5 flex justify-center">
-              <div className="flex w-fit gap-6">
-                <Select
-                  onValueChange={setActiveAudioDevice}
-                  value={activeAudioDevice}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <Mic className="flex-shrink-0" size={18} />
-                    <SelectValue placeholder="Audio" />
+              <div className="flex w-full flex-col gap-2 sm:flex-row md:w-fit md:gap-6">
+                <Select onValueChange={setActiveAudioDevice} value={activeAudioDevice}>
+                  <SelectTrigger className="w-full sm:max-w-48">
+                    <Mic size={18} /><SelectValue placeholder="Audio" />
                   </SelectTrigger>
                   <SelectContent>
                     {audioDevices?.map((audio) => {
@@ -132,13 +128,9 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
                     })}
                   </SelectContent>
                 </Select>
-                <Select
-                  onValueChange={setActiveVideoDevice}
-                  value={activeVideoDevice}
-                >
-                  <SelectTrigger className="w-[180px]">
-                    <Video className="flex-shrink-0" size={18} />{" "}
-                    <SelectValue placeholder="Video" />
+                <Select onValueChange={setActiveVideoDevice} value={activeVideoDevice}>
+                  <SelectTrigger className="w-full sm:max-w-48">
+                    <Video size={18} /> <SelectValue placeholder="Video" />
                   </SelectTrigger>
                   <SelectContent>
                     {videoDevices?.map((video) => {

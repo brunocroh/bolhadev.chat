@@ -53,6 +53,12 @@ git checkout -b my-new-branch
 pnpm install
 ```
 
+### Rename .env.template to .env
+
+```bash
+mv .env.template .env
+```
+
 ### Run a workspace
 
 You can use the `pnpm --filter=[WORKSPACE]` command to start the development process for a workspace.
