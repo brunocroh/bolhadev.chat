@@ -16,8 +16,11 @@ export default function Page(): JSX.Element {
   const {
     audioDevices,
     videoDevices,
+    outputDevices,
     selectedAudioDevice,
     selectedVideoDevice,
+    selectedOutputDevice,
+    audioOutputChangeNotSupported,
     switchInput,
     activeStream: stream,
     stopAllStreaming,
@@ -26,6 +29,7 @@ export default function Page(): JSX.Element {
     toggleMute,
     toggleVideo,
     accessGranted,
+    switchAudioOutput,
   } = useUserMedia()
 
   const [me, setMe] = useState(null)
@@ -57,8 +61,7 @@ export default function Page(): JSX.Element {
             break
         }
       },
-    }
-  )
+    })
 
   const onConnect = useCallback(() => {
     setInQueue(!inQueue) // TODO: Replace to update the state when receive it from backend
@@ -70,6 +73,13 @@ export default function Page(): JSX.Element {
       switchInput(deviceId, type)
     },
     [switchInput]
+  )
+
+  const onAudioOutputChange = useCallback(
+    (deviceId: string) => {
+      switchAudioOutput(deviceId)
+    },
+    [switchAudioOutput]
   )
 
   useEffect(() => {
@@ -108,6 +118,7 @@ export default function Page(): JSX.Element {
                         ref={videoRef}
                         audioDevices={audioDevices}
                         videoDevices={videoDevices}
+                        outputDevices={outputDevices}
                         setActiveAudioDevice={(deviceId) =>
                           onInputChange(deviceId, "audio")
                         }
@@ -116,6 +127,13 @@ export default function Page(): JSX.Element {
                           onInputChange(deviceId, "video")
                         }
                         activeVideoDevice={selectedVideoDevice}
+                        activeOutputDevice={selectedOutputDevice}
+                        selectOutputDeviceDisabled={
+                          audioOutputChangeNotSupported
+                        }
+                        setActiveOutputDevice={(deviceId) =>
+                          onAudioOutputChange(deviceId)
+                        }
                         muted={muted}
                         onMute={toggleMute}
                         videoOff={videoOff}

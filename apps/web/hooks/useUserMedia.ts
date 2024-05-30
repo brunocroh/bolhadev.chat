@@ -6,14 +6,54 @@ type MediaConstraints = {
   video?: string
 }
 
+async function attachAudioOutputDeviceRef(
+  element: HTMLVideoElement,
+  selectedAudioOutputDeviceId: string
+) {
+  if (typeof element.sinkId !== "undefined") {
+    element
+      .setSinkId(selectedAudioOutputDeviceId)
+      .then(() => {
+        return true
+      })
+      .catch((err) => {
+        let errorMessage = err
+
+        switch (err.name) {
+          case "SecurityError":
+            errorMessage =
+              "You need to use HTTPS for selecting audio output device"
+            break
+          case "NotFoundError":
+            errorMessage = "Selected audio output device not found"
+            break
+          case "NotAllowedError":
+            errorMessage = "The specified audio output device was not found"
+            break
+          default:
+            errorMessage = "Error changing audio output device"
+        }
+
+        console.error(errorMessage)
+        return false
+      })
+  } else {
+    console.warn("Browser does not support output device selection.")
+  }
+
+  return false
+}
+
 export const useUserMedia = () => {
   const preferences = usePreferencesStore()
   const [stream, setStream] = useState<MediaStream | null>(null)
   const [activeStream, setActiveStream] = useState<MediaStream | null>(null)
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([])
   const [ready, setReady] = useState(false)
-
   const [accessGranted, setAccessGranted] = useState(false)
+
+  const audioOutputChangeNotSupported =
+    "sinkId" in HTMLMediaElement.prototype ? false : true
 
   const checkPermission = useCallback(async () => {
     const videoPermission = await navigator.permissions.query({
@@ -98,6 +138,23 @@ export const useUserMedia = () => {
     preferences.toggleVideoOff()
   }, [preferences, activeStream])
 
+  const switchAudioOutput = useCallback(
+    async (deviceId: string) => {
+      preferences.set(deviceId, "audioOutput")
+    },
+    [preferences]
+  )
+
+  const changeAudioDestination = useCallback(async () => {
+    const remoteVideoElement = document.getElementById(
+      "remote"
+    ) as HTMLVideoElement
+    await attachAudioOutputDeviceRef(
+      remoteVideoElement,
+      preferences.audioOutput!
+    )
+  }, [preferences])
+
   const switchInput = useCallback(
     async (deviceId: string, type: "audio" | "video") => {
       let newStream: MediaStream
@@ -156,6 +213,12 @@ export const useUserMedia = () => {
     )
   }, [devices])
 
+  const outputDevices = useMemo(() => {
+    return devices.filter(
+      (device) => device.kind === "audiooutput" && !!device.deviceId
+    )
+  }, [devices])
+
   const videoDevices = useMemo(() => {
     return devices.filter(
       (device) => device.kind === "videoinput" && !!device.deviceId
@@ -180,15 +243,18 @@ export const useUserMedia = () => {
 
       let audio = preferences.audio
       let video = preferences.video
+      let audioOutput = preferences.audioOutput
 
       if (!_devices || !devices.length) {
         return
       }
 
-      if (!audio && !video) {
+      if (!audio && !video && !audioOutput) {
         audio = _devices.find((device) => device.kind === "audioinput")
           ?.deviceId
         video = _devices.find((device) => device.kind === "videoinput")
+          ?.deviceId
+        audioOutput = _devices.find((device) => device.kind === "audiooutput")
           ?.deviceId
       }
 
@@ -198,6 +264,10 @@ export const useUserMedia = () => {
 
       if (audio) {
         preferences.set(audio, "audio")
+      }
+
+      if (audioOutput) {
+        preferences.set(audioOutput, "audioOutput")
       }
 
       const _stream = await updateUserMedia({
@@ -226,17 +296,22 @@ export const useUserMedia = () => {
     activeStream,
     audioDevices,
     videoDevices,
+    outputDevices,
     selectedAudioDevice: preferences.audio,
     selectedVideoDevice: preferences.video,
+    selectedOutputDevice: preferences.audioOutput,
     ready,
+    changeAudioDestination,
     accessGranted,
     switchInput,
     stopStreaming,
     stopAllStreaming,
     toggleMute,
     toggleVideo,
+    switchAudioOutput,
     muted: preferences.muted,
     videoOff: preferences.videoOff,
     checkPermission,
+    audioOutputChangeNotSupported,
   }
 }

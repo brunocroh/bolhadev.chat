@@ -38,11 +38,16 @@ export default function Page(): JSX.Element {
     videoOff,
     stream,
     activeStream,
+    audioOutputChangeNotSupported,
     selectedAudioDevice,
     selectedVideoDevice,
+    selectedOutputDevice,
+    outputDevices,
     audioDevices,
     videoDevices,
+    changeAudioDestination,
     switchInput,
+    switchAudioOutput,
     stopAllStreaming,
   } = useUserMedia()
 
@@ -83,6 +88,8 @@ export default function Page(): JSX.Element {
               if (remoteRef.current) {
                 remoteRef.current.srcObject = remoteStream
               }
+
+              changeAudioDestination()
             })
 
             peerRef.current.on("connect", () => {
@@ -177,6 +184,14 @@ export default function Page(): JSX.Element {
     )
   }
 
+  const handleAudioOutputChange = useCallback(
+    async (deviceId: string) => {
+      await switchAudioOutput(deviceId)
+      changeAudioDestination()
+    },
+    [switchAudioOutput]
+  )
+
   const handleHangUp = useCallback(async () => {
     stopAllStreaming()
     peerRef.current?.destroy()
@@ -188,6 +203,8 @@ export default function Page(): JSX.Element {
     peerRef.current?.destroy()
     location.replace(`/room/queue`)
   }, [stopAllStreaming])
+
+  // const isAudioOutputSelectNotSupported = 'sinkId' in HTMLVideoElement.prototype
 
   return (
     <section className="container flex h-full flex-col content-center items-center justify-center gap-4">
@@ -220,6 +237,12 @@ export default function Page(): JSX.Element {
                 }
                 audioDevices={audioDevices}
                 videoDevices={videoDevices}
+                outputDevices={outputDevices}
+                activeOutputDevice={selectedOutputDevice}
+                setActiveOutputDevice={(deviceId) =>
+                  handleAudioOutputChange(deviceId)
+                }
+                selectOutputDeviceDisabled={audioOutputChangeNotSupported}
                 muted={muted}
                 videoOff={videoOff}
                 onMute={toggleMute}

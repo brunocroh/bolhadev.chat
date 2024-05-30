@@ -4,9 +4,10 @@ import { createJSONStorage, persist } from "zustand/middleware"
 interface PreferencesState {
   video?: string
   audio?: string
+  audioOutput?: string
   muted: boolean
   videoOff: boolean
-  set: (deviceId: string, type: "audio" | "video") => void
+  set: (deviceId: string, type: "audio" | "video" | "audioOutput") => void
   toggleMute: () => void
   toggleVideoOff: () => void
 }
@@ -16,6 +17,7 @@ export const usePreferencesStore = create<PreferencesState>()(
     (set) => ({
       audio: undefined,
       video: undefined,
+      audioOutput: undefined,
       muted: false,
       videoOff: false,
       set: (deviceId, type) => set({ [type]: deviceId }),

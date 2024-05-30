@@ -8,17 +8,28 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select"
-import { Mic, MicOff, PhoneOff, Video, VideoOff } from "lucide-react"
+import {
+  Headphones,
+  Mic,
+  MicOff,
+  PhoneOff,
+  Video,
+  VideoOff,
+} from "lucide-react"
 import { Button } from "./ui/button"
 import clsx from "clsx"
 
 type VideoPlayer = {
   audioDevices?: MediaDeviceInfo[]
   videoDevices?: MediaDeviceInfo[]
+  outputDevices?: MediaDeviceInfo[]
   activeAudioDevice?: string
   activeVideoDevice?: string
+  activeOutputDevice?: string
   setActiveAudioDevice?: (deviceId: string) => void
   setActiveVideoDevice?: (deviceId: string) => void
+  setActiveOutputDevice?: (deviceId: string) => void
+  selectOutputDeviceDisabled?: boolean
   onMute?: () => void
   onVideoOff?: () => void
   onTurnOff?: () => void
@@ -32,13 +43,17 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
     {
       audioDevices,
       videoDevices,
+      outputDevices,
       setActiveAudioDevice,
       activeAudioDevice,
       setActiveVideoDevice,
       activeVideoDevice,
+      setActiveOutputDevice,
+      activeOutputDevice,
       onMute,
       onVideoOff,
       onTurnOff,
+      selectOutputDeviceDisabled = false,
       remote = false,
       muted = false,
       videoOff = false,
@@ -58,6 +73,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
               playsInline
               autoPlay={true}
               muted={!remote}
+              id={remote ? "remote" : "local"}
             ></video>
             {!remote && (
               <div className="absolute bottom-2 flex gap-2">
@@ -121,7 +137,8 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
                   value={activeVideoDevice}
                 >
                   <SelectTrigger className="w-[180px]">
-                    <Video className="flex-shrink-0" size={18} /> <SelectValue placeholder="Video" />
+                    <Video className="flex-shrink-0" size={18} />{" "}
+                    <SelectValue placeholder="Video" />
                   </SelectTrigger>
                   <SelectContent>
                     {videoDevices?.map((video) => {
@@ -131,6 +148,27 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
                           value={video.deviceId || video.label}
                         >
                           {video.label}
+                        </SelectItem>
+                      )
+                    })}
+                  </SelectContent>
+                </Select>
+                <Select
+                  onValueChange={setActiveOutputDevice}
+                  value={activeOutputDevice}
+                >
+                  <SelectTrigger className="w-[180px]">
+                    <Headphones className="flex-shrink-0" size={18} />{" "}
+                    <SelectValue placeholder="Output Device" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {outputDevices?.map((outputDevice) => {
+                      return (
+                        <SelectItem
+                          key={outputDevice.deviceId}
+                          value={outputDevice.deviceId || outputDevice.label}
+                        >
+                          {outputDevice.label}
                         </SelectItem>
                       )
                     })}
