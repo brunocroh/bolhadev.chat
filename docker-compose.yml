@@ -3,8 +3,7 @@ version: "3.8"
 services:
   bolhadev-chat:
     build:
-      context: .
-      dockerfile: Dockerfile
+      dockerfile: ./docker/apps/Dockerfile
       args:
         PROJECT: server
     image: brunoroh/bolhadev-chat:latest
