@@ -62,7 +62,7 @@ export default function Page(): JSX.Element {
       </section>
       <section
         style={{boxShadow: "0px -20px 44px -60px rgb(255 255 255)"}}
-        className="border-slate-6 relative mt-10 flex flex-col items-center overflow-hidden rounded-3xl border-t px-6 py-12 lg:container sm:mx-5 sm:py-24 md:mx-10">
+        className="border-slate-6 g:mx-auto relative mt-10 flex flex-col items-center overflow-hidden rounded-3xl border-t px-6 py-12 lg:container sm:mx-5 sm:py-24 md:mx-10">
         <div
           aria-hidden="true"
           className="center pointer-events-none absolute -top-1 left-1/2 -z-20 h-[200px] w-full max-w-[200px] -translate-x-1/2 -translate-y-1/2 md:max-w-[400px]"
