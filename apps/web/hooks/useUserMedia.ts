@@ -13,9 +13,7 @@ async function attachAudioOutputDeviceRef(
   if (typeof element.sinkId !== "undefined") {
     element
       .setSinkId(selectedAudioOutputDeviceId)
-      .then(() => {
-        return true
-      })
+      .then(() => {})
       .catch((err) => {
         let errorMessage = err
 
@@ -35,13 +33,10 @@ async function attachAudioOutputDeviceRef(
         }
 
         console.error(errorMessage)
-        return false
       })
   } else {
     console.warn("Browser does not support output device selection.")
   }
-
-  return false
 }
 
 export const useUserMedia = () => {
@@ -51,9 +46,6 @@ export const useUserMedia = () => {
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([])
   const [ready, setReady] = useState(false)
   const [accessGranted, setAccessGranted] = useState(false)
-
-  const audioOutputChangeNotSupported =
-    "sinkId" in HTMLMediaElement.prototype ? false : true
 
   const checkPermission = useCallback(async () => {
     const videoPermission = await navigator.permissions.query({
@@ -145,15 +137,19 @@ export const useUserMedia = () => {
     [preferences]
   )
 
-  const changeAudioDestination = useCallback(async () => {
-    const remoteVideoElement = document.getElementById(
-      "remote"
-    ) as HTMLVideoElement
-    await attachAudioOutputDeviceRef(
-      remoteVideoElement,
-      preferences.audioOutput!
-    )
-  }, [preferences])
+  const changeAudioDestination = useCallback(
+    async (deviceId?: string) => {
+      const remoteVideoElement = document.getElementById(
+        "remote"
+      ) as HTMLVideoElement
+
+      await attachAudioOutputDeviceRef(
+        remoteVideoElement,
+        deviceId || preferences.audioOutput!
+      )
+    },
+    [preferences]
+  )
 
   const switchInput = useCallback(
     async (deviceId: string, type: "audio" | "video") => {
@@ -312,6 +308,5 @@ export const useUserMedia = () => {
     muted: preferences.muted,
     videoOff: preferences.videoOff,
     checkPermission,
-    audioOutputChangeNotSupported,
   }
 }

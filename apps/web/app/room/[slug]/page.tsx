@@ -38,7 +38,6 @@ export default function Page(): JSX.Element {
     videoOff,
     stream,
     activeStream,
-    audioOutputChangeNotSupported,
     selectedAudioDevice,
     selectedVideoDevice,
     selectedOutputDevice,
@@ -50,6 +49,9 @@ export default function Page(): JSX.Element {
     switchAudioOutput,
     stopAllStreaming,
   } = useUserMedia()
+
+  const audioOutputChangeNotSupported =
+    "sinkId" in HTMLMediaElement.prototype ? false : true
 
   const { sendJsonMessage, getWebSocket } = useWebSocket(
     process.env.NEXT_PUBLIC_SOCKET_URL!,
@@ -187,7 +189,7 @@ export default function Page(): JSX.Element {
   const handleAudioOutputChange = useCallback(
     async (deviceId: string) => {
       await switchAudioOutput(deviceId)
-      changeAudioDestination()
+      await changeAudioDestination(deviceId)
     },
     [switchAudioOutput]
   )
