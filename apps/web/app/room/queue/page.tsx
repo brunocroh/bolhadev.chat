@@ -31,9 +31,6 @@ export default function Page(): JSX.Element {
     switchAudioOutput,
   } = useUserMedia()
 
-  const audioOutputChangeNotSupported =
-    "sinkId" in HTMLMediaElement.prototype ? false : true
-
   const [me, setMe] = useState(null)
   const [usersOnline, setUsersOnline] = useState(null)
   const [inQueue, setInQueue] = useState(false)
@@ -130,7 +127,6 @@ export default function Page(): JSX.Element {
                       }
                       activeVideoDevice={selectedVideoDevice}
                       activeOutputDevice={selectedOutputDevice}
-                      selectOutputDeviceDisabled={audioOutputChangeNotSupported}
                       setActiveOutputDevice={(deviceId) =>
                         onAudioOutputChange(deviceId)
                       }

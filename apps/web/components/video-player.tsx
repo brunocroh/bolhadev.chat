@@ -53,13 +53,16 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
       onMute,
       onVideoOff,
       onTurnOff,
-      selectOutputDeviceDisabled = false,
       remote = false,
       muted = false,
       videoOff = false,
     },
     videoRef
   ) => {
+
+    const selectOutputDeviceDisabled =
+      "sinkId" in HTMLMediaElement.prototype ? false : true
+
     return (
       <>
         <div className="size-full m-0 w-full max-w-[900px] overflow-hidden">
@@ -115,7 +118,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
                   value={activeAudioDevice}
                 >
                   <SelectTrigger className="sm:max-w-48 w-full">
-                    <Mic size={18} />
+                    <Mic className="flex-shrink-0" size={18} />
                     <SelectValue placeholder="Audio" />
                   </SelectTrigger>
                   <SelectContent>
@@ -137,7 +140,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
                   value={activeVideoDevice}
                 >
                   <SelectTrigger className="sm:max-w-48 w-full">
-                    <Video size={18} /> <SelectValue placeholder="Video" />
+                    <Video className="flex-shrink-0" size={18} /> <SelectValue placeholder="Video" />
                   </SelectTrigger>
                   <SelectContent>
                     {videoDevices?.map((video) => {
@@ -155,8 +158,9 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
                 <Select
                   onValueChange={setActiveOutputDevice}
                   value={activeOutputDevice}
+                  disabled={selectOutputDeviceDisabled}
                 >
-                  <SelectTrigger className="w-[180px]">
+                  <SelectTrigger className="sm:max-w-48 w-full">
                     <Headphones className="flex-shrink-0" size={18} />{" "}
                     <SelectValue placeholder="Output Device" />
                   </SelectTrigger>

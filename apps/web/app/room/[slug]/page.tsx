@@ -50,9 +50,6 @@ export default function Page(): JSX.Element {
     stopAllStreaming,
   } = useUserMedia()
 
-  const audioOutputChangeNotSupported =
-    "sinkId" in HTMLMediaElement.prototype ? false : true
-
   const { sendJsonMessage, getWebSocket } = useWebSocket(
     process.env.NEXT_PUBLIC_SOCKET_URL!,
     {
@@ -244,7 +241,6 @@ export default function Page(): JSX.Element {
                 setActiveOutputDevice={(deviceId) =>
                   handleAudioOutputChange(deviceId)
                 }
-                selectOutputDeviceDisabled={audioOutputChangeNotSupported}
                 muted={muted}
                 videoOff={videoOff}
                 onMute={toggleMute}
