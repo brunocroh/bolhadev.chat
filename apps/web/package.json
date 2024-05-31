@@ -37,6 +37,7 @@
     "@radix-ui/react-slot": "^1.0.2",
     "@repo/eslint-config": "workspace:*",
     "@repo/typescript-config": "workspace:*",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/eslint": "^8.44.7",
     "@types/node": "^17.0.12",
     "@types/react": "^18.0.22",
@@ -45,6 +46,8 @@
     "eslint": "^8.53.0",
     "eslint-plugin-only-warn": "^1.1.0",
     "postcss": "^8.4.32",
+    "prettier": "^3.1.0",
+    "prettier-plugin-tailwindcss": "^0.5.14",
     "socket.io-client": "^4.7.2",
     "tailwindcss": "^3.3.6",
     "typescript": "^5.2.2"

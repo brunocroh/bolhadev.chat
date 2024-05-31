@@ -1,0 +1,11 @@
+!/.*.{js,jsx,ts,tsx}
+*.min.{js,jsx,ts,tsx}
+.*cache/
+.github/
+.next/
+.vercel/
+.vscode/
+build/
+dist/
+node_modules/
+public/

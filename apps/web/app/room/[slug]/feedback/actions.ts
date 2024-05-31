@@ -12,11 +12,10 @@ export async function sendFeedback(formData: FormData) {
     content: formData.get('feedback') as string,
   }
 
-  if(data.twitter || data.content) {
+  if (data.twitter || data.content) {
     const { error } = await supabase.from('feedbacks').insert(data)
-    console.error("Fail to insert feedback", error)
+    console.error('Fail to insert feedback', error)
   }
-
 
   redirect('/room/queue')
 }
