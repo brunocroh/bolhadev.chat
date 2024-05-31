@@ -34,7 +34,7 @@ export default function Page(): JSX.Element {
             className="text-slate-6 w-full text-center text-[3rem] leading-10">
             Practice English for free
           </h2>
-          <h3 className="my-4 text-center text-[1rem] text-slate-400">The quickest path to learning English is to speak it regularly. Just find someone to chat with.</h3>
+          <h3 className="my-4 text-center text-[1rem] text-slate-400">The quickest path to learn English is speaking it regularly. Just find someone to chat with.</h3>
           <div className="flex w-full justify-center">
             <Link href={`room/queue`}>
               <Button className="h-12 min-w-max rounded-full text-base font-semibold text-black">
