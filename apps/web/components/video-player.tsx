@@ -1,6 +1,6 @@
 "use client"
 
-import React, { forwardRef, useCallback, useState } from "react"
+import React, { forwardRef } from "react"
 import {
   Select,
   SelectContent,
@@ -65,7 +65,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
 
     return (
       <>
-        <div className="size-full m-0 w-full max-w-[900px] overflow-hidden">
+        <div className="m-0 size-full w-full max-w-[900px] overflow-hidden">
           <div className="relative flex flex-col items-center">
             <video
               className={clsx("w-full rounded-lg ", {
@@ -117,8 +117,8 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
                   onValueChange={setActiveAudioDevice}
                   value={activeAudioDevice}
                 >
-                  <SelectTrigger className="sm:max-w-48 w-full">
-                    <Mic className="flex-shrink-0" size={18} />
+                  <SelectTrigger className="w-full sm:max-w-48">
+                    <Mic className="shrink-0" size={18} />
                     <SelectValue placeholder="Audio" />
                   </SelectTrigger>
                   <SelectContent>
@@ -136,32 +136,12 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
                   </SelectContent>
                 </Select>
                 <Select
-                  onValueChange={setActiveVideoDevice}
-                  value={activeVideoDevice}
-                >
-                  <SelectTrigger className="sm:max-w-48 w-full">
-                    <Video className="flex-shrink-0" size={18} /> <SelectValue placeholder="Video" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {videoDevices?.map((video) => {
-                      return (
-                        <SelectItem
-                          key={video.deviceId}
-                          value={video.deviceId || video.label}
-                        >
-                          {video.label}
-                        </SelectItem>
-                      )
-                    })}
-                  </SelectContent>
-                </Select>
-                <Select
                   onValueChange={setActiveOutputDevice}
                   value={activeOutputDevice}
                   disabled={selectOutputDeviceDisabled}
                 >
-                  <SelectTrigger className="sm:max-w-48 w-full">
-                    <Headphones className="flex-shrink-0" size={18} />{" "}
+                  <SelectTrigger className="w-full sm:max-w-48">
+                    <Headphones className="shrink-0" size={18} />{" "}
                     <SelectValue placeholder="Output Device" />
                   </SelectTrigger>
                   <SelectContent>
@@ -172,6 +152,26 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
                           value={outputDevice.deviceId || outputDevice.label}
                         >
                           {outputDevice.label}
+                        </SelectItem>
+                      )
+                    })}
+                  </SelectContent>
+                </Select>
+                <Select
+                  onValueChange={setActiveVideoDevice}
+                  value={activeVideoDevice}
+                >
+                  <SelectTrigger className="w-full sm:max-w-48">
+                    <Video className="shrink-0" size={18} /> <SelectValue placeholder="Video" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {videoDevices?.map((video) => {
+                      return (
+                        <SelectItem
+                          key={video.deviceId}
+                          value={video.deviceId || video.label}
+                        >
+                          {video.label}
                         </SelectItem>
                       )
                     })}

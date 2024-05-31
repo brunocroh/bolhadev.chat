@@ -9,7 +9,7 @@ import {
   PiggyBank,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { InfoCard } from "./components/info-card"
+import { InfoCard } from "./components/info-card";
 
 const infoCardContent = [
   {
@@ -41,8 +41,7 @@ export default function Page(): JSX.Element {
             Practice English for free
           </h2>
           <h3 className="my-4 text-center text-[1rem] text-slate-400">
-            The quickest path to learning English is to speak it regularly. Just
-            find someone to chat with.
+            The quickest path to learning English is to speak it regularly. Just find someone to chat with.
           </h3>
           <div className="flex w-full justify-center">
             <Link href={`room/queue`}>
