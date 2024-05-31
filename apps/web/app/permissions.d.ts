@@ -2,7 +2,7 @@
 
 declare global {
   interface PermissionDescriptor {
-    name: 'camera' | 'microphone' | 'geolocation' | 'notifications' | 'persistent-storage' | 'push' | 'midi' | 'midi-sysex' | 'camera' | 'microphone';
+    name: 'camera' | 'microphone' | 'geolocation' | 'notifications' | 'persistent-storage' | 'push' | 'midi' | 'midi-sysex';
   }
 
   // Extend the PermissionName type
