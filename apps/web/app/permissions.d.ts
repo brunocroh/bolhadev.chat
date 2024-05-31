@@ -11,8 +11,6 @@ declare global {
       | "push"
       | "midi"
       | "midi-sysex"
-      | "camera"
-      | "microphone"
   }
 
   // Extend the PermissionName type
