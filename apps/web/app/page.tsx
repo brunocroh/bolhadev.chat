@@ -1,30 +1,29 @@
-import React from "react"
-import Link from "next/link"
-
+import React from 'react'
+import Link from 'next/link'
 import {
   ChevronRight,
   Dumbbell,
   Heart,
   MessageCircle,
   PiggyBank,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { InfoCard } from "./components/info-card";
+} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { InfoCard } from './components/info-card'
 
 const infoCardContent = [
   {
     icon: MessageCircle,
     content:
-      "The most effective way to improve your English is through speaking.",
+      'The most effective way to improve your English is through speaking.',
   },
   {
     icon: Dumbbell,
     content:
-      "Enhance your English skills quickly by practicing a little every day.",
+      'Enhance your English skills quickly by practicing a little every day.',
   },
   {
     icon: Heart,
-    content: "Show respect, patience, and kindness to everyone.",
+    content: 'Show respect, patience, and kindness to everyone.',
   },
   {
     icon: PiggyBank,
@@ -41,7 +40,8 @@ export default function Page(): JSX.Element {
             Practice English for free
           </h2>
           <h3 className="my-4 text-center text-[1rem] text-slate-400">
-            The quickest path to learning English is to speak it regularly. Just find someone to chat with.
+            The quickest path to learn English is speaking it regularly. Just
+            find someone to chat with.
           </h3>
           <div className="flex w-full justify-center">
             <Link href={`room/queue`}>
@@ -56,9 +56,9 @@ export default function Page(): JSX.Element {
           <video
             className="-z-20 w-full max-w-2xl"
             style={{
-              display: "block",
-              width: "700px",
-              height: "500px",
+              display: 'block',
+              width: '700px',
+              height: '500px',
             }}
             playsInline
             loop={true}
@@ -69,7 +69,7 @@ export default function Page(): JSX.Element {
         </div>
       </section>
       <section
-        style={{ boxShadow: "0px -20px 44px -60px rgb(255 255 255)" }}
+        style={{ boxShadow: '0px -20px 44px -60px rgb(255 255 255)' }}
         className="border-slate-6 relative mt-10 flex flex-col items-center overflow-hidden rounded-3xl border-t px-6 py-12 lg:container sm:mx-5 sm:py-24 md:mx-10 lg:mx-auto"
       >
         <div
@@ -77,7 +77,7 @@ export default function Page(): JSX.Element {
           className="center pointer-events-none absolute -top-1 left-1/2 -z-20 h-[200px] w-full max-w-[200px] -translate-x-1/2 -translate-y-1/2 md:max-w-[400px]"
           style={{
             background:
-              "conic-gradient(from 90deg at 50% 50%, #00000000 50%, #000 50%),radial-gradient(rgba(200,200,200,0.1) 0%, transparent 80%)",
+              'conic-gradient(from 90deg at 50% 50%, #00000000 50%, #000 50%),radial-gradient(rgba(200,200,200,0.1) 0%, transparent 80%)',
           }}
         />
         <div className="mt-10 flex w-full flex-col flex-wrap items-center justify-center gap-10 md:flex-row">
