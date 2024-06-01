@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import React, { useEffect, useState } from "react"
-import { Badge } from "./ui/badge"
-import clsx from "clsx"
+import React, { useEffect, useState } from 'react'
+import clsx from 'clsx'
+import { Badge } from './ui/badge'
 
 const toMinutesAndSeconds = (time: number) => {
   const seconds = Math.floor((time / 1000) % 60)
@@ -35,7 +35,7 @@ const Countdown: React.FC<Countdown> = ({
   onFinishTime,
 }) => {
   const [minutesLeft, setMinutesLeft] = useState<number | null>(null)
-  const [time, setTimer] = useState("")
+  const [time, setTimer] = useState('')
 
   useEffect(() => {
     const deadLine = getDeadLine(startTime)
@@ -50,9 +50,9 @@ const Countdown: React.FC<Countdown> = ({
       setTimer(
         `${formatedTime.minutes
           .toString()
-          .padStart(2, "0")}:${formatedTime.seconds
+          .padStart(2, '0')}:${formatedTime.seconds
           .toString()
-          .padStart(2, "0")}`
+          .padStart(2, '0')}`
       )
     }, 1000)
 
@@ -63,8 +63,8 @@ const Countdown: React.FC<Countdown> = ({
     <Badge
       variant="destructive"
       className={clsx(
-        "invisible",
-        minutesLeft !== null && minutesLeft <= 1 && "visible"
+        'invisible',
+        minutesLeft !== null && minutesLeft <= 1 && 'visible'
       )}
     >
       Ends in: {time}

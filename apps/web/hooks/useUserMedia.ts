@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react"
-import { usePreferencesStore } from "./usePreferencesStore"
+import { useCallback, useEffect, useMemo, useState } from 'react'
+import { usePreferencesStore } from './usePreferencesStore'
 
 type MediaConstraints = {
   audio?: string
@@ -16,15 +16,15 @@ export const useUserMedia = () => {
 
   const checkPermission = useCallback(async () => {
     const videoPermission = await navigator.permissions.query({
-      name: "camera",
+      name: 'camera',
     })
     const audioPermission = await navigator.permissions.query({
-      name: "microphone",
+      name: 'microphone',
     })
 
     const permission = {
-      video: videoPermission.state === "granted",
-      audio: audioPermission.state === "granted",
+      video: videoPermission.state === 'granted',
+      audio: audioPermission.state === 'granted',
     }
 
     if (permission.video && permission.audio) {
@@ -99,29 +99,29 @@ export const useUserMedia = () => {
 
   const switchAudioOutput = useCallback(
     async (deviceId: string) => {
-      preferences.set(deviceId, "audioOutput")
+      preferences.set(deviceId, 'audioOutput')
     },
     [preferences]
   )
 
   const switchInput = useCallback(
-    async (deviceId: string, type: "audio" | "video") => {
+    async (deviceId: string, type: 'audio' | 'video') => {
       let newStream: MediaStream
       const oldVideoTrack = activeStream?.getVideoTracks()[0]!
       const oldAudioTrack = activeStream?.getAudioTracks()[0]!
 
-      if (type === "audio") {
+      if (type === 'audio') {
         newStream = await navigator.mediaDevices.getUserMedia({
           audio: { deviceId: { exact: deviceId } },
           video: { deviceId: { exact: preferences.video } },
         })
-        preferences.set(deviceId, "audio")
+        preferences.set(deviceId, 'audio')
       } else {
         newStream = await navigator.mediaDevices.getUserMedia({
           audio: { deviceId: { exact: preferences.audio } },
           video: { deviceId: { exact: deviceId } },
         })
-        preferences.set(deviceId, "video")
+        preferences.set(deviceId, 'video')
       }
 
       if (!newStream) return
@@ -158,19 +158,19 @@ export const useUserMedia = () => {
 
   const audioDevices = useMemo(() => {
     return devices.filter(
-      (device) => device.kind === "audioinput" && !!device.deviceId
+      (device) => device.kind === 'audioinput' && !!device.deviceId
     )
   }, [devices])
 
   const outputDevices = useMemo(() => {
     return devices.filter(
-      (device) => device.kind === "audiooutput" && !!device.deviceId
+      (device) => device.kind === 'audiooutput' && !!device.deviceId
     )
   }, [devices])
 
   const videoDevices = useMemo(() => {
     return devices.filter(
-      (device) => device.kind === "videoinput" && !!device.deviceId
+      (device) => device.kind === 'videoinput' && !!device.deviceId
     )
   }, [devices])
 
@@ -199,24 +199,24 @@ export const useUserMedia = () => {
       }
 
       if (!audio && !video && !audioOutput) {
-        audio = _devices.find((device) => device.kind === "audioinput")
+        audio = _devices.find((device) => device.kind === 'audioinput')
           ?.deviceId
-        video = _devices.find((device) => device.kind === "videoinput")
+        video = _devices.find((device) => device.kind === 'videoinput')
           ?.deviceId
-        audioOutput = _devices.find((device) => device.kind === "audiooutput")
+        audioOutput = _devices.find((device) => device.kind === 'audiooutput')
           ?.deviceId
       }
 
       if (video) {
-        preferences.set(video, "video")
+        preferences.set(video, 'video')
       }
 
       if (audio) {
-        preferences.set(audio, "audio")
+        preferences.set(audio, 'audio')
       }
 
       if (audioOutput) {
-        preferences.set(audioOutput, "audioOutput")
+        preferences.set(audioOutput, 'audioOutput')
       }
 
       const _stream = await updateUserMedia({

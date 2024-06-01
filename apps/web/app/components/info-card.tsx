@@ -1,6 +1,6 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { LucideIcon } from "lucide-react"
-import React from "react"
+import React from 'react'
+import { LucideIcon } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
 
 type InfoCard = {
   icon: LucideIcon
@@ -14,7 +14,7 @@ export const InfoCard: React.FC<InfoCard> = ({ icon, content }) => {
       className="border-slate-5 bg-slate-6 w-full border border-b-0 md:w-2/5 "
       style={{
         background:
-          "linear-gradient(180deg, rgba(80, 80, 80, 0.15) 0%, rgba(0, 0, 0, 0) 70%",
+          'linear-gradient(180deg, rgba(80, 80, 80, 0.15) 0%, rgba(0, 0, 0, 0) 70%',
       }}
     >
       <CardContent className="flex flex-row items-center gap-4 p-5">
