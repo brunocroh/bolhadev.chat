@@ -1,13 +1,12 @@
-"use client"
+'use client'
 
-import React, { forwardRef, useEffect } from "react"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "./ui/select"
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+} from 'react'
+import clsx from 'clsx'
 import {
   Headphones,
   Mic,
@@ -15,9 +14,19 @@ import {
   PhoneOff,
   Video,
   VideoOff,
-} from "lucide-react"
-import { Button } from "./ui/button"
-import clsx from "clsx"
+} from 'lucide-react'
+import { Button } from './ui/button'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select'
+
+interface HTMLVideoElementWithSetSinkId extends HTMLVideoElement {
+  setSinkId?: (sinkId: string) => Promise<void>
+}
 
 type VideoPlayer = {
   audioDevices?: MediaDeviceInfo[]
@@ -37,7 +46,10 @@ type VideoPlayer = {
   videoOff?: boolean
 }
 
-export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
+export const VideoPlayer = forwardRef<
+  HTMLVideoElementWithSetSinkId,
+  VideoPlayer
+>(
   (
     {
       audioDevices,
@@ -58,11 +70,22 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
     },
     videoRef
   ) => {
+    const localVideoRef = useRef<HTMLVideoElementWithSetSinkId | null>(null)
+    useImperativeHandle(
+      videoRef,
+      () => localVideoRef.current as HTMLVideoElement
+    )
+
     useEffect(() => {
       if (!remote) return
 
-      const videoElement = videoRef.current
-      if (videoElement && videoElement.setSinkId !== undefined) {
+      const videoElement = localVideoRef?.current
+
+      if (
+        videoElement &&
+        videoElement?.setSinkId !== undefined &&
+        activeOutputDevice
+      ) {
         videoElement
           .setSinkId(activeOutputDevice)
           .then(() => {
@@ -70,7 +93,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
               `Success, audio output device attached: ${activeOutputDevice}`
             )
           })
-          .catch((error) => {
+          .catch((error: any) => {
             console.error(`Error: ${error.name}`)
           })
       }
@@ -78,32 +101,32 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
 
     return (
       <>
-        <div className="m-0 size-full w-full max-w-[900px] overflow-hidden">
+        <div className="size-full m-0 w-full max-w-[900px] overflow-hidden">
           <div className="relative flex flex-col items-center">
             <video
-              className={clsx("w-full rounded-lg ", {
-                "[transform:scaleX(-1)]": !remote,
+              className={clsx('w-full rounded-lg ', {
+                '[transform:scaleX(-1)]': !remote,
               })}
-              ref={videoRef}
+              ref={localVideoRef}
               poster="/thumbnail.png"
               playsInline
               autoPlay={true}
               muted={!remote}
-              id={remote ? "remote" : "local"}
+              id={remote ? 'remote' : 'local'}
             ></video>
             {!remote && (
               <div className="absolute bottom-2 flex gap-2">
                 <Button
                   onClick={onMute}
                   className="size-6 rounded-full p-3 active:scale-95"
-                  variant={muted ? "destructive" : "secondary"}
+                  variant={muted ? 'destructive' : 'secondary'}
                 >
                   {muted ? <MicOff size={18} /> : <Mic size={18} />}
                 </Button>
                 <Button
                   onClick={onVideoOff}
                   className="size-6 rounded-full p-3 active:scale-95"
-                  variant={videoOff ? "destructive" : "secondary"}
+                  variant={videoOff ? 'destructive' : 'secondary'}
                 >
                   {videoOff ? (
                     <VideoOff size={18} className="size-3" />
@@ -115,7 +138,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
                   <Button
                     onClick={onTurnOff}
                     className="size-6 rounded-full p-3 active:scale-95"
-                    variant={"destructive"}
+                    variant={'destructive'}
                   >
                     <PhoneOff size={18} />
                   </Button>
@@ -130,7 +153,7 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
                   onValueChange={setActiveAudioDevice}
                   value={activeAudioDevice}
                 >
-                  <SelectTrigger className="w-full sm:max-w-48">
+                  <SelectTrigger className="sm:max-w-48 w-full">
                     <Mic className="shrink-0" size={18} />
                     <SelectValue placeholder="Audio" />
                   </SelectTrigger>
@@ -152,8 +175,8 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
                   onValueChange={setActiveOutputDevice}
                   value={activeOutputDevice}
                 >
-                  <SelectTrigger className="w-full sm:max-w-48">
-                    <Headphones className="shrink-0" size={18} />{" "}
+                  <SelectTrigger className="sm:max-w-48 w-full">
+                    <Headphones className="shrink-0" size={18} />{' '}
                     <SelectValue placeholder="Output Device" />
                   </SelectTrigger>
                   <SelectContent>
@@ -173,8 +196,8 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
                   onValueChange={setActiveVideoDevice}
                   value={activeVideoDevice}
                 >
-                  <SelectTrigger className="w-full sm:max-w-48">
-                    <Video className="shrink-0" size={18} />{" "}
+                  <SelectTrigger className="sm:max-w-48 w-full">
+                    <Video className="shrink-0" size={18} />{' '}
                     <SelectValue placeholder="Video" />
                   </SelectTrigger>
                   <SelectContent>
@@ -199,4 +222,4 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
   }
 )
 
-VideoPlayer.displayName = "VideoPlayer"
+VideoPlayer.displayName = 'VideoPlayer'

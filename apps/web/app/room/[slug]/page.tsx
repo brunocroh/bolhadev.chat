@@ -20,7 +20,7 @@ import { useUserMedia } from '@/hooks/useUserMedia'
 export default function Page(): JSX.Element {
   const peerRef: MutableRefObject<Peer.Instance | null> = useRef(null)
   const videoRef: MutableRefObject<HTMLVideoElement | null> = useRef(null)
-  const remoteRef = useRef<HTMLVideoElement>(null)
+  const remoteRef = useRef<HTMLVideoElement | null>(null)
 
   const pathname = usePathname()
   const roomId = pathname.split('/room/')[1]
