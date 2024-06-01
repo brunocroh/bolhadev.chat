@@ -47,7 +47,7 @@ export default function Page(): JSX.Element {
   } = useUserMedia();
 
   const { sendJsonMessage, getWebSocket } = useWebSocket(
-    process.env.NEXT_PUBLIC_SOCKET_URL!,
+    'ws://localhost:4000/',
     {
       onOpen: () => {
         sendJsonMessage({

@@ -33,7 +33,7 @@ export default function Page(): JSX.Element {
   const [inQueue, setInQueue] = useState(false);
 
   const { sendJsonMessage } = useWebSocket(
-    process.env.NEXT_PUBLIC_SOCKET_URL!,
+    'ws://localhost:4000/',
     {
       onOpen: () => {
         sendJsonMessage({
