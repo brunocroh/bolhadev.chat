@@ -1,38 +1,44 @@
+<p align="center">
+  <img src="https://github.com/brunocroh/bolhadev.chat/assets/13812512/acfd1f3e-3e30-4eb5-8bae-f56d2a6af6cb" alt="Bolhadev.chat Logo" width="600"/>
+</p>
+
 # Bolhadev.chat
 
-Brazil has many talented developers, but unfortunately, fewer Brazilians speak English. This language barrier limits the world's ability to see our full potential.
+Brazil boasts a wealth of talented developers, yet the English language barrier often limits their global visibility and opportunities. Proficiency in English is a crucial skill that unlocks access to a vast amount of content and international career prospects, especially for developers.
 
-English is a powerful tool for individuals to achieve their goals, granting access to a vast amount of content created in English. Proficiency in English is particularly important for developers seeking international opportunities.
+## Project Goal
 
-The goal of this project is to create a safe and supportive environment for members of "BolhaDev" to practice and improve their communication skills.
+The goal of Bolhadev.chat is to create a safe and supportive environment where members of "BolhaDev" can practice and improve their English communication skills. This project aims to bridge the language gap, allowing Brazilian developers to showcase their full potential on the global stage.
 
-## Tech
+## Technology
 
-This project is designed to be cost-effective, ensuring it remains free for everyone.
+Bolhadev.chat is designed to be cost-effective, ensuring it remains free for all users. By leveraging P2P (peer-to-peer) connections, users can connect directly, allowing us to support numerous practice rooms simultaneously without incurring significant server costs.
 
-One of the key features is the use of P2P (peer-to-peer) connections, allowing users to connect directly. This approach enables us to support numerous practice rooms running simultaneously without incurring significant server costs
+## What's Inside?
 
-## What's inside?
-
-This repo includes the following packages/apps:
+This repository includes the following packages/apps:
 
 ### Apps
 
-- `web`: a [Next.js](https://nextjs.org/) app with the client code
-- `server`: a [Node](https://nodejs.org/en) app to handle sockets and connect users
+- **`web`**: A [Next.js](https://nextjs.org/) application that contains the client-side code.
+- **`server`**: A [Node.js](https://nodejs.org/en) application that handles socket connections and user interactions.
 
-We are using:
+### Technologies Used
 
-- Turborepo
-- Next
-- Node
-- Sockets
-- WebRTC
-- Tailwind
-- Shadcn
+- **Turborepo**: For efficient project management.
+- **Next.js**: For the web client.
+- **Node.js**: For the server.
+- **WebSockets**: For real-time communication.
+- **WebRTC**: For peer-to-peer connections.
+- **Tailwind CSS**: For styling.
+- **Shadcn**: For design components.
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+Each package/app is fully written in [TypeScript](https://www.typescriptlang.org/), ensuring type safety and code quality.
 
 ## Contributing
 
-Please read the [contributing guide](https://github.com/brunocroh/bolhadev.chat/blob/main/CONTRIBUTING.md)
+We welcome contributions from everyone! Please read our [contributing guide](https://github.com/brunocroh/bolhadev.chat/blob/main/CONTRIBUTING.md) to learn how you can help improve Bolhadev.chat.
+
+---
+
+Together, we can break down language barriers and unlock new opportunities for Brazilian developers around the world.
