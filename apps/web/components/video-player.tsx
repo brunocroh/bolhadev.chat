@@ -1,6 +1,6 @@
 "use client"
 
-import React, { forwardRef } from "react"
+import React, { forwardRef, useEffect } from "react"
 import {
   Select,
   SelectContent,
@@ -29,7 +29,6 @@ type VideoPlayer = {
   setActiveAudioDevice?: (deviceId: string) => void
   setActiveVideoDevice?: (deviceId: string) => void
   setActiveOutputDevice?: (deviceId: string) => void
-  selectOutputDeviceDisabled?: boolean
   onMute?: () => void
   onVideoOff?: () => void
   onTurnOff?: () => void
@@ -59,9 +58,23 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
     },
     videoRef
   ) => {
+    useEffect(() => {
+      if (!remote) return
 
-    const selectOutputDeviceDisabled =
-      "sinkId" in HTMLMediaElement.prototype ? false : true
+      const videoElement = videoRef.current
+      if (videoElement && videoElement.setSinkId !== undefined) {
+        videoElement
+          .setSinkId(activeOutputDevice)
+          .then(() => {
+            console.log(
+              `Success, audio output device attached: ${activeOutputDevice}`
+            )
+          })
+          .catch((error) => {
+            console.error(`Error: ${error.name}`)
+          })
+      }
+    }, [activeOutputDevice])
 
     return (
       <>
@@ -138,7 +151,6 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
                 <Select
                   onValueChange={setActiveOutputDevice}
                   value={activeOutputDevice}
-                  disabled={selectOutputDeviceDisabled}
                 >
                   <SelectTrigger className="w-full sm:max-w-48">
                     <Headphones className="shrink-0" size={18} />{" "}
@@ -162,7 +174,8 @@ export const VideoPlayer = forwardRef<HTMLVideoElement, VideoPlayer>(
                   value={activeVideoDevice}
                 >
                   <SelectTrigger className="w-full sm:max-w-48">
-                    <Video className="shrink-0" size={18} /> <SelectValue placeholder="Video" />
+                    <Video className="shrink-0" size={18} />{" "}
+                    <SelectValue placeholder="Video" />
                   </SelectTrigger>
                   <SelectContent>
                     {videoDevices?.map((video) => {

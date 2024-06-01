@@ -44,7 +44,6 @@ export default function Page(): JSX.Element {
     outputDevices,
     audioDevices,
     videoDevices,
-    changeAudioDestination,
     switchInput,
     switchAudioOutput,
     stopAllStreaming,
@@ -87,8 +86,6 @@ export default function Page(): JSX.Element {
               if (remoteRef.current) {
                 remoteRef.current.srcObject = remoteStream
               }
-
-              changeAudioDestination()
             })
 
             peerRef.current.on("connect", () => {
@@ -183,14 +180,6 @@ export default function Page(): JSX.Element {
     )
   }
 
-  const handleAudioOutputChange = useCallback(
-    async (deviceId: string) => {
-      await switchAudioOutput(deviceId)
-      await changeAudioDestination(deviceId)
-    },
-    [switchAudioOutput]
-  )
-
   const handleHangUp = useCallback(async () => {
     stopAllStreaming()
     peerRef.current?.destroy()
@@ -202,8 +191,6 @@ export default function Page(): JSX.Element {
     peerRef.current?.destroy()
     location.replace(`/room/queue`)
   }, [stopAllStreaming])
-
-  // const isAudioOutputSelectNotSupported = 'sinkId' in HTMLVideoElement.prototype
 
   return (
     <section className="container flex h-full flex-col content-center items-center justify-center gap-4">
@@ -237,9 +224,8 @@ export default function Page(): JSX.Element {
                 audioDevices={audioDevices}
                 videoDevices={videoDevices}
                 outputDevices={outputDevices}
-                activeOutputDevice={selectedOutputDevice}
                 setActiveOutputDevice={(deviceId) =>
-                  handleAudioOutputChange(deviceId)
+                  switchAudioOutput(deviceId)
                 }
                 muted={muted}
                 videoOff={videoOff}
@@ -251,7 +237,11 @@ export default function Page(): JSX.Element {
           </Card>
           <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 md:w-1/2 md:self-start ">
             <CardContent className="h-full p-5">
-              <VideoPlayer remote ref={remoteRef} />
+              <VideoPlayer
+                remote
+                ref={remoteRef}
+                activeOutputDevice={selectedOutputDevice}
+              />
             </CardContent>
           </Card>
         </div>

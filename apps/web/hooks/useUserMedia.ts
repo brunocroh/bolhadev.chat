@@ -6,39 +6,6 @@ type MediaConstraints = {
   video?: string
 }
 
-async function attachAudioOutputDeviceRef(
-  element: HTMLVideoElement,
-  selectedAudioOutputDeviceId: string
-) {
-  if (typeof element.sinkId !== "undefined") {
-    element
-      .setSinkId(selectedAudioOutputDeviceId)
-      .then(() => {})
-      .catch((err) => {
-        let errorMessage = err
-
-        switch (err.name) {
-          case "SecurityError":
-            errorMessage =
-              "You need to use HTTPS for selecting audio output device"
-            break
-          case "NotFoundError":
-            errorMessage = "Selected audio output device not found"
-            break
-          case "NotAllowedError":
-            errorMessage = "The specified audio output device was not found"
-            break
-          default:
-            errorMessage = "Error changing audio output device"
-        }
-
-        console.error(errorMessage)
-      })
-  } else {
-    console.warn("Browser does not support output device selection.")
-  }
-}
-
 export const useUserMedia = () => {
   const preferences = usePreferencesStore()
   const [stream, setStream] = useState<MediaStream | null>(null)
@@ -133,20 +100,6 @@ export const useUserMedia = () => {
   const switchAudioOutput = useCallback(
     async (deviceId: string) => {
       preferences.set(deviceId, "audioOutput")
-    },
-    [preferences]
-  )
-
-  const changeAudioDestination = useCallback(
-    async (deviceId?: string) => {
-      const remoteVideoElement = document.getElementById(
-        "remote"
-      ) as HTMLVideoElement
-
-      await attachAudioOutputDeviceRef(
-        remoteVideoElement,
-        deviceId || preferences.audioOutput!
-      )
     },
     [preferences]
   )
@@ -297,7 +250,6 @@ export const useUserMedia = () => {
     selectedVideoDevice: preferences.video,
     selectedOutputDevice: preferences.audioOutput,
     ready,
-    changeAudioDestination,
     accessGranted,
     switchInput,
     stopStreaming,
