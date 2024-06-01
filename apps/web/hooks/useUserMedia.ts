@@ -16,20 +16,25 @@ export const useUserMedia = () => {
   const [accessGranted, setAccessGranted] = useState(false);
 
   const checkPermission = useCallback(async () => {
-    const videoPermission = await navigator.permissions.query({ name: 'camera' });
-    const audioPermission = await navigator.permissions.query({ name: 'microphone' });
-
-    const permission =  {
-      video: videoPermission.state === 'granted',
-      audio: audioPermission.state === 'granted'
+    try {
+      await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      });
+      setAccessGranted(true);
+      return {
+        video: true,
+        audio: true,
+      };
+    } catch (error) {
+      console.error("Error checking permission:", error);
+      setAccessGranted(false);
+      return {
+        video: false,
+        audio: false,
+      };
     }
-
-    if(permission.video && permission.audio){
-      setAccessGranted(true)
-    }
-
-    return permission
-  }, [setAccessGranted])
+  }, [setAccessGranted]);  
 
 
   const stopStreaming = useCallback(async (_stream?: MediaStream) => {
