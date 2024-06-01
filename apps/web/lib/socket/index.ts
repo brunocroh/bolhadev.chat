@@ -1,5 +1,5 @@
-const URL = process.env.NEXT_PUBLIC_SOCKET_URL;
+const URL = process.env.NEXT_PUBLIC_SOCKET_URL
 
 export const socket = () => {
-  return new WebSocket(URL!);
-};
+  return new WebSocket(URL!)
+}
