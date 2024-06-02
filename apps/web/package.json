@@ -5,7 +5,7 @@
   "scripts": {
     "env:load": "dotenv -e ../../.env --",
     "dev": "pnpm env:load next dev",
-    "build": "pnpm env:loadnext build",
+    "build": "pnpm env:load next build",
     "start": "pnpm env:load next start",
     "lint": "next lint && lint-staged"
   },
