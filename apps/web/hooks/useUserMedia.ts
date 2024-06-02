@@ -12,26 +12,28 @@ export const useUserMedia = () => {
   const [activeStream, setActiveStream] = useState<MediaStream | null>(null)
   const [devices, setDevices] = useState<MediaDeviceInfo[]>([])
   const [ready, setReady] = useState(false)
+
   const [accessGranted, setAccessGranted] = useState(false)
 
   const checkPermission = useCallback(async () => {
-    const videoPermission = await navigator.permissions.query({
-      name: 'camera',
-    })
-    const audioPermission = await navigator.permissions.query({
-      name: 'microphone',
-    })
-
-    const permission = {
-      video: videoPermission.state === 'granted',
-      audio: audioPermission.state === 'granted',
-    }
-
-    if (permission.video && permission.audio) {
+    try {
+      await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true,
+      })
       setAccessGranted(true)
+      return {
+        video: true,
+        audio: true,
+      }
+    } catch (error) {
+      console.error('Error checking permission:', error)
+      setAccessGranted(false)
+      return {
+        video: false,
+        audio: false,
+      }
     }
-
-    return permission
   }, [setAccessGranted])
 
   const stopStreaming = useCallback(async (_stream?: MediaStream) => {
@@ -83,7 +85,6 @@ export const useUserMedia = () => {
   }, [setDevices])
 
   const toggleMute = useCallback(async () => {
-    console.log({ muted: preferences.muted })
     activeStream?.getAudioTracks().forEach((track) => {
       track.enabled = preferences.muted
     })
@@ -199,12 +200,15 @@ export const useUserMedia = () => {
       }
 
       if (!audio && !video && !audioOutput) {
-        audio = _devices.find((device) => device.kind === 'audioinput')
-          ?.deviceId
-        video = _devices.find((device) => device.kind === 'videoinput')
-          ?.deviceId
-        audioOutput = _devices.find((device) => device.kind === 'audiooutput')
-          ?.deviceId
+        audio = _devices.find(
+          (device) => device.kind === 'audioinput'
+        )?.deviceId
+        video = _devices.find(
+          (device) => device.kind === 'videoinput'
+        )?.deviceId
+        audioOutput = _devices.find(
+          (device) => device.kind === 'audiooutput'
+        )?.deviceId
       }
 
       if (video) {

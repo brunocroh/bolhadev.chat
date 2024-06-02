@@ -7,8 +7,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Bolhadev.chat',
-  description:
-    'A free way for Brazilian developers to improve their English skills.',
+  description: 'Free English Language Development for Coders',
   metadataBase: new URL('https://bolhadev.chat'),
 }
 
@@ -26,7 +25,7 @@ export default function RootLayout({
           alt="Purple light ray"
           width="1000"
           height="800"
-          className="size-full absolute -z-10 animate-in fade-in slide-in-from-bottom-1"
+          className="absolute -z-10 size-full animate-in fade-in slide-in-from-bottom-1"
           style={{ color: 'transparent', animationDuration: '10s' }}
         />
         {children}
