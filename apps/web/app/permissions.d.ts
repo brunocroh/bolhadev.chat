@@ -3,18 +3,18 @@
 declare global {
   interface PermissionDescriptor {
     name:
-      | "camera"
-      | "microphone"
-      | "geolocation"
-      | "notifications"
-      | "persistent-storage"
-      | "push"
-      | "midi"
-      | "midi-sysex"
+      | 'camera'
+      | 'microphone'
+      | 'geolocation'
+      | 'notifications'
+      | 'persistent-storage'
+      | 'push'
+      | 'midi'
+      | 'midi-sysex'
   }
 
   // Extend the PermissionName type
-  type ExtendedPermissionName = "camera" | "microphone"
+  type ExtendedPermissionName = 'camera' | 'microphone'
 
   interface Permissions {
     query(permissionDesc: {
