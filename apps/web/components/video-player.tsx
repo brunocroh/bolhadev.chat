@@ -25,7 +25,7 @@ import {
 } from './ui/select'
 
 interface HTMLVideoElementWithSetSinkId extends HTMLVideoElement {
-  setSinkId?: (sinkId: string) => Promise<void>
+  setSinkId: (sinkId: string) => Promise<void>
 }
 
 type VideoPlayer = {
