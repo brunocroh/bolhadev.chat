@@ -2,16 +2,26 @@
 
 declare global {
   interface PermissionDescriptor {
-    name: 'camera' | 'microphone' | 'geolocation' | 'notifications' | 'persistent-storage' | 'push' | 'midi' | 'midi-sysex';
+    name:
+      | 'camera'
+      | 'microphone'
+      | 'geolocation'
+      | 'notifications'
+      | 'persistent-storage'
+      | 'push'
+      | 'midi'
+      | 'midi-sysex'
   }
 
   // Extend the PermissionName type
-  type ExtendedPermissionName = 'camera' | 'microphone';
+  type ExtendedPermissionName = 'camera' | 'microphone'
 
   interface Permissions {
-    query(permissionDesc: { name: ExtendedPermissionName }): Promise<PermissionStatus>;
+    query(permissionDesc: {
+      name: ExtendedPermissionName
+    }): Promise<PermissionStatus>
   }
 }
 
 // This is required to make TypeScript recognize the new types
-export {};
+export {}

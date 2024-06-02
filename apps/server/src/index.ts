@@ -1,13 +1,12 @@
-import WebSocket, { WebSocketServer } from "ws"
-import Http from "http"
-import { v4 as uuid } from "uuid"
-import Fastify from "fastify"
+import Fastify from 'fastify'
+import Http from 'http'
+import cron from 'node-cron'
+import { v4 as uuid } from 'uuid'
+import WebSocket, { WebSocketServer } from 'ws'
 
 const fastify = Fastify({
   logger: true,
 })
-
-import cron from "node-cron"
 
 const server = Http.createServer()
 const wss = new WebSocketServer({ server })
@@ -18,29 +17,29 @@ type Room = {
 }
 
 type QueueMe = {
-  type: "me"
+  type: 'me'
 }
 
 type QueueUpdateEvent = {
-  type: "queueJoin" | "queueExit"
+  type: 'queueJoin' | 'queueExit'
   userId: string
 }
 
 type SendOfferEvent = {
-  type: "sendOffer"
+  type: 'sendOffer'
   to: string
   signal: any
   from: string
 }
 
 type SendAnswerEvent = {
-  type: "sendAnswer"
+  type: 'sendAnswer'
   to: string
   signal: any
 }
 
 type RoomEnterEvent = {
-  type: "roomEnter"
+  type: 'roomEnter'
   id: string
   roomId: string
 }
@@ -65,31 +64,31 @@ const queue = new Set<string>()
 const users = new Map<string, any>()
 const rooms = new Map<string, Room>()
 
-wss.on("connection", (ws) => {
+wss.on('connection', (ws) => {
   const userId = uuid()
   users.set(userId, ws)
 
-  ws.on("message", (data) => {
+  ws.on('message', (data) => {
     const event = JSON.parse(data.toString()) as SocketEvents
 
     switch (event.type) {
-      case "me":
-        ws.send(JSON.stringify({ type: "me", id: userId }))
-        broadcastMessage({ type: "usersOnline", size: users.size })
+      case 'me':
+        ws.send(JSON.stringify({ type: 'me', id: userId }))
+        broadcastMessage({ type: 'usersOnline', size: users.size })
         break
-      case "queueJoin":
+      case 'queueJoin':
         onQueueJoin(event)
         break
-      case "queueExit":
+      case 'queueExit':
         onQueueExit(event)
         break
-      case "sendOffer":
+      case 'sendOffer':
         onSendOffer(event)
         break
-      case "sendAnswer":
+      case 'sendAnswer':
         onSendAnswer(event)
         break
-      case "roomEnter":
+      case 'roomEnter':
         onRoomEnter(event)
         break
       default:
@@ -97,14 +96,14 @@ wss.on("connection", (ws) => {
     }
   })
 
-  ws.on("close", () => handleDisconnect(userId))
+  ws.on('close', () => handleDisconnect(userId))
 })
 
 const handleDisconnect = (userId: string) => {
   queue.delete(userId)
   users.delete(userId)
   broadcastMessage({
-    type: "usersOnline",
+    type: 'usersOnline',
     size: users.size,
   })
 }
@@ -125,17 +124,17 @@ const onRoomEnter = async ({ roomId, id }: any) => {
       room.users.forEach((user) => {
         const _user = users.get(user)
         // TODO: if user is not connected, send a event to other user to navigate back to queue screen
-        _user.send(JSON.stringify({ type: "hostCall", to: participant }))
+        _user.send(JSON.stringify({ type: 'hostCall', to: participant }))
       })
     }
   } catch (e) {
-    console.error("Fail to create room", e)
+    console.error('Fail to create room', e)
 
     if (room) {
       room?.users.forEach((user) => {
         const _user = users.get(user)
         if (!_user) return
-        _user.send(JSON.stringify({ type: "createRoomFail" }))
+        _user.send(JSON.stringify({ type: 'createRoomFail' }))
       })
       return
     }
@@ -143,7 +142,7 @@ const onRoomEnter = async ({ roomId, id }: any) => {
     const _user = users.get(id)
 
     if (_user) {
-      _user.send(JSON.stringify({ type: "createRoomFail" }))
+      _user.send(JSON.stringify({ type: 'createRoomFail' }))
     }
   }
 }
@@ -160,7 +159,7 @@ const onSendOffer = ({ to, signal, from }: SendOfferEvent) => {
 
   userTo.send(
     JSON.stringify({
-      type: "receiveOffer",
+      type: 'receiveOffer',
       signal,
       from,
       to,
@@ -180,7 +179,7 @@ const onSendAnswer = ({ to, signal }: SendAnswerEvent) => {
 
   userTo.send(
     JSON.stringify({
-      type: "receiveAnswer",
+      type: 'receiveAnswer',
       signal,
     })
   )
@@ -195,10 +194,10 @@ const onQueueExit = ({ userId }: QueueUpdateEvent) => {
 }
 
 server.listen(4000, () => {
-  console.log("Server up")
+  console.log('Server up')
 })
 
-cron.schedule("*/15 * * * * *", () => {
+cron.schedule('*/15 * * * * *', () => {
   const _queue = Array.from(queue).sort(() => Math.random() - 0.5)
 
   for (; _queue.length >= 2; ) {
@@ -213,7 +212,7 @@ cron.schedule("*/15 * * * * *", () => {
         .map((userId) => {
           const userSocket = users.get(userId)
           if (!userSocket) {
-            throw "User is not connected"
+            throw 'User is not connected'
           }
 
           return {
@@ -222,18 +221,18 @@ cron.schedule("*/15 * * * * *", () => {
           }
         })
         .forEach(({ ws, userId }) => {
-          ws.send(JSON.stringify({ type: "roomFound", room, roomId }))
+          ws.send(JSON.stringify({ type: 'roomFound', room, roomId }))
           users.delete(userId)
           queue.delete(userId)
         })
     } catch (e) {
-      console.warn("Fail to create a room", e)
+      console.warn('Fail to create a room', e)
     }
   }
 })
 
-fastify.get("/", function (_, reply) {
-  reply.send({ hello: "world" })
+fastify.get('/', function (_, reply) {
+  reply.send({ hello: 'world' })
 })
 
 fastify.listen({ port: 4001 }, function (err, address) {

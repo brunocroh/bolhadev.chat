@@ -22,6 +22,7 @@ apps
 └── web
 └── server
 ```
+
 ## Development
 
 ### Fork this repo
@@ -110,7 +111,7 @@ the following categories:
   e.g. `feat(web): add new awesome feature`
 
 If you are interested in the detailed specification you can visit
-https://www.conventionalcommits.org/ 
+https://www.conventionalcommits.org/
 
 ## Requests for new features
 

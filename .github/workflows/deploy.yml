@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
+          node-version: '18'
 
       - name: Build and push Docker image
         run: |
@@ -48,4 +48,4 @@ jobs:
             -v /etc/letsencrypt/ssl/privkey.pem:/etc/nginx/ssl/privkey.pem \
             --network internal \
             ${{ vars.DOCKER_REPO }}/bolhadev-nginx:latest
-            docker image prune
+            docker image prune -f
