@@ -1,14 +1,14 @@
-"use client"
+'use client'
 
-import { useRef, useState, useCallback, useEffect } from "react"
-import useWebSocket from "react-use-websocket"
-import { Button } from "@/components/ui/button"
-import { useRouter } from "next/navigation"
-import { useUserMedia } from "@/hooks/useUserMedia"
-import { Card, CardContent } from "@/components/ui/card"
-import { VideoPlayer } from "@/components/video-player"
-import { Badge } from "@/components/ui/badge"
-import { env } from "@repo/env-config"
+import { useCallback, useEffect, useRef, useState } from 'react'
+import useWebSocket from 'react-use-websocket'
+import { useRouter } from 'next/navigation'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { VideoPlayer } from '@/components/video-player'
+import { useUserMedia } from '@/hooks/useUserMedia'
+import { env } from '@repo/env-config'
 
 export default function Page(): JSX.Element {
   const router = useRouter()
@@ -17,8 +17,10 @@ export default function Page(): JSX.Element {
   const {
     audioDevices,
     videoDevices,
+    outputDevices,
     selectedAudioDevice,
     selectedVideoDevice,
+    selectedOutputDevice,
     switchInput,
     activeStream: stream,
     stopAllStreaming,
@@ -27,6 +29,7 @@ export default function Page(): JSX.Element {
     toggleMute,
     toggleVideo,
     accessGranted,
+    switchAudioOutput,
   } = useUserMedia()
 
   const [me, setMe] = useState(null)
@@ -36,20 +39,20 @@ export default function Page(): JSX.Element {
   const { sendJsonMessage } = useWebSocket(env.NEXT_PUBLIC_SOCKET_URL!, {
     onOpen: () => {
       sendJsonMessage({
-        type: "me",
+        type: 'me',
       })
     },
     onMessage: (event) => {
       const data = JSON.parse(event.data)
 
       switch (data.type) {
-        case "me":
+        case 'me':
           setMe(data.id)
           break
-        case "usersOnline":
+        case 'usersOnline':
           setUsersOnline(data.size)
           break
-        case "roomFound":
+        case 'roomFound':
           router.push(`/room/${data.roomId}`)
           break
         default:
@@ -60,14 +63,21 @@ export default function Page(): JSX.Element {
 
   const onConnect = useCallback(() => {
     setInQueue(!inQueue) // TODO: Replace to update the state when receive it from backend
-    sendJsonMessage({ type: inQueue ? "queueExit" : "queueJoin", userId: me })
+    sendJsonMessage({ type: inQueue ? 'queueExit' : 'queueJoin', userId: me })
   }, [inQueue, me, sendJsonMessage])
 
   const onInputChange = useCallback(
-    (deviceId: string, type: "audio" | "video") => {
+    (deviceId: string, type: 'audio' | 'video') => {
       switchInput(deviceId, type)
     },
     [switchInput]
+  )
+
+  const onAudioOutputChange = useCallback(
+    (deviceId: string) => {
+      switchAudioOutput(deviceId)
+    },
+    [switchAudioOutput]
   )
 
   useEffect(() => {
@@ -105,14 +115,19 @@ export default function Page(): JSX.Element {
                       ref={videoRef}
                       audioDevices={audioDevices}
                       videoDevices={videoDevices}
+                      outputDevices={outputDevices}
                       setActiveAudioDevice={(deviceId) =>
-                        onInputChange(deviceId, "audio")
+                        onInputChange(deviceId, 'audio')
                       }
                       activeAudioDevice={selectedAudioDevice}
                       setActiveVideoDevice={(deviceId) =>
-                        onInputChange(deviceId, "video")
+                        onInputChange(deviceId, 'video')
                       }
                       activeVideoDevice={selectedVideoDevice}
+                      activeOutputDevice={selectedOutputDevice}
+                      setActiveOutputDevice={(deviceId) =>
+                        onAudioOutputChange(deviceId)
+                      }
                       muted={muted}
                       onMute={toggleMute}
                       videoOff={videoOff}
@@ -128,14 +143,14 @@ export default function Page(): JSX.Element {
                     <div className="mt-2 flex w-full flex-col items-center justify-between gap-6 sm:flex-row">
                       <h2 className="text-sm sm:text-base">
                         {inQueue
-                          ? "Finding a practice buddy"
+                          ? 'Finding a practice buddy'
                           : "Hit the 'Ready' button when you feel ready to start practicing with someone."}
                       </h2>
                       <Button
                         onClick={onConnect}
                         className="z-10 w-full rounded-xl sm:w-auto"
                       >
-                        {inQueue ? "Cancel" : "I'm Ready"}
+                        {inQueue ? 'Cancel' : "I'm Ready"}
                       </Button>
                     </div>
                   </>

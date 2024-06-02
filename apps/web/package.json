@@ -5,10 +5,17 @@
   "scripts": {
     "env:load": "dotenv -e ../../.env --",
     "dev": "pnpm env:load next dev",
-    "build": "pnpm env:load next build",
+    "build": "pnpm env:loadnext build",
     "start": "pnpm env:load next start",
-    "lint": "next lint",
-    "format": "prettier --write \"app/**/*.{js,jsx,ts,tsx,json,css,md}\""
+    "lint": "next lint && lint-staged"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx, jsx}": [
+      "eslint --quiet --fix"
+    ],
+    "*.{json,md,html,js,jsx,ts,tsx}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@next/third-parties": "^14.2.3",

@@ -1,36 +1,36 @@
-"use client"
+'use client'
 
 import {
+  MutableRefObject,
+  useCallback,
   useEffect,
   useRef,
   useState,
-  MutableRefObject,
-  useCallback,
-} from "react"
-import { usePathname } from "next/navigation"
-import { useUserMedia } from "@/hooks/useUserMedia"
-import Peer from "simple-peer"
-import useWebSocket from "react-use-websocket"
-import { Card, CardContent } from "@/components/ui/card"
-import { VideoPlayer } from "@/components/video-player"
-import Countdown from "@/components/countdown"
-import { clsx } from "clsx"
-import { Button } from "@/components/ui/button"
-import { env } from "@repo/env-config"
+} from 'react'
+import useWebSocket from 'react-use-websocket'
+import { usePathname } from 'next/navigation'
+import { clsx } from 'clsx'
+import Peer from 'simple-peer'
+import Countdown from '@/components/countdown'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
+import { VideoPlayer } from '@/components/video-player'
+import { useUserMedia } from '@/hooks/useUserMedia'
+import { env } from '@repo/env-config'
 
 export default function Page(): JSX.Element {
   const peerRef: MutableRefObject<Peer.Instance | null> = useRef(null)
   const videoRef: MutableRefObject<HTMLVideoElement | null> = useRef(null)
-  const remoteRef = useRef<HTMLVideoElement>(null)
+  const remoteRef = useRef<HTMLVideoElement | null>(null)
 
   const pathname = usePathname()
-  const roomId = pathname.split("/room/")[1]
+  const roomId = pathname.split('/room/')[1]
 
-  const [me, setMe] = useState("")
+  const [me, setMe] = useState('')
   const [connected, setConnected] = useState(false)
   const [loading, setLoading] = useState(true)
   const [videoReady, setVideoReady] = useState(false)
-  const [error, setError] = useState("")
+  const [error, setError] = useState('')
 
   const {
     muted,
@@ -41,9 +41,12 @@ export default function Page(): JSX.Element {
     activeStream,
     selectedAudioDevice,
     selectedVideoDevice,
+    selectedOutputDevice,
+    outputDevices,
     audioDevices,
     videoDevices,
     switchInput,
+    switchAudioOutput,
     stopAllStreaming,
   } = useUserMedia()
 
@@ -52,27 +55,27 @@ export default function Page(): JSX.Element {
     {
       onOpen: () => {
         sendJsonMessage({
-          type: "me",
+          type: 'me',
         })
       },
       onClose: () => {
-        console.log("websocket disconnected")
+        console.log('websocket disconnected')
       },
       onMessage: (event) => {
         const data = JSON.parse(event.data)
         let isHost: boolean = false
 
         switch (data.type) {
-          case "me":
+          case 'me':
             setMe(data.id)
             break
-          case "createRoomFail":
+          case 'createRoomFail':
             setError(
-              "Unable to connect to the room. Please check your network connection and try again."
+              'Unable to connect to the room. Please check your network connection and try again.'
             )
             setLoading(false)
             break
-          case "hostCall":
+          case 'hostCall':
             isHost = me !== data.to
             peerRef.current = new Peer({
               initiator: isHost,
@@ -80,13 +83,13 @@ export default function Page(): JSX.Element {
               stream: stream!,
             })
 
-            peerRef.current?.on("stream", (remoteStream) => {
+            peerRef.current?.on('stream', (remoteStream) => {
               if (remoteRef.current) {
                 remoteRef.current.srcObject = remoteStream
               }
             })
 
-            peerRef.current.on("connect", () => {
+            peerRef.current.on('connect', () => {
               const ws = getWebSocket()
               if (ws) {
                 ws.close()
@@ -95,19 +98,19 @@ export default function Page(): JSX.Element {
               setLoading(false)
             })
 
-            peerRef.current.on("close", () => {
+            peerRef.current.on('close', () => {
               if (!error) {
                 location.replace(`/room/${roomId}/feedback`)
               }
             })
 
             if (isHost) {
-              peerRef.current?.on("signal", (signalData) => {
+              peerRef.current?.on('signal', (signalData) => {
                 if (peerRef.current?.connected) return
 
-                if (signalData.type === "offer") {
+                if (signalData.type === 'offer') {
                   sendJsonMessage({
-                    type: "sendOffer",
+                    type: 'sendOffer',
                     to: data.to,
                     signal: signalData,
                     from: me,
@@ -117,20 +120,20 @@ export default function Page(): JSX.Element {
             }
 
             break
-          case "receiveOffer":
+          case 'receiveOffer':
             peerRef.current?.signal(data.signal)
-            peerRef.current?.on("signal", (signalData) => {
+            peerRef.current?.on('signal', (signalData) => {
               if (peerRef.current?.connected) return
-              if (signalData.type === "answer") {
+              if (signalData.type === 'answer') {
                 sendJsonMessage({
-                  type: "sendAnswer",
+                  type: 'sendAnswer',
                   to: data.from,
                   signal: signalData,
                 })
               }
             })
             break
-          case "receiveAnswer":
+          case 'receiveAnswer':
             peerRef.current?.signal(data.signal)
             break
           default:
@@ -157,13 +160,13 @@ export default function Page(): JSX.Element {
 
   useEffect(() => {
     if (videoReady && me) {
-      sendJsonMessage({ type: "roomEnter", roomId, id: me })
+      sendJsonMessage({ type: 'roomEnter', roomId, id: me })
     }
   }, [me, videoReady, roomId, sendJsonMessage])
 
   const handleInputChange = async (
     deviceId: string,
-    type: "audio" | "video"
+    type: 'audio' | 'video'
   ) => {
     const result = await switchInput(deviceId, type)
     peerRef.current?.replaceTrack(
@@ -194,17 +197,17 @@ export default function Page(): JSX.Element {
     <section className="container flex h-full flex-col content-center items-center justify-center gap-4">
       <Countdown onFinishTime={handleHangUp} startTime={600_000} />
       <div className="flex w-full flex-col items-center ">
-        <div className={clsx("flex flex-col gap-4", !error && "invisible")}>
+        <div className={clsx('flex flex-col gap-4', !error && 'invisible')}>
           <h3 className="text-lg">{error}</h3>
           <Button onClick={handleBackToQueue}>Back to queue</Button>
         </div>
-        <div className={clsx(!loading && "invisible")}>
+        <div className={clsx(!loading && 'invisible')}>
           <h2>Loading...</h2>
         </div>
         <div
           className={clsx(
-            "flex gap-2 md:flex-row md:items-center",
-            !connected && "invisible"
+            'flex gap-2 md:flex-row md:items-center',
+            !connected && 'invisible'
           )}
         >
           <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 md:w-1/2 ">
@@ -213,14 +216,19 @@ export default function Page(): JSX.Element {
                 ref={videoRef}
                 activeAudioDevice={selectedAudioDevice}
                 setActiveAudioDevice={(deviceId) =>
-                  handleInputChange(deviceId, "audio")
+                  handleInputChange(deviceId, 'audio')
                 }
                 activeVideoDevice={selectedVideoDevice}
                 setActiveVideoDevice={(deviceId) =>
-                  handleInputChange(deviceId, "video")
+                  handleInputChange(deviceId, 'video')
                 }
                 audioDevices={audioDevices}
                 videoDevices={videoDevices}
+                outputDevices={outputDevices}
+                activeOutputDevice={selectedOutputDevice}
+                setActiveOutputDevice={(deviceId) =>
+                  switchAudioOutput(deviceId)
+                }
                 muted={muted}
                 videoOff={videoOff}
                 onMute={toggleMute}
@@ -231,7 +239,11 @@ export default function Page(): JSX.Element {
           </Card>
           <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 md:w-1/2 md:self-start ">
             <CardContent className="h-full p-5">
-              <VideoPlayer remote ref={remoteRef} />
+              <VideoPlayer
+                remote
+                ref={remoteRef}
+                activeOutputDevice={selectedOutputDevice}
+              />
             </CardContent>
           </Card>
         </div>
