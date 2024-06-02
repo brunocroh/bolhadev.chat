@@ -3,14 +3,9 @@
   "root": true,
   "extends": ["next/core-web-vitals", "turbo", "prettier"],
   "rules": {
-    "@next/next/no-html-link-for-pages": "off",
-    "tailwindcss/no-custom-classname": "off"
+    "@next/next/no-html-link-for-pages": "off"
   },
   "settings": {
-    "tailwindcss": {
-      "callees": ["cn", "cva"],
-      "config": "tailwind.config.cjs"
-    },
     "next": {
       "rootDir": ["apps/*/"]
     }

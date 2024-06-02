@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint && lint-staged"
+    "lint": "next lint; lint-staged"
   },
   "lint-staged": {
     "*.{js,ts,tsx, jsx}": [

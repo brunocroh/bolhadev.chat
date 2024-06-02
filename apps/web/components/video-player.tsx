@@ -97,7 +97,7 @@ export const VideoPlayer = forwardRef<
             console.error(`Error: ${error.name}`)
           })
       }
-    }, [activeOutputDevice])
+    }, [activeOutputDevice, remote])
 
     return (
       <>
