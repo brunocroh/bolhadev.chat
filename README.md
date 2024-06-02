@@ -39,6 +39,14 @@ Each package/app is fully written in [TypeScript](https://www.typescriptlang.org
 
 We welcome contributions from everyone! Please read our [contributing guide](https://github.com/brunocroh/bolhadev.chat/blob/main/CONTRIBUTING.md) to learn how you can help improve Bolhadev.chat.
 
+## Contributors
+
+Thanks goes to all these wonderful people:
+
+<a href="https://github.com/brunocroh/bolhadev.chat/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=brunocroh/bolhadev.chat" />
+</a>
+
 ---
 
 Together, we can break down language barriers and unlock new opportunities for Brazilian developers around the world.
