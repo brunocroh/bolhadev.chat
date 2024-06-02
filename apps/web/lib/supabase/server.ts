@@ -8,8 +8,8 @@ export function createClient(): SupabaseClient<Database> {
   const cookieStore = cookies()
 
   return createServerClient<Database>(
-    env.NEXT_PUBLIC_SUPABASE_URL,
-    env.NEXT_PUBLIC_SUPABASE_KEY,
+    env.NEXT_SUPABASE_URL,
+    env.NEXT_SUPABASE_KEY,
     {
       cookies: {
         get(name: string) {
