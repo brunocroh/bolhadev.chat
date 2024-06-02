@@ -17,11 +17,13 @@ export const useUserMedia = () => {
 
   const checkPermission = useCallback(async () => {
     try {
-      await navigator.mediaDevices.getUserMedia({
+      const _stream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
       })
       setAccessGranted(true)
+      stopStreaming(_stream)
+
       return {
         video: true,
         audio: true,
@@ -200,12 +202,15 @@ export const useUserMedia = () => {
       }
 
       if (!audio && !video && !audioOutput) {
-        audio = _devices.find((device) => device.kind === 'audioinput')
-          ?.deviceId
-        video = _devices.find((device) => device.kind === 'videoinput')
-          ?.deviceId
-        audioOutput = _devices.find((device) => device.kind === 'audiooutput')
-          ?.deviceId
+        audio = _devices.find(
+          (device) => device.kind === 'audioinput'
+        )?.deviceId
+        video = _devices.find(
+          (device) => device.kind === 'videoinput'
+        )?.deviceId
+        audioOutput = _devices.find(
+          (device) => device.kind === 'audiooutput'
+        )?.deviceId
       }
 
       if (video) {
