@@ -16,7 +16,7 @@
     "eslint-config-next": "^14.2.3",
     "husky": "^9.0.11",
     "lint-staged": "^15.2.5",
-    "prettier": "^3.1.0",
+    "prettier": "^3.3.0",
     "prettier-plugin-tailwindcss": "^0.5.14",
     "turbo": "latest"
   },
@@ -25,7 +25,7 @@
     "node": ">=18"
   },
   "dependencies": {
-    "eslint-plugin-tailwindcss": "^3.15.2",
-    "supabase": "^1.167.4"
+    "eslint-plugin-tailwindcss": "^3.17.0",
+    "supabase": "^1.172.2"
   }
 }

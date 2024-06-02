@@ -101,7 +101,7 @@ export const VideoPlayer = forwardRef<
 
     return (
       <>
-        <div className="size-full m-0 w-full max-w-[900px] overflow-hidden">
+        <div className="m-0 size-full w-full max-w-[900px] overflow-hidden">
           <div className="relative flex flex-col items-center">
             <video
               className={clsx('w-full rounded-lg ', {
@@ -118,26 +118,22 @@ export const VideoPlayer = forwardRef<
               <div className="absolute bottom-2 flex gap-2">
                 <Button
                   onClick={onMute}
-                  className="size-6 rounded-full p-3 active:scale-95"
+                  className="size-10 rounded-full p-1 active:scale-95"
                   variant={muted ? 'destructive' : 'secondary'}
                 >
                   {muted ? <MicOff size={18} /> : <Mic size={18} />}
                 </Button>
                 <Button
                   onClick={onVideoOff}
-                  className="size-6 rounded-full p-3 active:scale-95"
+                  className="size-10 rounded-full p-1 active:scale-95"
                   variant={videoOff ? 'destructive' : 'secondary'}
                 >
-                  {videoOff ? (
-                    <VideoOff size={18} className="size-3" />
-                  ) : (
-                    <Video size={18} />
-                  )}
+                  {videoOff ? <VideoOff size={18} /> : <Video size={18} />}
                 </Button>
                 {onTurnOff && (
                   <Button
                     onClick={onTurnOff}
-                    className="size-6 rounded-full p-3 active:scale-95"
+                    className="size-10 rounded-full p-1 active:scale-95"
                     variant={'destructive'}
                   >
                     <PhoneOff size={18} />
@@ -153,7 +149,7 @@ export const VideoPlayer = forwardRef<
                   onValueChange={setActiveAudioDevice}
                   value={activeAudioDevice}
                 >
-                  <SelectTrigger className="sm:max-w-48 w-full">
+                  <SelectTrigger className="w-full sm:max-w-48">
                     <Mic className="shrink-0" size={18} />
                     <SelectValue placeholder="Audio" />
                   </SelectTrigger>
@@ -175,7 +171,7 @@ export const VideoPlayer = forwardRef<
                   onValueChange={setActiveOutputDevice}
                   value={activeOutputDevice}
                 >
-                  <SelectTrigger className="sm:max-w-48 w-full">
+                  <SelectTrigger className="w-full sm:max-w-48">
                     <Headphones className="shrink-0" size={18} />{' '}
                     <SelectValue placeholder="Output Device" />
                   </SelectTrigger>
@@ -196,7 +192,7 @@ export const VideoPlayer = forwardRef<
                   onValueChange={setActiveVideoDevice}
                   value={activeVideoDevice}
                 >
-                  <SelectTrigger className="sm:max-w-48 w-full">
+                  <SelectTrigger className="w-full sm:max-w-48">
                     <Video className="shrink-0" size={18} />{' '}
                     <SelectValue placeholder="Video" />
                   </SelectTrigger>
