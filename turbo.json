@@ -3,10 +3,8 @@
   "globalDependencies": [
     "**/.env.*local"
   ],
-  "globalEnv": [
-    "NEXT_PUBLIC_SOCKET_URL",
-    "NEXT_PUBLIC_SUPABASE_URL",
-    "NEXT_PUBLIC_SUPABASE_KEY"
+  "globalDotEnv": [
+    ".env"
   ],
   "pipeline": {
     "build": {
