@@ -7,8 +7,7 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: 'Bolhadev.chat',
-  description:
-    'A free way for Brazilian developers to improve their English skills.',
+  description: 'Free English Language Development for Coders',
   metadataBase: new URL('https://bolhadev.chat'),
 }
 
