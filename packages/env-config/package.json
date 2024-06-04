@@ -4,6 +4,9 @@
   "private": true,
   "main": "index.ts",
   "types": "index.ts",
+  "scripts": {
+    "build": "tsc index.ts"
+  },
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.10.1",
     "ts-node": "^10.9.1",
