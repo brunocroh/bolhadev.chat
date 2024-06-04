@@ -17,11 +17,13 @@ export const useUserMedia = () => {
 
   const checkPermission = useCallback(async () => {
     try {
-      await navigator.mediaDevices.getUserMedia({
+      const _stream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
       })
       setAccessGranted(true)
+      stopStreaming(_stream)
+
       return {
         video: true,
         audio: true,
