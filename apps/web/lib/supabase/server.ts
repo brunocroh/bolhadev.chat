@@ -1,4 +1,5 @@
 import { cookies } from 'next/headers'
+import { env } from '@repo/env-config'
 import { type CookieOptions, createServerClient } from '@supabase/ssr'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { Database } from './types'
@@ -7,8 +8,8 @@ export function createClient(): SupabaseClient<Database> {
   const cookieStore = cookies()
 
   return createServerClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_SUPABASE_KEY!,
+    env.NEXT_SUPABASE_URL,
+    env.NEXT_SUPABASE_KEY,
     {
       cookies: {
         get(name: string) {

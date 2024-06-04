@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { VideoPlayer } from '@/components/video-player'
 import { useUserMedia } from '@/hooks/useUserMedia'
+import { env } from '@repo/env-config'
 
 export default function Page(): JSX.Element {
   const router = useRouter()
@@ -35,33 +36,30 @@ export default function Page(): JSX.Element {
   const [usersOnline, setUsersOnline] = useState(null)
   const [inQueue, setInQueue] = useState(false)
 
-  const { sendJsonMessage } = useWebSocket(
-    process.env.NEXT_PUBLIC_SOCKET_URL!,
-    {
-      onOpen: () => {
-        sendJsonMessage({
-          type: 'me',
-        })
-      },
-      onMessage: (event) => {
-        const data = JSON.parse(event.data)
+  const { sendJsonMessage } = useWebSocket(env.NEXT_PUBLIC_SOCKET_URL!, {
+    onOpen: () => {
+      sendJsonMessage({
+        type: 'me',
+      })
+    },
+    onMessage: (event) => {
+      const data = JSON.parse(event.data)
 
-        switch (data.type) {
-          case 'me':
-            setMe(data.id)
-            break
-          case 'usersOnline':
-            setUsersOnline(data.size)
-            break
-          case 'roomFound':
-            router.push(`/room/${data.roomId}`)
-            break
-          default:
-            break
-        }
-      },
-    }
-  )
+      switch (data.type) {
+        case 'me':
+          setMe(data.id)
+          break
+        case 'usersOnline':
+          setUsersOnline(data.size)
+          break
+        case 'roomFound':
+          router.push(`/room/${data.roomId}`)
+          break
+        default:
+          break
+      }
+    },
+  })
 
   const onConnect = useCallback(() => {
     setInQueue(!inQueue) // TODO: Replace to update the state when receive it from backend

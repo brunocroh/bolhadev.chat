@@ -16,6 +16,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { VideoPlayer } from '@/components/video-player'
 import { useUserMedia } from '@/hooks/useUserMedia'
+import { env } from '@repo/env-config'
 
 export default function Page(): JSX.Element {
   const peerRef: MutableRefObject<Peer.Instance | null> = useRef(null)
@@ -50,7 +51,7 @@ export default function Page(): JSX.Element {
   } = useUserMedia()
 
   const { sendJsonMessage, getWebSocket } = useWebSocket(
-    process.env.NEXT_PUBLIC_SOCKET_URL!,
+    env.NEXT_PUBLIC_SOCKET_URL!,
     {
       onOpen: () => {
         sendJsonMessage({
