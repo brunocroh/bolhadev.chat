@@ -1,6 +1,11 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": [".env"],
+  "globalDependencies": ["**/.env.*local"],
+  "globalEnv": [
+    "NEXT_PUBLIC_SOCKET_URL",
+    "NEXT_SUPABASE_URL",
+    "NEXT_SUPABASE_KEY"
+  ],
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
