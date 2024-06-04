@@ -2,8 +2,8 @@
   "name": "@repo/env-config",
   "version": "0.0.0",
   "private": true,
-  "main": "index.js",
-  "types": "index.ts",
+  "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "build": "tsc"
   },

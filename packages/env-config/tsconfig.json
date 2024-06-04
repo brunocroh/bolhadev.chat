@@ -1,5 +1,15 @@
 {
   "extends": "@repo/typescript-config/nextjs.json",
+  "compilerOptions": {
+    "target": "ES2020",                 // or another suitable ES version
+    "module": "NodeNext",                 // ESM module system
+    "moduleResolution": "NodeNext",     // NodeNext for ESM
+    "outDir": "./dist",                 // Output directory
+    "esModuleInterop": true,            // Enables emit interoperability between CommonJS and ES Modules
+    "skipLibCheck": true,               // Skips type checking of all declaration files (*.d.ts)
+    "strict": true,                     // Enables strict type-checking options
+    "forceConsistentCasingInFileNames": true // Disallows inconsistently-cased references to the same file
+  },
   "include": [
     "index.ts"
   ]
