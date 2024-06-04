@@ -5,7 +5,7 @@
   "main": "index.js",
   "types": "index.ts",
   "scripts": {
-    "build": "tsc index.ts"
+    "build": ""
   },
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.10.1",
