@@ -1,11 +1,11 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Github } from 'lucide-react'
+import GithubCorner from './github-corner'
 
 export const Header = () => {
   return (
-    <nav className="container z-10 flex items-center justify-between p-5">
+    <nav className="container z-10 flex items-start justify-between p-5">
       <Link href="/">
         <Image
           src="/full-logo.png"
@@ -15,9 +15,7 @@ export const Header = () => {
         ></Image>
       </Link>
       <Link href="https://github.com/brunocroh/bolhadev.chat">
-        <h2 className="rounded-lg p-1 hover:bg-white hover:text-black">
-          <Github color="currentColor" />
-        </h2>
+        <GithubCorner />
       </Link>
     </nav>
   )
