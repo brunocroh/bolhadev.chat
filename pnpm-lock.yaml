@@ -45,6 +45,9 @@ importers:
 
   apps/server:
     dependencies:
+      '@repo/env-config':
+        specifier: workspace:^
+        version: link:../../packages/env-config
       '@types/node-cron':
         specifier: ^3.0.11
         version: 3.0.11
