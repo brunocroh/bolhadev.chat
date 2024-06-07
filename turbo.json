@@ -6,7 +6,7 @@
     "NEXT_SUPABASE_URL",
     "NEXT_SUPABASE_KEY"
   ],
-  "pipeline": {
+  "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "!.next/cache/**"]
