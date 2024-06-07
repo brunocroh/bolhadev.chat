@@ -1,7 +1,6 @@
 import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import GithubCorner from './github-corner'
 
 export const Header = () => {
   return (
@@ -13,9 +12,6 @@ export const Header = () => {
           height={42}
           alt="BolhaDEV.chat logo featuring a stylized globe and a speech bubble with a language symbol on a dark background."
         ></Image>
-      </Link>
-      <Link href="https://github.com/brunocroh/bolhadev.chat">
-        <GithubCorner />
       </Link>
     </nav>
   )
