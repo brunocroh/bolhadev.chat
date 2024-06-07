@@ -5,11 +5,12 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "build": "tsc"
+    "build": "tsup index.ts"
   },
   "dependencies": {
     "@t3-oss/env-nextjs": "^0.10.1",
     "ts-node": "^10.9.1",
+    "tsup": "^8.1.0",
     "zod": "^3.22.5"
   },
   "devDependencies": {
