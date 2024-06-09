@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
+import { env } from '@repo/env-config'
 import { type CookieOptions, createServerClient } from '@supabase/ssr'
 
 export async function GET(request: Request) {
@@ -12,8 +13,8 @@ export async function GET(request: Request) {
   if (code) {
     const cookieStore = cookies()
     const supabase = createServerClient(
-      process.env.NEXTSUPABASE_URL!,
-      process.env.NEXT_SUPABASE_KEY!,
+      env.NEXT_SUPABASE_URL!,
+      env.NEXT_SUPABASE_KEY!,
       {
         cookies: {
           get(name: string) {

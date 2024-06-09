@@ -16,12 +16,12 @@ export default async function GithubSignIn() {
       provider: 'github',
       options: {
         // TODO: Move to an env
-        redirectTo: 'http://localhost:3000/room/queue',
+        redirectTo: 'http://localhost:3000/auth/callback',
       },
     })
 
     if (error) {
-      console.log(error)
+      console.error(error)
     }
 
     if (data.url) {
