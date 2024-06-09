@@ -1,6 +1,5 @@
 import React from 'react'
-import Image from 'next/image'
-import { Button } from '@/components/ui/button'
+import GithubSignIn from './components/GithubSignIn'
 
 export default function Page(): JSX.Element {
   return (
@@ -10,13 +9,7 @@ export default function Page(): JSX.Element {
         <p className="text-sm text-slate-100">Sign in your account</p>
       </div>
       <div className="w-full max-w-sm">
-        <Button className="flex h-12 w-full gap-2 rounded-full align-top text-base font-normal text-black">
-          <span className="items-top flex h-6 justify-end leading-6">
-            Sign in with
-          </span>
-          <Image src="/github.svg" width="26" height="26" alt="Github logo" />
-          <span className="text-xl font-bold">Github</span>
-        </Button>
+        <GithubSignIn />
       </div>
     </div>
   )
