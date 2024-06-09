@@ -22,7 +22,6 @@ export default function RootLayout({
     <html lang="en" className={GeistSans.className}>
       <body className="dark relative flex h-auto flex-col ">
         <Header />
-
         <Link
           href="https://github.com/brunocroh/bolhadev.chat"
           target="_blank"
@@ -30,14 +29,6 @@ export default function RootLayout({
         >
           <GithubCorner />
         </Link>
-        <Image
-          src="/light-ray.svg"
-          alt="Purple light ray"
-          width="1000"
-          height="800"
-          className="absolute -z-10 size-full animate-in fade-in slide-in-from-bottom-1"
-          style={{ color: 'transparent', animationDuration: '10s' }}
-        />
         {children}
       </body>
       <GoogleAnalytics gaId="G-STY9BKWKT4" />
