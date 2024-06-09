@@ -1,5 +1,6 @@
 import React from 'react'
 import GithubSignIn from './components/GithubSignIn'
+import SignOut from './components/SignOut'
 
 export default function Page(): JSX.Element {
   return (
@@ -10,6 +11,7 @@ export default function Page(): JSX.Element {
       </div>
       <div className="w-full max-w-sm">
         <GithubSignIn />
+        <SignOut />
       </div>
     </div>
   )
