@@ -20,7 +20,7 @@ export default function RootLayout({
 }): JSX.Element {
   return (
     <html lang="en" className={GeistSans.className}>
-      <body className="dark relative flex h-auto flex-col ">
+      <body className="dark relative flex h-auto min-h-screen flex-col">
         <Header />
 
         <Link

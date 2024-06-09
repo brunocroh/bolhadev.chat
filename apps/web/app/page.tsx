@@ -44,7 +44,7 @@ export default function Page(): JSX.Element {
             find someone to chat with.
           </h3>
           <div className="flex w-full justify-center">
-            <Link href={`room/queue`}>
+            <Link href={`/auth`}>
               <Button className="h-12 min-w-max rounded-full text-base font-semibold text-black">
                 Get Started
                 <ChevronRight size={16} />
