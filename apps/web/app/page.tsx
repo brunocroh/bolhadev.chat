@@ -1,8 +1,8 @@
 import React from 'react'
-import Link from 'next/link'
 import Image from 'next/image'
+import Link from 'next/link'
 import {
-    ArrowRight,
+  ArrowRight,
   ChevronRight,
   Dumbbell,
   Heart,
@@ -37,29 +37,37 @@ export default function Page(): JSX.Element {
   return (
     <main className="flex flex-col">
       <section className="relative flex w-full flex-col items-center lg:container">
-        <Image src="/background-noise.png" width="1820" height="1040" className='absolute -z-10 mix-blend-lighten' alt="a noise to add front of square pattern background" />
-        <div className="absolute size-full bg-pattern bg-cover bg-center -z-30 "></div>
-        <div className="absolute size-full top-96 md:top-40 bg-elipses bg-cover bg-center -z-20 "></div>
-        <div className="flex flex-col py-12 items-center w-full gap-6"> 
-          <Image src="/hero-section-logo.png" width="128" height="78" alt="a square pattern on background"   />
-          <h2 className="text-slate-6 w-full text-center text-2xl md:text-5xl font-bold leading-tight">
-            <span className="bg-gradient-to-r from-gray-200 to-[#A4A7FF] inline-block text-transparent bg-clip-text">
-              Master English, Transform Your World. 
+        <Image
+          src="/background-noise.png"
+          width="1820"
+          height="1040"
+          className="absolute -z-10 mix-blend-lighten"
+          alt="a noise to add front of square pattern background"
+        />
+        <div className="absolute -z-30 size-full bg-pattern bg-cover bg-center "></div>
+        <div className="absolute top-40 -z-20 size-full bg-elipses bg-cover "></div>
+        <div className="flex w-full flex-col items-center gap-6 py-12">
+          <Image
+            src="/hero-section-logo.png"
+            width="128"
+            height="78"
+            alt="a square pattern on background"
+          />
+          <h2 className="text-slate-6 w-full text-center text-2xl font-bold leading-tight md:text-5xl">
+            <span className="inline-block bg-gradient-to-r from-gray-200 to-[#A4A7FF] bg-clip-text text-transparent">
+              Master English, Transform Your World.
             </span>
             <br />
-            <span>
-              The new frontier in collaborative learning.
-            </span>
+            <span>The new frontier in collaborative learning.</span>
           </h2>
           <h3 className="my-4 text-center text-[1rem] text-slate-400">
-            The quickest path to learn English is speaking it regularly. Just find someone to chat with.
+            The quickest path to learn English is speaking it regularly. Just
+            find someone to chat with.
           </h3>
           <div className="flex w-full justify-center">
             <Link href={`room/queue`}>
-              <Button className="p-6 min-w-max rounded-lg text-base text-zinc-800">
-                <span className="mr-1">
-                  Get Started
-                </span>
+              <Button className="min-w-max rounded-lg p-6 text-base text-zinc-800">
+                <span className="mr-1">Get Started</span>
                 <ArrowRight size={16} />
               </Button>
             </Link>
@@ -68,7 +76,7 @@ export default function Page(): JSX.Element {
       </section>
       <section
         style={{ boxShadow: '0px -20px 44px -60px rgb(255 255 255)' }}
-        className="border-slate-6 h-full bg-background relative pt-10 flex flex-col items-center overflow-hidden rounded-3xl border-t px-6 py-12 lg:container sm:mx-5 sm:py-24 md:mx-10 lg:mx-auto"
+        className="border-slate-6 relative flex h-full flex-col items-center overflow-hidden rounded-3xl border-t bg-background px-6 py-12 pt-10 lg:container sm:mx-5 sm:py-24 md:mx-10 lg:mx-auto"
       >
         <div
           aria-hidden="true"
