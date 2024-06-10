@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
-import Image from 'next/image'
+import { IBM_Plex_Sans } from 'next/font/google'
 import Link from 'next/link'
-import { GeistSans } from 'geist/font/sans'
 import { Header } from '@/components/header'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import GithubCorner from './components/github-corner'
@@ -13,16 +12,20 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://bolhadev.chat'),
 }
 
+const IBMPlexSans = IBM_Plex_Sans({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+})
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }): JSX.Element {
   return (
-    <html lang="en" className={GeistSans.className}>
-      <body className="dark relative flex h-auto min-h-screen flex-col">
+    <html lang="en" className={IBMPlexSans.className}>
+      <body className="dark relative flex h-auto flex-col ">
         <Header />
-
         <Link
           href="https://github.com/brunocroh/bolhadev.chat"
           target="_blank"
@@ -30,14 +33,6 @@ export default function RootLayout({
         >
           <GithubCorner />
         </Link>
-        <Image
-          src="/light-ray.svg"
-          alt="Purple light ray"
-          width="1000"
-          height="800"
-          className="absolute -z-10 size-full animate-in fade-in slide-in-from-bottom-1"
-          style={{ color: 'transparent', animationDuration: '10s' }}
-        />
         {children}
       </body>
       <GoogleAnalytics gaId="G-STY9BKWKT4" />
