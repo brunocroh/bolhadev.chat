@@ -11,11 +11,17 @@ import useWebSocket from 'react-use-websocket'
 import { usePathname } from 'next/navigation'
 import { clsx } from 'clsx'
 import Peer from 'simple-peer'
+import { Chat } from '@/components/chat'
 import Countdown from '@/components/countdown'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { VideoPlayer } from '@/components/video-player'
 import { useUserMedia } from '@/hooks/useUserMedia'
+
+export type Message = {
+  sender: 'Me' | 'Other'
+  content: string
+}
 
 export default function Page(): JSX.Element {
   const peerRef: MutableRefObject<Peer.Instance | null> = useRef(null)
@@ -30,6 +36,7 @@ export default function Page(): JSX.Element {
   const [loading, setLoading] = useState(true)
   const [videoReady, setVideoReady] = useState(false)
   const [error, setError] = useState('')
+  const [messages, setMessages] = useState<Message[]>([])
 
   const {
     muted,
@@ -101,6 +108,13 @@ export default function Page(): JSX.Element {
               if (!error) {
                 location.replace(`/room/${roomId}/feedback`)
               }
+            })
+
+            peerRef.current?.on('data', (message) => {
+              setMessages((prevMessages) => [
+                ...prevMessages,
+                { sender: 'Other', content: JSON.parse(message.toString()) },
+              ])
             })
 
             if (isHost) {
@@ -192,6 +206,16 @@ export default function Page(): JSX.Element {
     location.replace(`/room/queue`)
   }, [stopAllStreaming])
 
+  const handleSendMessage = (newMessage: string) => {
+    if (peerRef.current && peerRef.current.connected) {
+      peerRef.current.send(JSON.stringify(newMessage))
+    }
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { sender: 'Me', content: newMessage.toString() },
+    ])
+  }
+
   return (
     <section className="container flex h-full flex-col content-center items-center justify-center gap-4">
       <Countdown onFinishTime={handleHangUp} startTime={600_000} />
@@ -247,6 +271,7 @@ export default function Page(): JSX.Element {
           </Card>
         </div>
       </div>
+      {connected && <Chat onSend={handleSendMessage} messages={messages} />}
     </section>
   )
 }
