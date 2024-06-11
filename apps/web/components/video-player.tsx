@@ -101,7 +101,7 @@ export const VideoPlayer = forwardRef<
 
     return (
       <>
-        <div className="m-0 size-full w-full max-w-[900px] overflow-hidden">
+        <div className="flex size-full h-full w-full flex-col gap-3 overflow-hidden">
           <div className="relative flex flex-col items-center">
             <video
               className={clsx('w-full rounded-lg ', {
@@ -143,7 +143,7 @@ export const VideoPlayer = forwardRef<
             )}
           </div>
           {!remote && (
-            <div className="mt-5 flex justify-center">
+            <div className="flex justify-center">
               <div className="flex w-full flex-col gap-2 sm:flex-row md:w-fit md:gap-6">
                 <Select
                   onValueChange={setActiveAudioDevice}

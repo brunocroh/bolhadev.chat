@@ -11,6 +11,7 @@ import useWebSocket from 'react-use-websocket'
 import { usePathname } from 'next/navigation'
 import { clsx } from 'clsx'
 import Peer from 'simple-peer'
+import { Chat, Message } from '@/app/room/[slug]/components/chat'
 import Countdown from '@/components/countdown'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -31,6 +32,7 @@ export default function Page(): JSX.Element {
   const [loading, setLoading] = useState(true)
   const [videoReady, setVideoReady] = useState(false)
   const [error, setError] = useState('')
+  const [messages, setMessages] = useState<Message[]>([])
 
   const {
     muted,
@@ -102,6 +104,13 @@ export default function Page(): JSX.Element {
               if (!error) {
                 location.replace(`/room/${roomId}/feedback`)
               }
+            })
+
+            peerRef.current?.on('data', (message) => {
+              setMessages((prevMessages) => [
+                ...prevMessages,
+                { sender: 'other', content: message.toString() },
+              ])
             })
 
             if (isHost) {
@@ -193,59 +202,80 @@ export default function Page(): JSX.Element {
     location.replace(`/room/queue`)
   }, [stopAllStreaming])
 
+  const handleSendMessage = useCallback((newMessage: string) => {
+    if (peerRef.current && peerRef.current.connected) {
+      peerRef.current.send(newMessage)
+    }
+    setMessages((prevMessages) => [
+      ...prevMessages,
+      { sender: 'me', content: newMessage },
+    ])
+  }, [])
+
   return (
-    <section className="container flex h-full flex-col content-center items-center justify-center gap-4">
+    <section className="container flex h-full flex-col content-center items-center justify-center">
       <Countdown onFinishTime={handleHangUp} startTime={600_000} />
-      <div className="flex w-full flex-col items-center ">
-        <div className={clsx('flex flex-col gap-4', !error && 'invisible')}>
-          <h3 className="text-lg">{error}</h3>
-          <Button onClick={handleBackToQueue}>Back to queue</Button>
-        </div>
-        <div className={clsx(!loading && 'invisible')}>
-          <h2>Loading...</h2>
-        </div>
+      <div className="flex w-full flex-col items-center">
+        {error && (
+          <div className="flex flex-col gap-4">
+            <h3 className="text-lg">{error}</h3>
+            <Button onClick={handleBackToQueue}>Back to queue</Button>
+          </div>
+        )}
+        {loading && (
+          <div>
+            <h2>Loading...</h2>
+          </div>
+        )}
         <div
           className={clsx(
-            'flex gap-2 md:flex-row md:items-center',
+            'flex w-full flex-col justify-center gap-2 p-1 md:flex-row',
             !connected && 'invisible'
           )}
         >
-          <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 md:w-1/2 ">
-            <CardContent className="p-5">
-              <VideoPlayer
-                ref={videoRef}
-                activeAudioDevice={selectedAudioDevice}
-                setActiveAudioDevice={(deviceId) =>
-                  handleInputChange(deviceId, 'audio')
-                }
-                activeVideoDevice={selectedVideoDevice}
-                setActiveVideoDevice={(deviceId) =>
-                  handleInputChange(deviceId, 'video')
-                }
-                audioDevices={audioDevices}
-                videoDevices={videoDevices}
-                outputDevices={outputDevices}
-                activeOutputDevice={selectedOutputDevice}
-                setActiveOutputDevice={(deviceId) =>
-                  switchAudioOutput(deviceId)
-                }
-                muted={muted}
-                videoOff={videoOff}
-                onMute={toggleMute}
-                onVideoOff={toggleVideo}
-                onTurnOff={handleHangUp}
-              />
-            </CardContent>
-          </Card>
-          <Card className="border-slate-5 bg-slate-6 w-3/4 border border-b-0 md:w-1/2 md:self-start ">
-            <CardContent className="h-full p-5">
-              <VideoPlayer
-                remote
-                ref={remoteRef}
-                activeOutputDevice={selectedOutputDevice}
-              />
-            </CardContent>
-          </Card>
+          <div className="flex flex-row gap-2 md:flex-col-reverse">
+            <Card className="border-slate-5 bg-slate-6 border border-b-0 md:self-start">
+              <CardContent className="p-3">
+                <VideoPlayer
+                  ref={videoRef}
+                  activeAudioDevice={selectedAudioDevice}
+                  setActiveAudioDevice={(deviceId) =>
+                    handleInputChange(deviceId, 'audio')
+                  }
+                  activeVideoDevice={selectedVideoDevice}
+                  setActiveVideoDevice={(deviceId) =>
+                    handleInputChange(deviceId, 'video')
+                  }
+                  audioDevices={audioDevices}
+                  videoDevices={videoDevices}
+                  outputDevices={outputDevices}
+                  activeOutputDevice={selectedOutputDevice}
+                  setActiveOutputDevice={(deviceId) =>
+                    switchAudioOutput(deviceId)
+                  }
+                  muted={muted}
+                  videoOff={videoOff}
+                  onMute={toggleMute}
+                  onVideoOff={toggleVideo}
+                  onTurnOff={handleHangUp}
+                />
+              </CardContent>
+            </Card>
+            <Card className="border-slate-5 bg-slate-6 border border-b-0 md:self-start">
+              <CardContent className="p-3">
+                <VideoPlayer
+                  remote
+                  ref={remoteRef}
+                  activeOutputDevice={selectedOutputDevice}
+                />
+              </CardContent>
+            </Card>
+          </div>
+          <div>
+            {connected && (
+              <Chat onSend={handleSendMessage} messages={messages} />
+            )}
+          </div>
         </div>
       </div>
     </section>
