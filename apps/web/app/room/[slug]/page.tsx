@@ -107,7 +107,6 @@ export default function Page(): JSX.Element {
             })
 
             peerRef.current?.on('data', (message) => {
-              console.log({ message })
               setMessages((prevMessages) => [
                 ...prevMessages,
                 { sender: 'other', content: message.toString() },
@@ -152,8 +151,6 @@ export default function Page(): JSX.Element {
       },
     }
   )
-
-  console.log({ messages })
 
   useEffect(() => {
     return () => {
