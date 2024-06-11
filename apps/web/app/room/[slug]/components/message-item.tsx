@@ -12,7 +12,7 @@ export const MessageItem: React.FC<MessageItem> = ({ message }) => {
     <div
       className={clsx(
         'flex items-center gap-3',
-        isMe ? 'justify-start' : 'justify-end'
+        isMe ? 'justify-end' : 'justify-start'
       )}
     >
       <span
@@ -21,7 +21,6 @@ export const MessageItem: React.FC<MessageItem> = ({ message }) => {
           isMe ? 'bg-accent' : 'bg-purple-950'
         )}
       >
-        <span className="text-sm font-semibold">{message.sender}</span>:{' '}
         <span className="text-sm">{message.content}</span>
       </span>
     </div>
