@@ -2,7 +2,7 @@ ARG NODE_VERSION=18.19
 
 # Setup pnpm and turbo on the alpine base
 FROM node:${NODE_VERSION}-alpine AS base
-ARG PROJECT
+ARG PROJECT=server
 WORKDIR /app
 
 ENV PNPM_HOME=/usr/local/bin

@@ -1,7 +1,8 @@
 import React from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import {
-  ChevronRight,
+  ArrowRight,
   Dumbbell,
   Heart,
   MessageCircle,
@@ -34,43 +35,47 @@ const infoCardContent = [
 export default function Page(): JSX.Element {
   return (
     <main className="flex flex-col">
-      <section className="flex w-full flex-col lg:container lg:flex-row-reverse">
-        <div className="z-10 mt-16 flex w-full flex-col justify-center p-10 lg:w-1/2">
-          <h2 className="text-slate-6 w-full text-center text-[3rem] leading-10">
-            Practice English for free
+      <section className="relative flex w-full flex-col items-center lg:container">
+        <Image
+          src="/background-noise.png"
+          width="1820"
+          height="1040"
+          className="absolute -z-10 mix-blend-lighten"
+          alt="a noise to add front of square pattern background"
+        />
+        <div className="absolute -z-30 size-full bg-pattern bg-cover bg-center "></div>
+        <div className="absolute top-40 -z-20 size-full bg-elipses bg-cover "></div>
+        <div className="flex w-full flex-col items-center gap-6 px-6 py-12">
+          <Image
+            src="/hero-section-logo.png"
+            width="128"
+            height="78"
+            alt="a square pattern on background"
+          />
+          <h2 className="text-slate-6 w-full text-center text-2xl font-bold md:text-5xl">
+            <span className="inline-block bg-gradient-to-r from-gray-200 to-[#A4A7FF] bg-clip-text leading-tight text-transparent">
+              Master English, Transform Your World.
+            </span>
+            <br />
+            <span>The new frontier in collaborative learning.</span>
           </h2>
-          <h3 className="my-4 text-center text-[1rem] text-slate-400">
+          <h3 className="my-4 text-center text-[1rem] leading-tight text-slate-400">
             The quickest path to learn English is speaking it regularly. Just
             find someone to chat with.
           </h3>
           <div className="flex w-full justify-center">
             <Link href={`room/queue`}>
-              <Button className="h-12 min-w-max rounded-full text-base font-semibold text-black">
-                Get Started
-                <ChevronRight size={16} />
+              <Button className="min-w-max rounded-lg p-6 text-base text-zinc-800">
+                <span className="mr-1">Get Started</span>
+                <ArrowRight size={16} />
               </Button>
             </Link>
           </div>
         </div>
-        <div className="flex w-full justify-center overflow-hidden lg:w-1/2">
-          <video
-            className="-z-20 w-full max-w-2xl"
-            style={{
-              display: 'block',
-              width: '700px',
-              height: '500px',
-            }}
-            playsInline
-            loop={true}
-            autoPlay={true}
-            muted={true}
-            src="/earth.mp4"
-          ></video>
-        </div>
       </section>
       <section
         style={{ boxShadow: '0px -20px 44px -60px rgb(255 255 255)' }}
-        className="border-slate-6 relative mt-10 flex flex-col items-center overflow-hidden rounded-3xl border-t px-6 py-12 lg:container sm:mx-5 sm:py-24 md:mx-10 lg:mx-auto"
+        className="border-slate-6 relative flex h-full flex-col items-center overflow-hidden rounded-3xl border-t bg-background px-6 py-12 pt-10 lg:container sm:mx-5 sm:py-24 md:mx-10 lg:mx-auto"
       >
         <div
           aria-hidden="true"

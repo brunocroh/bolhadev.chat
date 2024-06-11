@@ -1,0 +1,27 @@
+{
+  "name": "@repo/env-config",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "build": "tsup index.ts"
+  },
+  "dependencies": {
+    "@t3-oss/env-nextjs": "^0.10.1",
+    "ts-node": "^10.9.1",
+    "tsup": "^8.1.0",
+    "zod": "^3.22.5"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "workspace:*",
+    "@repo/typescript-config": "workspace:*",
+    "@types/node": "^20.13.0",
+    "typescript": "^5.2.2"
+  },
+  "eslintConfig": {
+    "extends": [
+      "@repo/eslint-config/next"
+    ]
+  }
+}
