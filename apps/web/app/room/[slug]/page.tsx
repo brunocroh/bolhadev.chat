@@ -11,17 +11,12 @@ import useWebSocket from 'react-use-websocket'
 import { usePathname } from 'next/navigation'
 import { clsx } from 'clsx'
 import Peer from 'simple-peer'
-import { Chat } from '@/components/chat'
+import { Chat, Message } from '@/app/room/[slug]/components/chat'
 import Countdown from '@/components/countdown'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { VideoPlayer } from '@/components/video-player'
 import { useUserMedia } from '@/hooks/useUserMedia'
-
-export type Message = {
-  sender: 'Me' | 'Other'
-  content: string
-}
 
 export default function Page(): JSX.Element {
   const peerRef: MutableRefObject<Peer.Instance | null> = useRef(null)
@@ -113,7 +108,7 @@ export default function Page(): JSX.Element {
             peerRef.current?.on('data', (message) => {
               setMessages((prevMessages) => [
                 ...prevMessages,
-                { sender: 'Other', content: JSON.parse(message.toString()) },
+                { sender: 'other', content: message.toString() },
               ])
             })
 
@@ -206,15 +201,15 @@ export default function Page(): JSX.Element {
     location.replace(`/room/queue`)
   }, [stopAllStreaming])
 
-  const handleSendMessage = (newMessage: string) => {
+  const handleSendMessage = useCallback((newMessage: string) => {
     if (peerRef.current && peerRef.current.connected) {
-      peerRef.current.send(JSON.stringify(newMessage))
+      peerRef.current.send(newMessage)
     }
     setMessages((prevMessages) => [
       ...prevMessages,
-      { sender: 'Me', content: newMessage.toString() },
+      { sender: 'me', content: newMessage },
     ])
-  }
+  }, [])
 
   return (
     <section className="container flex h-full flex-col content-center items-center justify-center gap-4">
