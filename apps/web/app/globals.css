@@ -74,3 +74,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+ @layer utilities {
+    .h-content {
+      height: calc(100vh - 125px); /* Adjust the value to match the header height */
+    }
+  }

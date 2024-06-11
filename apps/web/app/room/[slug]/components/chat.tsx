@@ -40,10 +40,10 @@ export const Chat: React.FC<Chat> = ({ messages, onSend }) => {
   }
 
   return (
-    <div className="mb-2 flex w-full flex-col items-center gap-2">
-      <ScrollArea className="flex h-48 w-1/2 flex-col justify-center gap-2 rounded-lg border p-4">
+    <div className="align-center flex h-full w-full flex-col items-center justify-center gap-2">
+      <ScrollArea className="flex w-full flex-1 items-center gap-2 rounded-lg border p-4">
         {!messages.length ? (
-          <div className="mt-6 flex flex-col items-center">
+          <div className="mt-6 flex flex-col items-center ">
             <MessageCircle className="text-muted" />
             <span className="italic text-muted">No messages yet</span>
           </div>
@@ -55,9 +55,9 @@ export const Chat: React.FC<Chat> = ({ messages, onSend }) => {
           ))
         )}
       </ScrollArea>
-
-      <div className="flex w-1/2 flex-row gap-2 rounded-lg align-baseline">
+      <div className="flex w-full flex-row gap-2 rounded-lg align-baseline">
         <Input
+          className="flex-shrink"
           placeholder="Type a message..."
           value={inputValue}
           onKeyDown={handleKeyPress}
