@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { VideoChat } from './components/video-chat'
 
-export default async function Page(): JSX.Element {
+export default async function Page(): Promise<JSX.Element> {
   const supabase = createClient()
 
   const { data, error } = await supabase.auth.getUser()
