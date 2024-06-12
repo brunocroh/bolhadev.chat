@@ -2,10 +2,10 @@ import type { Metadata } from 'next'
 import { IBM_Plex_Sans } from 'next/font/google'
 import Link from 'next/link'
 import { Header } from '@/components/header'
+import { createClient } from '@/lib/supabase/server'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import GithubCorner from './components/github-corner'
 import './globals.css'
-import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = {
   title: 'Bolhadev.chat',
@@ -22,8 +22,7 @@ export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
-}): JSX.Element {
-
+}): Promise<JSX.Element> {
   const supabase = createClient()
 
   const { data, error } = await supabase.auth.getUser()
