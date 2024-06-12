@@ -1,6 +1,6 @@
 import React from 'react'
-import GithubSignIn from './components/GithubSignIn'
-import SignOut from './components/SignOut'
+import GithubSignIn from './components/github-sign-in'
+import SignOut from './components/sign-out'
 
 export default function Page(): JSX.Element {
   return (

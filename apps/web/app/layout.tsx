@@ -5,6 +5,7 @@ import { Header } from '@/components/header'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import GithubCorner from './components/github-corner'
 import './globals.css'
+import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = {
   title: 'Bolhadev.chat',
@@ -17,15 +18,22 @@ const IBMPlexSans = IBM_Plex_Sans({
   weight: ['400', '700'],
 })
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }): JSX.Element {
+
+  const supabase = createClient()
+
+  const { data, error } = await supabase.auth.getUser()
+
+  const user = data?.user
+
   return (
     <html lang="en" className={IBMPlexSans.className}>
       <body className="dark relative flex h-auto flex-col ">
-        <Header />
+        <Header user={user} />
         <Link
           href="https://github.com/brunocroh/bolhadev.chat"
           target="_blank"
