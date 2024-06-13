@@ -6,9 +6,27 @@ on:
       - main
 
 jobs:
+
+  check-changes:
+    runs-on: ubuntu-latest
+    environment: Production
+    outputs:
+        changes: ${{ steps.check_changes.outputs.changes }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+            fetch-depth: 0
+      - name: Check for changes in server 
+        id: check_changes
+        run: |
+          git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^apps/server/' && echo "changes=true" >> $GITHUB_OUTPUT || echo "changes=false" >> $GITHUB_OUTPUT
+
   deploy:
     runs-on: ubuntu-latest
     environment: Production
+    needs: check-changes
+    if: needs.check-changes.outputs.changes == 'true'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
