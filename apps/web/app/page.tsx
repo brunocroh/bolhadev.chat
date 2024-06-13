@@ -65,7 +65,7 @@ export default function Page(): JSX.Element {
           </h3>
           <div className="flex w-full justify-center">
             <Link href={`room/queue`}>
-              <Button className="min-w-max rounded-lg p-6 text-base text-zinc-800">
+              <Button className="min-w-max rounded-xl p-6 text-base text-zinc-800">
                 <span className="mr-1">Get Started</span>
                 <ArrowRight size={16} />
               </Button>
