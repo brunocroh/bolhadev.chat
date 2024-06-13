@@ -213,7 +213,7 @@ export default function Page(): JSX.Element {
   }, [])
 
   return (
-    <section className="container flex h-full flex-col content-center items-center justify-center">
+    <section className="container flex flex-col content-center items-center justify-center px-4 md:px-8">
       <Countdown onFinishTime={handleHangUp} startTime={600_000} />
       <div className="flex w-full flex-col items-center">
         {error && (
@@ -233,8 +233,8 @@ export default function Page(): JSX.Element {
             !connected && 'invisible'
           )}
         >
-          <div className="flex flex-row gap-2 md:flex-col-reverse">
-            <Card className="border-slate-5 bg-slate-6 border border-b-0 md:self-start">
+          <div className="flex flex-col-reverse justify-center gap-2">
+            <Card className="border-slate-5 bg-slate-6 border border-b-0 md:size-4/6 md:self-center">
               <CardContent className="p-3">
                 <VideoPlayer
                   ref={videoRef}
