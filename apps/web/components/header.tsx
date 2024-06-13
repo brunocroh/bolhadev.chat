@@ -10,8 +10,8 @@ type Header = {
   user: User | null
 }
 
-export const Header: React.FC<Header> = ({ user }) => {
-  const authenticated = Boolean(user)
+export const Header: React.FC<Header> = ({ user }: Header) => {
+  const authenticated = !!user
 
   return (
     <nav className="w-full border-b border-b-zinc-800 py-6 pr-6">
