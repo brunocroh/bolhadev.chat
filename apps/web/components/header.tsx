@@ -2,6 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import SignOut from '@/app/auth/components/SignOut'
 import { Button } from '@/components/ui/button'
 
 export const Header = () => {
@@ -22,6 +23,7 @@ export const Header = () => {
             <ArrowRight />
           </Button>
         </Link>
+        <SignOut />
       </div>
     </nav>
   )
