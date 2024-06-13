@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -41,7 +41,7 @@ export const Chat: React.FC<Chat> = ({ messages, onSend }) => {
 
   return (
     <div className="align-center flex h-full w-full flex-col items-center justify-center gap-2">
-      <ScrollArea className="flex w-full flex-1 items-center gap-2 rounded-lg border p-4">
+      <ScrollArea className="md:min-h-5/6 flex max-h-[400px] w-full flex-1 items-center gap-2 rounded-lg border p-4 md:max-h-[84vh]">
         {!messages.length ? (
           <div className="mt-6 flex flex-col items-center ">
             <MessageCircle className="text-muted" />
