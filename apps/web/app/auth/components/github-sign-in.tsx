@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { createClient } from '@/lib/supabase/server'
 
 export default async function GithubSignIn() {
-  async function signIn() {
+  async function githubSignIn() {
     'use server'
 
     const supabase = createClient()
@@ -30,10 +30,10 @@ export default async function GithubSignIn() {
   }
 
   return (
-    <form action={signIn}>
+    <form action={githubSignIn}>
       <Button
         type="submit"
-        className="flex h-12 w-full gap-2 rounded-full align-top text-base font-normal text-black"
+        className="flex h-12 w-full gap-2 rounded-xl align-top text-base font-normal text-black"
       >
         <span className="items-top flex h-6 justify-end leading-6">
           Sign in with
