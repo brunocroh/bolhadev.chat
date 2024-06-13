@@ -3,17 +3,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import ProfileButton from '@/app/auth/components/profile-button'
-import SignOut from '@/app/auth/components/sign-out'
 import { Button } from '@/components/ui/button'
 import { User } from '@supabase/supabase-js'
 
 type Header = {
-  user: User
+  user: User | null
 }
 
 export const Header: React.FC<Header> = ({ user }) => {
-  console.log({ user })
-
   const authenticated = Boolean(user)
 
   return (
