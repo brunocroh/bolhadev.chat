@@ -1,11 +1,6 @@
 'use client'
 
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-} from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef } from 'react'
 import clsx from 'clsx'
 import {
   Headphones,
@@ -143,7 +138,7 @@ export const VideoPlayer = forwardRef<
             )}
           </div>
           {!remote && (
-            <div className="flex justify-center">
+            <div className="mt-5 flex justify-center p-4 sm:p-0">
               <div className="flex w-full flex-col gap-2 sm:flex-row md:w-fit md:gap-6">
                 <Select
                   onValueChange={setActiveAudioDevice}
