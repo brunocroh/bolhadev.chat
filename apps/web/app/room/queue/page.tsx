@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import useWebSocket from 'react-use-websocket'
 import { useRouter } from 'next/navigation'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { VideoPlayer } from '@/components/video-player'
@@ -35,6 +34,10 @@ export default function Page(): JSX.Element {
   const [me, setMe] = useState(null)
   const [usersOnline, setUsersOnline] = useState(null)
   const [inQueue, setInQueue] = useState(false)
+
+  useEffect(() => {
+    console.log({ usersOnline })
+  }, [usersOnline])
 
   const { sendJsonMessage } = useWebSocket(env.NEXT_PUBLIC_SOCKET_URL!, {
     onOpen: () => {
@@ -101,13 +104,10 @@ export default function Page(): JSX.Element {
     <main className="flex h-auto flex-col">
       <section className="align-center container mb-5 flex h-full place-content-center content-center justify-center px-4 md:px-8">
         <div className="flex w-full flex-col items-center">
-          <h1 className="mt-6 text-center text-xl sm:text-[2em] md:w-2/3">
+          <h1 className="mt-6 text-center leading-tight md:w-2/3">
             Before you start practicing, make sure to check your microphone and
             camera first.
           </h1>
-          <Badge className="md:text-md mt-4 text-sm">
-            Users Online: {usersOnline}
-          </Badge>
           <div className="mt-4 flex w-full flex-col items-center md:p-5">
             <Card className="border-slate-5 bg-slate-6 w-full border border-b-0 md:w-3/5">
               <CardContent className="p-4 md:p-6">
@@ -150,7 +150,7 @@ export default function Page(): JSX.Element {
                       </h2>
                       <Button
                         onClick={onConnect}
-                        className="z-10 h-12 w-full rounded-xl text-lg font-semibold sm:w-auto"
+                        className="z-10 w-full rounded-xl font-normal sm:w-auto"
                       >
                         {inQueue ? 'Cancel' : "I'm Ready"}
                       </Button>
