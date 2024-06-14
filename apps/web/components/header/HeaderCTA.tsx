@@ -12,12 +12,15 @@ export const HeaderCTA = () => {
 
   if (pathName.includes('auth')) {
     return (
-      <Link href="room/queue" className="invisible self-center md:visible">
-        <Button className="rounded-xl p-6 text-zinc-800">
-          <span className="mr-1 text-base leading-6">Sign Up</span>
-          <ArrowRight />
-        </Button>
-      </Link>
+      <div className="flex items-center gap-4">
+        <span>Don&apos;t have an account?</span>
+        <Link href="room/queue" className="invisible self-center md:visible">
+          <Button className="rounded-xl p-6 text-zinc-800">
+            <span className="mr-1 text-base leading-6">Register now</span>
+            <ArrowRight />
+          </Button>
+        </Link>
+      </div>
     )
   }
 
