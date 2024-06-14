@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react'
 import ProfileButton from '@/app/auth/components/profile-button'
 import { Button } from '@/components/ui/button'
 import { User } from '@supabase/supabase-js'
+import { HeaderCTA } from './HeaderCTA'
 
 type Header = {
   user: User | null
@@ -32,15 +33,7 @@ export const Header: React.FC<Header> = ({ user }: Header) => {
               photo={user.user_metadata.avatar_url}
             />
           ) : (
-            <Link
-              href="room/queue"
-              className="invisible self-center md:visible"
-            >
-              <Button className="rounded-xl p-6 text-zinc-800">
-                <span className="mr-1 text-base leading-6">Get started</span>
-                <ArrowRight />
-              </Button>
-            </Link>
+            <HeaderCTA />
           )}
         </div>
       </div>
