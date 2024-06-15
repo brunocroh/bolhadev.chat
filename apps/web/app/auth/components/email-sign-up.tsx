@@ -5,8 +5,8 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import EmailForm from './email-form'
 
-export default async function EmailSignIn() {
-  async function emailSignIn(formData: FormData) {
+export default async function EmailSignUp() {
+  async function emailSignUp(formData: FormData) {
     'use server'
 
     const supabase = createClient()
@@ -16,10 +16,12 @@ export default async function EmailSignIn() {
       password: formData.get('password') as string,
     }
 
-    const result = await supabase.auth.signInWithPassword({
+    const result = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
     })
+
+    console.log({ result })
 
     if (result.error || !result.data.user) {
       console.log('error')
@@ -30,8 +32,8 @@ export default async function EmailSignIn() {
   }
 
   return (
-    <form action={emailSignIn} className="flex flex-col gap-4">
-      <EmailForm submitLabel="Sign In" />
+    <form action={emailSignUp} className="flex flex-col gap-4">
+      <EmailForm submitLabel="Sign Up" />
     </form>
   )
 }
