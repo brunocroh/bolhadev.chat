@@ -21,14 +21,12 @@ export default async function EmailSignUp() {
       password: data.password,
     })
 
-    console.log({ result })
-
     if (result.error || !result.data.user) {
       console.log('error')
       return
     }
 
-    redirect('/room/queue')
+    redirect('/auth/email-confirmation')
   }
 
   return (
