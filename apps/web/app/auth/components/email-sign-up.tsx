@@ -19,6 +19,9 @@ export default async function EmailSignUp() {
     const result = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
+      options: {
+        emailRedirectTo: 'https://localhost:3000/auth/email-confirmed',
+      },
     })
 
     if (result.error || !result.data.user) {
