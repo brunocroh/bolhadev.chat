@@ -16,7 +16,7 @@ export const Header = () => {
             alt="BolhaDEV.chat logo featuring a stylized globe and a speech bubble with a language symbol on a dark background."
           ></Image>
         </Link>
-        <Link href="room/queue" className="invisible self-center md:visible">
+        <Link href="/room/queue" className="invisible self-center md:visible">
           <Button className="rounded-xl p-6 text-zinc-800">
             <span className="mr-1 text-base leading-6">Get started</span>
             <ArrowRight />
