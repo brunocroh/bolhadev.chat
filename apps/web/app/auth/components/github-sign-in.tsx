@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { redirect } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { createClient } from '@/lib/supabase/server'
+import { env } from '@repo/env-config'
 
 export default async function GithubSignIn() {
   async function githubSignIn() {
@@ -15,8 +16,7 @@ export default async function GithubSignIn() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {
-        // TODO: Move to an env
-        redirectTo: 'http://localhost:3000/auth/callback',
+        redirectTo: `${env.NEXT_PUBLIC_BASE_URL}/auth/callback`,
       },
     })
 

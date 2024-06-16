@@ -3,6 +3,7 @@
 import React from 'react'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
+import { env } from '@repo/env-config'
 import EmailForm from './email-form'
 
 export default async function EmailSignUp() {
@@ -20,7 +21,7 @@ export default async function EmailSignUp() {
       email: data.email,
       password: data.password,
       options: {
-        emailRedirectTo: 'https://localhost:3000/auth/email-confirmed',
+        emailRedirectTo: `${env.NEXT_PUBLIC_BASE_URL}/auth/callback`,
       },
     })
 
