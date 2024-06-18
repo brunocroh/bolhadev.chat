@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label'
 import { createClient } from '@/lib/supabase/server'
 import SignOut from '../auth/components/sign-out'
 
-export default async function Page(): JSX.Element {
+export default async function Page(): Promise<JSX.Element> {
   const supabase = createClient()
 
   const { data } = await supabase.auth.getUser()
@@ -20,6 +20,7 @@ export default async function Page(): JSX.Element {
       <div className="flex w-full max-w-sm flex-col gap-4">
         <div className="flex w-full justify-center">
           <Image
+            alt="user profile picture"
             className="border-1 rounded-full border-white"
             src={user?.user_metadata.avatar_url}
             height={82}
