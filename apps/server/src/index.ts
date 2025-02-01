@@ -25,17 +25,27 @@ type QueueUpdateEvent = {
   userId: string
 }
 
+type Signal = {
+  type: 'offer'
+  sdp: string
+}
+
 type SendOfferEvent = {
   type: 'sendOffer'
   to: string
-  signal: any
+  signal: Signal
   from: string
+}
+
+type BroadcastPayload = {
+  type: 'usersOnline'
+  size: number
 }
 
 type SendAnswerEvent = {
   type: 'sendAnswer'
   to: string
-  signal: any
+  signal: Signal
 }
 
 type RoomEnterEvent = {
@@ -51,8 +61,7 @@ type SocketEvents =
   | SendAnswerEvent
   | RoomEnterEvent
 
-function broadcastMessage(json) {
-  console.log({ json })
+function broadcastMessage(json: BroadcastPayload) {
   const data = JSON.stringify(json)
   for (const user of users.values()) {
     if (user.readyState === WebSocket.OPEN) {
@@ -152,6 +161,7 @@ const onRoomEnter = async ({ roomId, id }: { roomId: string; id: string }) => {
 }
 
 const onSendOffer = ({ to, signal, from }: SendOfferEvent) => {
+  console.log({ signal })
   if (!to) return
 
   const userTo = users.get(to)
