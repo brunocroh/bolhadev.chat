@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 
 export async function sendFeedback(formData: FormData) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const data = {
     twitter: formData.get('twitter') as string,

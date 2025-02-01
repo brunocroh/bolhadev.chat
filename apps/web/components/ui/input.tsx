@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 
 export type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   className?: string
-  type: string
+  type?: string
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
