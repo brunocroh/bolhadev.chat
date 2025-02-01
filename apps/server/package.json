@@ -2,10 +2,12 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon",
-    "build": "tsc"
+    "build": "tsc",
+    "lint": "npx eslint src/."
   },
   "keywords": [],
   "author": "",

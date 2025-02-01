@@ -51,9 +51,10 @@ type SocketEvents =
   | SendAnswerEvent
   | RoomEnterEvent
 
-function broadcastMessage(json: any) {
+function broadcastMessage(json) {
+  console.log({ json })
   const data = JSON.stringify(json)
-  for (let user of users.values()) {
+  for (const user of users.values()) {
     if (user.readyState === WebSocket.OPEN) {
       user.send(data)
     }
@@ -61,7 +62,7 @@ function broadcastMessage(json: any) {
 }
 
 const queue = new Set<string>()
-const users = new Map<string, any>()
+const users = new Map<string, WebSocket>()
 const rooms = new Map<string, Room>()
 
 wss.on('connection', (ws) => {
@@ -108,7 +109,7 @@ const handleDisconnect = (userId: string) => {
   })
 }
 
-const onRoomEnter = async ({ roomId, id }: any) => {
+const onRoomEnter = async ({ roomId, id }: { roomId: string; id: string }) => {
   let room
   try {
     room = rooms.get(roomId)
@@ -124,6 +125,9 @@ const onRoomEnter = async ({ roomId, id }: any) => {
       room.users.forEach((user) => {
         const _user = users.get(user)
         // TODO: if user is not connected, send a event to other user to navigate back to queue screen
+        if (!_user) {
+          return
+        }
         _user.send(JSON.stringify({ type: 'hostCall', to: participant }))
       })
     }
@@ -235,7 +239,7 @@ fastify.get('/', function (_, reply) {
   reply.send({ hello: 'world' })
 })
 
-fastify.listen({ port: 4001 }, function (err, address) {
+fastify.listen({ port: 4001 }, function (err) {
   if (err) {
     fastify.log.error(err)
     process.exit(1)

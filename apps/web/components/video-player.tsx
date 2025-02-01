@@ -88,7 +88,7 @@ export const VideoPlayer = forwardRef<
               `Success, audio output device attached: ${activeOutputDevice}`
             )
           })
-          .catch((error: any) => {
+          .catch((error) => {
             console.error(`Error: ${error.name}`)
           })
       }
