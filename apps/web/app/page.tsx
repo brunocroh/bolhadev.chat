@@ -5,13 +5,19 @@ import {
   ArrowRight,
   Dumbbell,
   Heart,
+  LucideIcon,
   MessageCircle,
   PiggyBank,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { InfoCard } from './components/info-card'
 
-const infoCardContent = [
+type InfoCard = {
+  icon: LucideIcon
+  content: string
+}
+
+const infoCardContent: InfoCard[] = [
   {
     icon: MessageCircle,
     content:
@@ -86,7 +92,7 @@ export default function Page(): JSX.Element {
           }}
         />
         <div className="mt-10 flex w-full flex-col flex-wrap items-center justify-center gap-10 md:flex-row">
-          {infoCardContent.map((card, i) => (
+          {infoCardContent.map((card: InfoCard, i: number) => (
             <InfoCard icon={card.icon} content={card.content} key={i} />
           ))}
         </div>

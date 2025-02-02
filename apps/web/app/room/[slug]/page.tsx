@@ -11,13 +11,14 @@ import useWebSocket from 'react-use-websocket'
 import { usePathname } from 'next/navigation'
 import { clsx } from 'clsx'
 import Peer from 'simple-peer'
-import { Chat, Message } from '@/app/room/[slug]/components/chat'
+import { Chat } from '@/app/room/[slug]/components/chat'
 import Countdown from '@/components/countdown'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { VideoPlayer } from '@/components/video-player'
 import { useUserMedia } from '@/hooks/useUserMedia'
 import { env } from '@repo/env-config'
+import { Message } from './components/message-item'
 
 export default function Page(): JSX.Element {
   const peerRef: MutableRefObject<Peer.Instance | null> = useRef(null)
@@ -178,14 +179,17 @@ export default function Page(): JSX.Element {
     type: 'audio' | 'video'
   ) => {
     const result = await switchInput(deviceId, type)
+    if (!result) {
+      return
+    }
     peerRef.current?.replaceTrack(
-      result?.oldVideoTrack!,
-      result?.newVideoTrack!,
+      result.oldVideoTrack,
+      result.newVideoTrack,
       stream!
     )
     peerRef.current?.replaceTrack(
-      result?.oldAudioTrack!,
-      result?.newAudioTrack!,
+      result.oldAudioTrack,
+      result.newAudioTrack,
       stream!
     )
   }

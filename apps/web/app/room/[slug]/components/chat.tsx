@@ -5,12 +5,7 @@ import { MessageCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { MessageItem } from './message-item'
-
-export type Message = {
-  sender: 'me' | 'other'
-  content: string
-}
+import { Message, MessageItem } from './message-item'
 
 type Chat = {
   messages: Message[]

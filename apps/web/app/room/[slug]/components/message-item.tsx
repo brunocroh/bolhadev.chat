@@ -1,11 +1,15 @@
 import clsx from 'clsx'
-import { Message } from './chat'
 
-type MessageItem = {
+export type Message = {
+  sender: 'me' | 'other'
+  content: string
+}
+
+type MessageItemProps = {
   message: Message
 }
 
-export const MessageItem: React.FC<MessageItem> = ({ message }) => {
+export const MessageItem = ({ message }: MessageItemProps) => {
   const isMe = message.sender === 'me'
 
   return (
