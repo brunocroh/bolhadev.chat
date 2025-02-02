@@ -8,7 +8,7 @@
     "reset-project": "node ./scripts/reset-project.js",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "'eb": "expo start --'eb",
+    "web": "expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint"
   },
