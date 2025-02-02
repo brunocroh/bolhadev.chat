@@ -1,4 +1,4 @@
-import { Image, Platform, StyleSheet, Text } from 'react-native'
+import { Image, Platform, StyleSheet } from 'react-native'
 import { Collapsible } from '@/components/Collapsible'
 import { ExternalLink } from '@/components/ExternalLink'
 import ParallaxScrollView from '@/components/ParallaxScrollView'
