@@ -1,6 +1,5 @@
 import { useEffect } from 'react'
 import 'react-native-reanimated'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { useFonts } from 'expo-font'
 import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
@@ -44,19 +43,17 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider>
-      <SafeAreaProvider>
-        <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-          <ClerkLoaded>
-            <Stack screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="(intro)" />
-              <Stack.Screen name="home" />
-              <Stack.Screen name="auth" />
-              <Stack.Screen name="+not-found" />
-            </Stack>
-            <StatusBar style="auto" />
-          </ClerkLoaded>
-        </ClerkProvider>
-      </SafeAreaProvider>
+      <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+        <ClerkLoaded>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="(intro)" />
+            <Stack.Screen name="home" />
+            <Stack.Screen name="auth" />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <StatusBar style="auto" />
+        </ClerkLoaded>
+      </ClerkProvider>
     </ThemeProvider>
   )
 }
