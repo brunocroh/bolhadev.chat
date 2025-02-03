@@ -1,21 +1,21 @@
 import { useEffect } from 'react'
 import 'react-native-reanimated'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { useFonts } from 'expo-font'
 import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
+import { useColorScheme } from 'nativewind'
 import { tokenCache } from '@/cache'
-import { useColorScheme } from '@/hooks/useColorScheme'
+import { ThemeProvider } from '@/components/providers/theme-provider'
 import { ClerkLoaded, ClerkProvider } from '@clerk/clerk-expo'
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from '@react-navigation/native'
 import '../global.css'
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
+
+export const unstable_settings = {
+  initialRouteName: '(intro)',
+}
 
 export default function RootLayout() {
   const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY!
@@ -24,10 +24,13 @@ export default function RootLayout() {
     throw new Error('Add EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY ')
   }
 
-  const colorScheme = useColorScheme()
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   })
+
+  const { setColorScheme, colorScheme } = useColorScheme()
+
+  setColorScheme(colorScheme || 'light')
 
   useEffect(() => {
     if (loaded) {
@@ -40,17 +43,20 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-        <ClerkLoaded>
-          <Stack initialRouteName="(auth)">
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-          <StatusBar style="auto" />
-        </ClerkLoaded>
-      </ClerkProvider>
+    <ThemeProvider>
+      <SafeAreaProvider>
+        <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+          <ClerkLoaded>
+            <Stack screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="(intro)" />
+              <Stack.Screen name="home" />
+              <Stack.Screen name="auth" />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+            <StatusBar style="auto" />
+          </ClerkLoaded>
+        </ClerkProvider>
+      </SafeAreaProvider>
     </ThemeProvider>
   )
 }
