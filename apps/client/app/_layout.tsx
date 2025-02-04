@@ -4,7 +4,6 @@ import { useFonts } from 'expo-font'
 import { Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
-import { useColorScheme } from 'nativewind'
 import { tokenCache } from '@/cache'
 import { ThemeProvider } from '@/components/providers/theme-provider'
 import { ClerkLoaded, ClerkProvider } from '@clerk/clerk-expo'
@@ -27,10 +26,6 @@ export default function RootLayout() {
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   })
 
-  const { setColorScheme, colorScheme } = useColorScheme()
-
-  setColorScheme(colorScheme || 'light')
-
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync()
@@ -42,9 +37,9 @@ export default function RootLayout() {
   }
 
   return (
-    <ThemeProvider>
-      <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-        <ClerkLoaded>
+    <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+      <ClerkLoaded>
+        <ThemeProvider>
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(intro)" />
             <Stack.Screen name="home" />
@@ -52,8 +47,8 @@ export default function RootLayout() {
             <Stack.Screen name="+not-found" />
           </Stack>
           <StatusBar style="auto" />
-        </ClerkLoaded>
-      </ClerkProvider>
-    </ThemeProvider>
+        </ThemeProvider>
+      </ClerkLoaded>
+    </ClerkProvider>
   )
 }

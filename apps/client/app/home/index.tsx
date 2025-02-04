@@ -16,10 +16,10 @@ export default function Page() {
         </TouchableOpacity>
       </SignedIn>
       <SignedOut>
-        <Link href="/(auth)/sign-in">
+        <Link href="/auth/sign-in">
           <Text>Sign in</Text>
         </Link>
-        <Link href="/(auth)/sign-up">
+        <Link href="/auth/sign-up">
           <Text>Sign up</Text>
         </Link>
       </SignedOut>

@@ -16,10 +16,8 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const { colorScheme } = useColorScheme()
 
   return (
-    <ThemeContext.Provider value={{ theme: colorScheme || 'light' }}>
-      <View style={{ ...themes[colorScheme || 'light'], flex: 1 }}>
-        {children}
-      </View>
+    <ThemeContext.Provider value={{ theme: 'dark' || 'light' }}>
+      <View style={{ ...themes['dark'], flex: 1 }}>{children}</View>
     </ThemeContext.Provider>
   )
 }

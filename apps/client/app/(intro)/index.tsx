@@ -4,7 +4,7 @@ import { Link } from 'expo-router'
 export default function Page() {
   return (
     <View className="p-safe bg-background">
-      <Text className="text-destructive"> text </Text>
+      <Text className="text-foreground"> text </Text>
       <View>
         <Link href="/auth/sign-in">
           <Text>Sign in</Text>

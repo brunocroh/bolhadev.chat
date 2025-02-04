@@ -9,6 +9,7 @@ export const themes = {
     '--popover': '#FFFFFF',
     '--popover-foreground': '#020817',
     '--primary': '#1A1D2B',
+    '--color-primary': '#1A1D2B',
     '--primary-foreground': '#F2F6FB',
     '--secondary': '#F3F5F7',
     '--secondary-foreground': '#1A1D2B',
