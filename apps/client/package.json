@@ -16,6 +16,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@babel/plugin-proposal-export-namespace-from": "^7.18.9",
     "@clerk/clerk-expo": "^2.7.3",
     "@clerk/types": "^4.45.0",
     "@expo/vector-icons": "^14.0.2",
