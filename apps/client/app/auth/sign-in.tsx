@@ -1,7 +1,8 @@
 import { useCallback, useState } from 'react'
-import { Button, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { Link, useRouter } from 'expo-router'
 import { Camera } from 'lucide-react-native'
+import { Button } from '@/components/ui/button'
 import { Container } from '@/components/ui/Container'
 import { Input } from '@/components/ui/input'
 import { useSignIn } from '@clerk/clerk-expo'
@@ -14,6 +15,7 @@ export default function Page() {
   const [password, setPassword] = useState('')
 
   const onSignInPress = useCallback(async () => {
+    return
     if (!isLoaded) return
 
     try {
@@ -35,8 +37,8 @@ export default function Page() {
 
   return (
     <Container className="flex-1 bg-background">
-      <View className="flex-1">
-        <Text>
+      <View className="flex-1 items-center justify-center">
+        <Text className="color-primary bg-background">
           Master English, Transform Your World. The new frontier in
           collaborative learning.
         </Text>
