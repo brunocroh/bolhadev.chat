@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react'
-import { Button, Text, TextInput, View } from 'react-native'
+import { Button, Text, View } from 'react-native'
 import { Link, useRouter } from 'expo-router'
 import { Camera } from 'lucide-react-native'
 import { Container } from '@/components/ui/Container'
-import { Input, InputField, InputIcon } from '@/components/ui/Input'
+import { Input } from '@/components/ui/input'
 import { useSignIn } from '@clerk/clerk-expo'
 
 export default function Page() {
