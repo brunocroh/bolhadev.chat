@@ -8,7 +8,7 @@ export default function Page() {
   const { user } = useUser()
 
   return (
-    <Container className="bg-green-500">
+    <Container className="bg-red-500">
       <SignedIn>
         <Text>Hello {user?.emailAddresses[0].emailAddress}</Text>
         <TouchableOpacity onPress={() => signOut()}>
@@ -22,6 +22,9 @@ export default function Page() {
         <Link href="/auth/sign-up">
           <Text>Sign up</Text>
         </Link>
+        <TouchableOpacity onPress={() => signOut()}>
+          <Text>Sign out</Text>
+        </TouchableOpacity>
       </SignedOut>
     </Container>
   )

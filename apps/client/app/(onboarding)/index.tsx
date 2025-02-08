@@ -7,7 +7,7 @@ export default function Page() {
       <Text className="text-foreground"> text </Text>
       <View>
         <Link href="/auth/sign-in">
-          <Text>Sign in</Text>
+          <Text className="text-primary">Sign in</Text>
         </Link>
         <Link href="/auth/sign-up">
           <Text>Sign up</Text>

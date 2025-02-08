@@ -12,7 +12,7 @@ import '../global.css'
 SplashScreen.preventAutoHideAsync()
 
 export const unstable_settings = {
-  initialRouteName: '(intro)',
+  initialRouteName: 'auth',
 }
 
 export default function RootLayout() {
@@ -41,8 +41,8 @@ export default function RootLayout() {
       <ClerkLoaded>
         <ThemeProvider>
           <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="(intro)" />
-            <Stack.Screen name="home" />
+            <Stack.Screen name="(onboarding)" />
+            <Stack.Screen name="(home)" />
             <Stack.Screen name="auth" />
             <Stack.Screen name="+not-found" />
           </Stack>
