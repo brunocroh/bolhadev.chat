@@ -10,7 +10,8 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
-    "lint": "expo lint"
+    "lint": "npx eslint_d . --max-warnings 0",
+    "expo:lint": "expo lint "
   },
   "jest": {
     "preset": "jest-expo"

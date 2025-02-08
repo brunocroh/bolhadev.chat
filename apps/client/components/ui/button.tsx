@@ -4,9 +4,6 @@ import Animated, {
   interpolate,
   useAnimatedStyle,
   useSharedValue,
-  withDelay,
-  withSequence,
-  withSpring,
   withTiming,
 } from 'react-native-reanimated'
 import { cn } from '@/lib/cn'

@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { Text, View } from 'react-native'
 import { Link, useRouter } from 'expo-router'
-import { Camera } from 'lucide-react-native'
+import { LockKeyhole, Mail } from 'lucide-react-native'
 import { Button } from '@/components/ui/button'
 import { Container } from '@/components/ui/Container'
 import { Input } from '@/components/ui/input'
@@ -15,7 +15,6 @@ export default function Page() {
   const [password, setPassword] = useState('')
 
   const onSignInPress = useCallback(async () => {
-    return
     if (!isLoaded) return
 
     try {
@@ -43,28 +42,26 @@ export default function Page() {
           collaborative learning.
         </Text>
       </View>
-      <View className="gap-2">
+      <View className="gap-4 px-6">
         <Input
-          icon={Camera}
+          icon={Mail}
           autoCapitalize="none"
           value={emailAddress}
           placeholder="Enter your email"
           onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
         />
         <Input
-          icon={Camera}
+          icon={LockKeyhole}
           value={password}
           placeholder="Enter password"
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
         />
-        <Button title="Sign in" onPress={onSignInPress} />
-        <View>
-          <Text>Don't have an account?</Text>
-          <Link href="/auth/sign-up">
-            <Text>Sign up</Text>
-          </Link>
-        </View>
+        <Button title="Sign In" onPress={onSignInPress} />
+
+        <Link href="/auth/sign-up" asChild>
+          <Button title="Sign Up" />
+        </Link>
       </View>
     </Container>
   )
