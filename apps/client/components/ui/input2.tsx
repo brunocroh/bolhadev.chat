@@ -4,7 +4,7 @@ import colors from 'tailwindcss/colors'
 import { cn } from '@/lib/cn'
 
 type InputProps = {
-  icon: LucideIcon
+  icon?: LucideIcon
 } & TextInputProps
 
 function Input({ className, icon, ...props }: InputProps) {
@@ -13,7 +13,7 @@ function Input({ className, icon, ...props }: InputProps) {
   return (
     <View className="relative">
       <View className="absolute flex h-10 w-8 items-center justify-center">
-        <Icon size={16} color={colors.gray[500]} />
+        {Icon ? <Icon size={16} color={colors.gray[500]} /> : <></>}
       </View>
       <TextInput
         className={cn(
