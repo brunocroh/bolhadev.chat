@@ -1,5 +1,6 @@
+import React from 'react'
 import { PressableProps, Text } from 'react-native'
-import { Pressable } from 'react-native'
+import { Pressable as BasePressable } from 'react-native'
 import Animated, {
   interpolate,
   useAnimatedStyle,
@@ -14,9 +15,12 @@ type ButtonProps = {
 
 const DURATION = 300
 
-const AnimatedPressable = Animated.createAnimatedComponent(Pressable)
+const Pressable = Animated.createAnimatedComponent(BasePressable)
 
-export function Button({ className, title, ...props }: ButtonProps) {
+const Button = React.forwardRef<
+  React.ComponentRef<typeof BasePressable>,
+  ButtonProps
+>(({ className, title, ...props }, ref) => {
   const transition = useSharedValue(0)
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -30,7 +34,8 @@ export function Button({ className, title, ...props }: ButtonProps) {
   })
 
   return (
-    <AnimatedPressable
+    <Pressable
+      ref={ref}
       {...props}
       style={animatedStyle}
       onPressIn={() => {
@@ -47,6 +52,9 @@ export function Button({ className, title, ...props }: ButtonProps) {
       <Text className="text-primary-foreground" selectable={false}>
         {title}
       </Text>
-    </AnimatedPressable>
+    </Pressable>
   )
-}
+})
+Button.displayName = 'Button'
+
+export { Button }
