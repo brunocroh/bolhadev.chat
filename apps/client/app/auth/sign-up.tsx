@@ -1,6 +1,9 @@
 import * as React from 'react'
-import { Button, Text, TextInput, View } from 'react-native'
+import { Text, TextInput, View } from 'react-native'
 import { useRouter } from 'expo-router'
+import { Button } from '@/components/ui/button'
+import { Container } from '@/components/ui/Container'
+import { Input } from '@/components/ui/input'
 import { useSignUp } from '@clerk/clerk-expo'
 
 export default function SignUpScreen() {
@@ -78,23 +81,30 @@ export default function SignUpScreen() {
   }
 
   return (
-    <View>
-      <>
-        <Text>Sign up</Text>
-        <TextInput
+    <Container className="flex-1 bg-background">
+      <View className="flex-1">
+        <View>
+          <Button title="back" onPress={() => router.back()} />
+        </View>
+        <View className="flex-1 items-center justify-center">
+          <Text className="text-3xl text-primary">Sign up</Text>
+        </View>
+      </View>
+      <View className="gap-4">
+        <Input
           autoCapitalize="none"
           value={emailAddress}
           placeholder="Enter email"
           onChangeText={(email) => setEmailAddress(email)}
         />
-        <TextInput
+        <Input
           value={password}
           placeholder="Enter password"
           secureTextEntry={true}
           onChangeText={(password) => setPassword(password)}
         />
         <Button title="Continue" onPress={onSignUpPress} />
-      </>
-    </View>
+      </View>
+    </Container>
   )
 }
