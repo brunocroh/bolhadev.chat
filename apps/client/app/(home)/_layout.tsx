@@ -1,6 +1,7 @@
 import { Redirect, Tabs } from 'expo-router'
-import { Calendar1, History, Home, Settings } from 'lucide-react-native'
+import { Calendar1, History, Home } from 'lucide-react-native'
 import { HapticTab } from '@/components/HapticTab'
+import { Avatar } from '@/components/ui/avatar'
 import TabBarBackground from '@/components/ui/TabBarBackground'
 import { colors } from '@/theme'
 import { useAuth } from '@clerk/clerk-expo'
@@ -54,7 +55,12 @@ export default function Layout() {
         name="settings"
         options={{
           title: '',
-          tabBarIcon: ({ color }) => <Settings size={24} color={color} />,
+          tabBarIcon: ({ color }) => (
+            <Avatar
+              size={24}
+              uri="https://avatars.githubusercontent.com/u/13812512?v=4"
+            />
+          ),
         }}
       />
     </Tabs>
