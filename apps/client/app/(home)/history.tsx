@@ -1,32 +1,9 @@
-import { Text, TouchableOpacity } from 'react-native'
-import { Link } from 'expo-router'
-import { SignedIn, SignedOut, useAuth, useUser } from '@clerk/clerk-expo'
+import { Text, View } from 'react-native'
 
 export default function Page() {
-  const { signOut } = useAuth()
-  const { user } = useUser()
-
   return (
-    <>
-      <SignedIn>
-        <Text className="text-primary">
-          Hello {user?.emailAddresses[0].emailAddress}
-        </Text>
-        <TouchableOpacity onPress={() => signOut()}>
-          <Text className="text-primary">Sign out</Text>
-        </TouchableOpacity>
-      </SignedIn>
-      <SignedOut>
-        <Link href="/auth/sign-in">
-          <Text className="primary">Sign in</Text>
-        </Link>
-        <Link href="/auth/sign-up">
-          <Text>Sign up</Text>
-        </Link>
-        <TouchableOpacity onPress={() => signOut()}>
-          <Text>Sign out</Text>
-        </TouchableOpacity>
-      </SignedOut>
-    </>
+    <View className="flex-1 bg-background py-4">
+      <Text className="text-primary">History</Text>
+    </View>
   )
 }
