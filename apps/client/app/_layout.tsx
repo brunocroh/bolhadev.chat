@@ -6,6 +6,7 @@ import * as SplashScreen from 'expo-splash-screen'
 import { StatusBar } from 'expo-status-bar'
 import { tokenCache } from '@/cache'
 import { ThemeProvider } from '@/components/providers/theme-provider'
+import '@/components/ui/icons'
 import { ClerkLoaded, ClerkProvider } from '@clerk/clerk-expo'
 import '../global.css'
 
