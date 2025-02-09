@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Text, View } from 'react-native'
 import { useRouter } from 'expo-router'
 import { Button } from '@/components/ui/button'
-import { Container } from '@/components/ui/Container'
 import { Input } from '@/components/ui/input'
 import { useSignUp } from '@clerk/clerk-expo'
 
@@ -32,7 +31,7 @@ export default function SignUpScreen() {
   }
 
   return (
-    <Container className="flex-1 bg-background">
+    <>
       <View className="flex-1">
         <View className="flex-1 items-center justify-center ">
           <Text className="text-3xl text-primary">Verify your email</Text>
@@ -46,6 +45,6 @@ export default function SignUpScreen() {
           <Button title="Verify" onPress={onVerifyPress} />
         </View>
       </View>
-    </Container>
+    </>
   )
 }

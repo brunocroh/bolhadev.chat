@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Text, View } from 'react-native'
 import { useRouter } from 'expo-router'
 import { Button } from '@/components/ui/button'
-import { Container } from '@/components/ui/Container'
 import { Input } from '@/components/ui/input'
 import { useSignUp } from '@clerk/clerk-expo'
 
@@ -31,7 +30,7 @@ export default function SignUpScreen() {
   }
 
   return (
-    <Container className="flex-1 bg-background">
+    <>
       <View className="flex-1">
         <View>
           <Button title="back" onPress={() => router.back()} />
@@ -55,6 +54,6 @@ export default function SignUpScreen() {
         />
         <Button title="Continue" onPress={onSignUpPress} />
       </View>
-    </Container>
+    </>
   )
 }

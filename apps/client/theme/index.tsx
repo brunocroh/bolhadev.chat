@@ -1,5 +1,51 @@
 import { vars } from 'nativewind'
 
+export const colors = {
+  light: {
+    background: '#FFFFFF',
+    foreground: '#020817',
+    card: '#FFFFFF',
+    cardForeground: '#020817',
+    popover: '#FFFFFF',
+    popoverForeground: '#020817',
+    primary: '#1A1D2B',
+    colorPrimary: '#1A1D2B',
+    primaryForeground: '#F2F6FB',
+    secondary: '#F3F5F7',
+    secondaryForeground: '#1A1D2B',
+    muted: '#F3F5F7',
+    mutedForeground: '#6B7280',
+    accent: '#F3F5F7',
+    accentForeground: '#1A1D2B',
+    destructive: '#EF4444',
+    destructiveForeground: '#F2F6FB',
+    border: '#E5E7EB',
+    input: '#E5E7EB',
+    ring: '#020817',
+  },
+  dark: {
+    background: '#020303',
+    Foreground: '#F3F8FD',
+    card: '#090B11',
+    cardForeground: '#F3F8FD',
+    popover: '#090B11',
+    popoverForeground: '#F3F8FD',
+    primary: '#F3F8FD',
+    primaryForeground: '#191D24',
+    secondary: '#232A34',
+    secondaryForeground: '#F3F8FD',
+    muted: '#232A34',
+    mutedForeground: '#94A3B8',
+    accent: '#232A34',
+    accentForeground: '#F3F8FD',
+    destructive: '#7D1A1A',
+    destructiveForeground: '#F3F8FD',
+    border: '#232A34',
+    input: '#232A34',
+    ring: '#CBD5E1',
+  },
+}
+
 export const themes = {
   light: vars({
     '--background': '#FFFFFF',
