@@ -1,6 +1,7 @@
 import { Redirect } from 'expo-router'
 import { Stack } from 'expo-router/stack'
 import { Container } from '@/components/ui/container'
+import { colors } from '@/theme'
 import { useAuth } from '@clerk/clerk-expo'
 import { Header } from './_components/header'
 
@@ -14,7 +15,12 @@ export default function Layout() {
   return (
     <Container className="bg-background">
       <Header />
-      <Stack screenOptions={{ headerShown: false }} />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: colors.dark.background },
+        }}
+      />
     </Container>
   )
 }
