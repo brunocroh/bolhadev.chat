@@ -80,7 +80,7 @@ const Button = React.forwardRef<
       <View className="flex-row">
         {Icon ? (
           <Icon
-            size={16}
+            size={24}
             style={animatedStyle}
             className={contentVariants({ variant })}
           />
