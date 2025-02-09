@@ -32,6 +32,7 @@ export default function Layout() {
     >
       <Tabs.Screen
         name="index"
+        initialParams={{ title: 'Home' }}
         options={{
           title: '',
           tabBarIcon: ({ color }) => <Home size={24} color={color} />,
@@ -39,6 +40,7 @@ export default function Layout() {
       />
       <Tabs.Screen
         name="schedule"
+        initialParams={{ title: 'Schedule' }}
         options={{
           title: '',
           tabBarIcon: ({ color }) => <Calendar1 size={24} color={color} />,
@@ -46,6 +48,7 @@ export default function Layout() {
       />
       <Tabs.Screen
         name="history"
+        initialParams={{ title: 'History' }}
         options={{
           title: '',
           tabBarIcon: ({ color }) => <History size={24} color={color} />,
@@ -53,6 +56,7 @@ export default function Layout() {
       />
       <Tabs.Screen
         name="settings"
+        initialParams={{ title: 'Settings' }}
         options={{
           title: '',
           tabBarIcon: ({ color }) => (
