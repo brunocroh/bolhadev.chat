@@ -13,7 +13,8 @@ export const ThemeContext = createContext<{
 })
 
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  const { colorScheme } = useColorScheme()
+  const { colorScheme, setColorScheme } = useColorScheme()
+  setColorScheme('dark')
 
   return (
     <ThemeContext.Provider value={{ theme: colorScheme || 'dark' }}>
