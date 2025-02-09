@@ -7,6 +7,7 @@ import { StatusBar } from 'expo-status-bar'
 import { tokenCache } from '@/cache'
 import { ThemeProvider } from '@/components/providers/theme-provider'
 import '@/components/ui/icons'
+import { colors } from '@/theme'
 import { ClerkLoaded, ClerkProvider } from '@clerk/clerk-expo'
 import '../global.css'
 
@@ -44,7 +45,7 @@ export default function RootLayout() {
           <Stack
             screenOptions={{
               headerShown: false,
-              contentStyle: { backgroundColor: 'red' },
+              contentStyle: { backgroundColor: colors.dark.background },
             }}
           >
             <Stack.Screen name="(onboarding)" />

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { Text, View } from 'react-native'
+import { KeyboardAvoidingView, Platform, Text, View } from 'react-native'
 import { Link, useRouter } from 'expo-router'
 import { LockKeyhole, Mail } from 'lucide-react-native'
 import { Button } from '@/components/ui/button'
@@ -35,33 +35,38 @@ export default function Page() {
 
   return (
     <>
-      <View className="flex-1 items-center justify-center">
-        <Text className="color-primary bg-background">
-          Master English, Transform Your World. The new frontier in
-          collaborative learning.
-        </Text>
-      </View>
-      <View className="gap-4 px-6">
-        <Input
-          icon={Mail}
-          autoCapitalize="none"
-          value={emailAddress}
-          placeholder="Enter your email"
-          onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
-        />
-        <Input
-          icon={LockKeyhole}
-          value={password}
-          placeholder="Enter password"
-          secureTextEntry={true}
-          onChangeText={(password) => setPassword(password)}
-        />
-        <Button title="Sign In" onPress={onSignInPress} />
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        className="flex-1"
+      >
+        <View className="flex-1 items-center justify-center">
+          <Text className="color-primary bg-background">
+            Master English, Transform Your World. The new frontier in
+            collaborative learning.
+          </Text>
+        </View>
+        <View className="gap-4 px-6">
+          <Input
+            icon={Mail}
+            autoCapitalize="none"
+            value={emailAddress}
+            placeholder="Enter your email"
+            onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
+          />
+          <Input
+            icon={LockKeyhole}
+            value={password}
+            placeholder="Enter password"
+            secureTextEntry={true}
+            onChangeText={(password) => setPassword(password)}
+          />
+          <Button title="Sign In" onPress={onSignInPress} />
 
-        <Link href="/auth/sign-up" asChild>
-          <Button variant="secondary" title="Sign Up" />
-        </Link>
-      </View>
+          <Link href="/auth/sign-up" asChild>
+            <Button variant="secondary" title="Sign Up" />
+          </Link>
+        </View>
+      </KeyboardAvoidingView>
     </>
   )
 }
