@@ -1,6 +1,8 @@
 import { Redirect } from 'expo-router'
 import { Stack } from 'expo-router/stack'
+import { Container } from '@/components/ui/container'
 import { useAuth } from '@clerk/clerk-expo'
+import { Header } from './_components/header'
 
 export default function Layout() {
   const { isSignedIn } = useAuth()
@@ -9,5 +11,10 @@ export default function Layout() {
     return <Redirect href={'/auth/sign-in'} />
   }
 
-  return <Stack screenOptions={{ headerShown: false }} />
+  return (
+    <Container className="bg-background">
+      <Header />
+      <Stack screenOptions={{ headerShown: false }} />
+    </Container>
+  )
 }

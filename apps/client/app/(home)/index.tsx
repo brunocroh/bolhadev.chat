@@ -1,6 +1,6 @@
 import { Text, TouchableOpacity } from 'react-native'
 import { Link } from 'expo-router'
-import { Container } from '@/components/ui/Container'
+import { Container } from '@/components/ui/container'
 import { SignedIn, SignedOut, useAuth, useUser } from '@clerk/clerk-expo'
 
 export default function Page() {

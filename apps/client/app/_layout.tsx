@@ -40,7 +40,12 @@ export default function RootLayout() {
     <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
       <ClerkLoaded>
         <ThemeProvider>
-          <Stack screenOptions={{ headerShown: false }}>
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              contentStyle: { backgroundColor: 'red' },
+            }}
+          >
             <Stack.Screen name="(onboarding)" />
             <Stack.Screen name="(home)" />
             <Stack.Screen name="auth" />

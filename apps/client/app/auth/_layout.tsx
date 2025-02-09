@@ -1,5 +1,5 @@
 import { Redirect, Stack } from 'expo-router'
-import { Container } from '@/components/ui/Container'
+import { Container } from '@/components/ui/container'
 import { colors } from '@/theme'
 import { useAuth } from '@clerk/clerk-expo'
 
