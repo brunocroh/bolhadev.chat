@@ -1,7 +1,7 @@
 import { TextInput, TextInputProps, View } from 'react-native'
 import { LucideIcon } from 'lucide-react-native'
-import colors from 'tailwindcss/colors'
 import { cn } from '@/lib/cn'
+import { colors } from '@/theme'
 
 type InputProps = {
   icon?: LucideIcon
@@ -13,7 +13,7 @@ function Input({ className, icon, ...props }: InputProps) {
   return (
     <View className="relative">
       <View className="absolute flex h-10 w-8 items-center justify-center">
-        {Icon ? <Icon size={16} color={colors.gray[500]} /> : <></>}
+        {Icon ? <Icon size={16} color={colors.dark.accentForeground} /> : <></>}
       </View>
       <TextInput
         className={cn(
