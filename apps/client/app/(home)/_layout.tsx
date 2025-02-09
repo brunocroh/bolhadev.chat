@@ -1,4 +1,3 @@
-import { Platform } from 'react-native'
 import { Redirect, Tabs } from 'expo-router'
 import { Calendar1, History, Home, Settings } from 'lucide-react-native'
 import { HapticTab } from '@/components/HapticTab'
@@ -22,40 +21,40 @@ export default function Layout() {
         headerShown: true,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            position: 'absolute',
-          },
-          default: {},
-        }),
+        tabBarIconStyle: {
+          marginTop: 10,
+        },
+        tabBarStyle: {
+          marginTop: 0,
+        },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: '',
-          tabBarIcon: ({ color }) => <Home size={18} color={color} />,
+          tabBarIcon: ({ color }) => <Home size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="schedule"
         options={{
           title: '',
-          tabBarIcon: ({ color }) => <Calendar1 size={18} color={color} />,
+          tabBarIcon: ({ color }) => <Calendar1 size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="history"
         options={{
           title: '',
-          tabBarIcon: ({ color }) => <History size={18} color={color} />,
+          tabBarIcon: ({ color }) => <History size={24} color={color} />,
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
           title: '',
-          tabBarIcon: ({ color }) => <Settings size={18} color={color} />,
+          tabBarIcon: ({ color }) => <Settings size={24} color={color} />,
         }}
       />
     </Tabs>
