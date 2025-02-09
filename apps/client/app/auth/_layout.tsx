@@ -3,11 +3,15 @@ import { Container } from '@/components/ui/container'
 import { colors } from '@/theme'
 import { useAuth } from '@clerk/clerk-expo'
 
+export const unstable_settings = {
+  initialRouteName: 'sign-in',
+}
+
 export default function AuthRoutesLayout() {
   const { isSignedIn } = useAuth()
 
   if (isSignedIn) {
-    return <Redirect href={'/'} />
+    return <Redirect href={'/(home)'} />
   }
 
   return (
