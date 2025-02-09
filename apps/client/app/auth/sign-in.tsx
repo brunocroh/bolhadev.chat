@@ -59,7 +59,7 @@ export default function Page() {
         <Button title="Sign In" onPress={onSignInPress} />
 
         <Link href="/auth/sign-up" asChild>
-          <Button title="Sign Up" />
+          <Button variant="secondary" title="Sign Up" />
         </Link>
       </View>
     </>

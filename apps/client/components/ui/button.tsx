@@ -28,7 +28,7 @@ const buttonVariants = cva('items-center justify-center rounded-md p-2', {
   },
 })
 
-const iconVariants = cva('', {
+const contentVariants = cva('', {
   variants: {
     variant: {
       primary: 'color-primary-foreground',
@@ -82,13 +82,13 @@ const Button = React.forwardRef<
           <Icon
             size={16}
             style={animatedStyle}
-            className={iconVariants({ variant })}
+            className={contentVariants({ variant })}
           />
         ) : (
           <></>
         )}
         {title ? (
-          <Text className="text-primary-foreground" selectable={false}>
+          <Text className={contentVariants({ variant })} selectable={false}>
             {title}
           </Text>
         ) : (
