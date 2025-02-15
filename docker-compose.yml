@@ -2,11 +2,21 @@ version: '3.8'
 
 services:
   bolhadev-chat:
+    image: brunoroh/bolhadev-chat:latest
     build:
       dockerfile: ./docker/apps/Dockerfile
       args:
         PROJECT: server
-    image: brunoroh/bolhadev-chat:latest
+
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
 
   nginx:
     build: ./docker/nginx/
@@ -16,3 +26,6 @@ services:
       - '443:443'
     depends_on:
       - bolhadev-chat
+
+volumes:
+  pgdata:
