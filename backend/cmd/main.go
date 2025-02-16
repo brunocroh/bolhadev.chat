@@ -19,20 +19,10 @@ import (
 
 const defaultPort = "8080"
 
-var (
-	DBHOST     = os.Getenv("DB_HOST")
-	DBPORT     = 5432
-	DBNAME     = os.Getenv("DB_NAME")
-	DBUSER     = os.Getenv("DB_USER")
-	DBPASSWORD = os.Getenv("DB_PASSWORD")
-)
-
 func main() {
 
-	db := database.GetDB()
+	database.GetDB()
 	defer database.CloseDB()
-
-	fmt.Println("db connected", db)
 
 	port := os.Getenv("PORT")
 	if port == "" {
