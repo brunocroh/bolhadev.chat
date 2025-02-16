@@ -1,75 +1,60 @@
 package main
 
 import (
-  "fmt"
-  "log"
-  "net/http"
-  "os"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
 
-  "github.com/99designs/gqlgen/graphql/handler"
-  "github.com/99designs/gqlgen/graphql/handler/extension"
-  "github.com/99designs/gqlgen/graphql/handler/lru"
-  "github.com/99designs/gqlgen/graphql/handler/transport"
-  "github.com/99designs/gqlgen/graphql/playground"
-  "github.com/brunocroh/bolhadev.chat/config"
-  "github.com/brunocroh/bolhadev.chat/internal/graph"
-  "github.com/jmoiron/sqlx"
-  _ "github.com/lib/pq"
-  "github.com/vektah/gqlparser/v2/ast"
+	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/handler/extension"
+	"github.com/99designs/gqlgen/graphql/handler/lru"
+	"github.com/99designs/gqlgen/graphql/handler/transport"
+	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/brunocroh/bolhadev.chat/internal/database"
+	"github.com/brunocroh/bolhadev.chat/internal/graph"
+	_ "github.com/lib/pq"
+	"github.com/vektah/gqlparser/v2/ast"
 )
 
 const defaultPort = "8080"
 
 var (
-  DBHOST     = os.Getenv("DB_HOST")
-  DBPORT     = 5432
-  DBNAME     = os.Getenv("DB_NAME")
-  DBUSER     = os.Getenv("DB_USER")
-  DBPASSWORD = os.Getenv("DB_PASSWORD")
+	DBHOST     = os.Getenv("DB_HOST")
+	DBPORT     = 5432
+	DBNAME     = os.Getenv("DB_NAME")
+	DBUSER     = os.Getenv("DB_USER")
+	DBPASSWORD = os.Getenv("DB_PASSWORD")
 )
 
 func main() {
-  config, err := config.LoadDatabaseConfig()
-  if err != nil {
-    log.Fatalln(err)
-  }
 
+	db := database.GetDB()
+	defer database.CloseDB()
 
-  connectionString := config.GetConnectionString()
+	fmt.Println("db connected", db)
 
-  fmt.Println(connectionString)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = defaultPort
+	}
 
-  db, err := sqlx.Connect("postgres", connectionString)
-  if err != nil {
-    log.Fatalln(err)
-  }
-  if err := db.Ping(); err != nil {
-    log.Fatal(err)
-  } else {
-    log.Println("Successfully Connected")
-  }
+	srv := handler.New(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
 
-  port := os.Getenv("PORT")
-  if port == "" {
-    port = defaultPort
-  }
+	srv.AddTransport(transport.Options{})
+	srv.AddTransport(transport.GET{})
+	srv.AddTransport(transport.POST{})
 
-  srv := handler.New(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
+	srv.SetQueryCache(lru.New[*ast.QueryDocument](1000))
 
-  srv.AddTransport(transport.Options{})
-  srv.AddTransport(transport.GET{})
-  srv.AddTransport(transport.POST{})
+	srv.Use(extension.Introspection{})
+	srv.Use(extension.AutomaticPersistedQuery{
+		Cache: lru.New[string](100),
+	})
 
-  srv.SetQueryCache(lru.New[*ast.QueryDocument](1000))
+	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
+	http.Handle("/query", srv)
 
-  srv.Use(extension.Introspection{})
-  srv.Use(extension.AutomaticPersistedQuery{
-    Cache: lru.New[string](100),
-  })
-
-  http.Handle("/", playground.Handler("GraphQL playground", "/query"))
-  http.Handle("/query", srv)
-
-  log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
-  log.Fatal(http.ListenAndServe(":"+port, nil))
+	log.Printf("connect to http://localhost:%s/ for GraphQL playground", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
