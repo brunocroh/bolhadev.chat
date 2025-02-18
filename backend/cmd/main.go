@@ -10,8 +10,10 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/lru"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
+	"github.com/brunocroh/bolhadev.chat/config"
 	"github.com/brunocroh/bolhadev.chat/internal/database"
 	"github.com/brunocroh/bolhadev.chat/internal/graph"
+	"github.com/brunocroh/bolhadev.chat/internal/service"
 	_ "github.com/lib/pq"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -20,7 +22,7 @@ const defaultPort = "8080"
 
 func main() {
 
-	database.GetDB()
+	db := database.GetDB()
 	defer database.CloseDB()
 
 	port := os.Getenv("PORT")
@@ -28,7 +30,12 @@ func main() {
 		port = defaultPort
 	}
 
-	srv := handler.New(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
+	aws := config.NewAws()
+	serviceImpl := service.NewService(db, aws)
+
+	srv := handler.New(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{
+		Service: serviceImpl,
+	}}))
 
 	srv.AddTransport(transport.Options{})
 	srv.AddTransport(transport.GET{})

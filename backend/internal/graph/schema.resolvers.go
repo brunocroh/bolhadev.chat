@@ -6,19 +6,33 @@ package graph
 
 import (
 	"context"
+
 	"github.com/brunocroh/bolhadev.chat/internal/model"
 )
 
+// Login is the resolver for the login field.
+func (r *mutationResolver) Login(ctx context.Context, email string, password string) (*model.LoginResponse, error) {
+	r.Service.AuthService.Login(ctx, email, password)
+
+	return &model.LoginResponse{
+		Token: "teste",
+	}, nil
+}
+
 // GetUser is the resolver for the getUser field.
 func (r *queryResolver) GetUser(ctx context.Context) (*model.User, error) {
-  r.user = model.User{
-    ID: "1",
-    Name: "Bruno Rodrigues",
-  }
-  return &r.user, nil
+	user := model.User{
+		ID:   "1",
+		Name: "Bruno Rodrigues",
+	}
+	return &user, nil
 }
+
+// Mutation returns MutationResolver implementation.
+func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
+type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
