@@ -6,6 +6,14 @@ type User {
   name: String!
 }
 
+type LoginResponse {
+  token: String!
+}
+
 type Query {
   getUser: User!
+}
+
+type Mutation {
+  login(email: String!, password: String!): LoginResponse
 }

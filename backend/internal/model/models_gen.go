@@ -2,6 +2,13 @@
 
 package model
 
+type LoginResponse struct {
+	Token string `json:"token"`
+}
+
+type Mutation struct {
+}
+
 type Query struct {
 }
 
