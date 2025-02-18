@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"log"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -16,7 +15,7 @@ type AuthService struct {
 	aws *config.Aws
 }
 
-func (s *AuthService) Login(ctx context.Context, email string, password string) string {
+func (s *AuthService) SignUp(ctx context.Context, email string, password string) string {
 	cognitoConfig := s.aws.GetCognitoConfig()
 
 	user, err := s.aws.CognitoClient.SignUp(ctx, &cognitoidentityprovider.SignUpInput{

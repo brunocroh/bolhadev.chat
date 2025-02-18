@@ -10,12 +10,12 @@ import (
 	"github.com/brunocroh/bolhadev.chat/internal/model"
 )
 
-// Login is the resolver for the login field.
-func (r *mutationResolver) Login(ctx context.Context, email string, password string) (*model.LoginResponse, error) {
-	r.Service.AuthService.Login(ctx, email, password)
+// SignUp is the resolver for the signUp field.
+func (r *mutationResolver) SignUp(ctx context.Context, email string, password string) (*model.LoginResponse, error) {
+	r.Resolver.Service.AuthService.SignUp(ctx, email, password)
 
 	return &model.LoginResponse{
-		Token: "teste",
+		Token: "ok",
 	}, nil
 }
 
@@ -36,3 +36,19 @@ func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//  - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//    it when you're done.
+//  - You have helper methods in this file. Move them out to keep these resolver files clean.
+/*
+	func (r *mutationResolver) Login(ctx context.Context, email string, password string) (*model.LoginResponse, error) {
+	r.Service.AuthService.Login(ctx, email, password)
+
+	return &model.LoginResponse{
+		Token: "teste",
+	}, nil
+}
+*/
