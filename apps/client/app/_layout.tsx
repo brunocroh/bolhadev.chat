@@ -7,7 +7,9 @@ import { StatusBar } from 'expo-status-bar'
 import { tokenCache } from '@/cache'
 import { ThemeProvider } from '@/components/providers/theme-provider'
 import '@/components/ui/icons'
+import { client } from '@/lib/apollo'
 import { colors } from '@/theme'
+import { ApolloProvider } from '@apollo/client'
 import { ClerkLoaded, ClerkProvider } from '@clerk/clerk-expo'
 import '../global.css'
 
@@ -39,23 +41,25 @@ export default function RootLayout() {
   }
 
   return (
-    <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
-      <ClerkLoaded>
-        <ThemeProvider>
-          <Stack
-            screenOptions={{
-              headerShown: false,
-              contentStyle: { backgroundColor: colors.dark.background },
-            }}
-          >
-            <Stack.Screen name="(onboarding)" />
-            <Stack.Screen name="(home)" />
-            <Stack.Screen name="auth" />
-            <Stack.Screen name="+not-found" />
-          </Stack>
-          <StatusBar style="auto" />
-        </ThemeProvider>
-      </ClerkLoaded>
-    </ClerkProvider>
+    <ApolloProvider client={client}>
+      <ClerkProvider tokenCache={tokenCache} publishableKey={publishableKey}>
+        <ClerkLoaded>
+          <ThemeProvider>
+            <Stack
+              screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: colors.dark.background },
+              }}
+            >
+              <Stack.Screen name="(onboarding)" />
+              <Stack.Screen name="(home)" />
+              <Stack.Screen name="auth" />
+              <Stack.Screen name="+not-found" />
+            </Stack>
+            <StatusBar style="auto" />
+          </ThemeProvider>
+        </ClerkLoaded>
+      </ClerkProvider>
+    </ApolloProvider>
   )
 }
