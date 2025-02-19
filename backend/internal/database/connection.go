@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"log"
 	"sync"
 
@@ -23,8 +22,6 @@ func GetDB() *sqlx.DB {
 			}
 
 			connectionString := config.GetConnectionString()
-
-			fmt.Println(connectionString)
 
 			_db, err := sqlx.Connect("postgres", connectionString)
 
