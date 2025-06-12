@@ -1,3 +1,8 @@
+# Temporary Shutdown
+
+The platform is currently offline as I’m working on a refactored and improved version.
+In the coming weeks, we’ll be introducing a much better approach to help you get back to your English studies. Stay tuned!
+
 <p align="center">
   <img src="https://github.com/brunocroh/bolhadev.chat/assets/13812512/acfd1f3e-3e30-4eb5-8bae-f56d2a6af6cb" alt="Bolhadev.chat Logo"/>
 </p>
